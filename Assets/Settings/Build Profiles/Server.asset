@@ -24,7 +24,8 @@ MonoBehaviour:
     m_path: Assets/Scenes/Auth.unity
   - m_enabled: 1
     m_path: Assets/Scenes/Hub.unity
-  m_ScriptingDefines: []
+  m_ScriptingDefines:
+  - ENABLE_PLAYFABSERVER_API
   m_PlayerSettingsYaml:
     m_Settings: []
   references:

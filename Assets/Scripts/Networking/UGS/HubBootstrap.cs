@@ -13,6 +13,7 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 using UnityEngine.SceneManagement;
+using Networking.Playfab.Login;
 
 public class ClientHubBootstrap : MonoBehaviour
 {
@@ -56,6 +57,9 @@ public class ClientHubBootstrap : MonoBehaviour
 
                 Debug.Log("Got Session, Joining.");
                 var id = result.Sessions[0].Id;
+
+                SendCredentials();
+
                 await MultiplayerService.Instance.JoinSessionByIdAsync(id);
                 Debug.Log("[CLIENT] Successfully connected to session!");
                 nm.StartClient();
@@ -75,6 +79,14 @@ public class ClientHubBootstrap : MonoBehaviour
         await SceneManager.LoadSceneAsync("Auth");
 
         SetConnecting(false);
+
+        void SendCredentials()
+        {
+            string IDs = AuthenticationService.Instance.PlayerId + "|" + Constants.Instance.PlayFabID;
+            byte[] payload = System.Text.Encoding.UTF8.GetBytes(IDs);
+            nm.NetworkConfig.ConnectionData = payload;
+            Debug.Log("[CLIENT] Sent Credentials for approval");
+        }
     }
 
     private void SetConnecting(bool state)

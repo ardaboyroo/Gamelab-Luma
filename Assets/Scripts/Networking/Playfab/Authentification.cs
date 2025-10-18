@@ -1,6 +1,7 @@
 ﻿using Networking.UGS;
 using PlayFab;
 using PlayFab.ClientModels;
+using System;
 using System.Collections.Generic;
 using Unity.Multiplayer;
 using Unity.Services.Authentication;
@@ -183,9 +184,26 @@ namespace Networking.Playfab.Login
 
         private async void ServerStart()
         {
+
+            ServerLogin();
+
             await _unityAuthLinker.InitializeUGSAsync();
             Constants.Instance.SetIDs("noID", AuthenticationService.Instance.PlayerId);
             await SceneManager.LoadSceneAsync("Hub");
+
+            void ServerLogin()
+            {
+                var titleId = Environment.GetEnvironmentVariable("PLAYFAB_TITLE_ID");
+                var secretKey = Environment.GetEnvironmentVariable("PLAYFAB_SECRET_KEY");
+
+                if (string.IsNullOrEmpty(titleId) || string.IsNullOrEmpty(secretKey))
+                    throw new InvalidOperationException("Missing PlayFab credentials in environment variables.");
+
+                PlayFabSettings.staticSettings.TitleId = titleId;
+                PlayFabSettings.staticSettings.DeveloperSecretKey = secretKey;
+
+                UnityEngine.Debug.Log("[SERVER] PlayFab server authentication initialized.");
+            }
         }
 
         public void Exit() {

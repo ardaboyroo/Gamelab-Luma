@@ -870,6 +870,7 @@ GameObject:
   - component: {fileID: 1825075095}
   - component: {fileID: 1825075100}
   - component: {fileID: 1825075099}
+  - component: {fileID: 1825075101}
   m_Layer: 0
   m_Name: Authentification
   m_TagString: Untagged
@@ -961,6 +962,20 @@ MonoBehaviour:
   _display: {fileID: 1825075098}
   _unityAuthLinker: {fileID: 1825075097}
   _role: 1
+--- !u!114 &1825075101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825075094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc6637d7073d65e48964f06905c39845, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  titleId: 1CFA92
+  secretKey: SFFTP99NOD47MMB7G4OU619XEN1REMKRKEIM5859ZGZUB61HQY
 --- !u!1 &1879266446
 GameObject:
   m_ObjectHideFlags: 0
