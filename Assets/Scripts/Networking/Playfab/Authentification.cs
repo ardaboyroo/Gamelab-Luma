@@ -2,8 +2,10 @@
 using PlayFab;
 using PlayFab.ClientModels;
 using System.Collections.Generic;
+using Unity.Multiplayer;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
+using Unity.Services.Multiplayer;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -14,12 +16,22 @@ namespace Networking.Playfab.Login
     {
         [SerializeField] private AuthEvents _display;
         [SerializeField] private UnityAuthLinker _unityAuthLinker;
+        [SerializeField] private NetworkRole _role;
+
+        private bool _authentificating = false;
 
         private async void Awake() => await UnityServices.InitializeAsync();
 
-        public void Start() {
+        public void Start() 
+        {
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
+
+            if (_role == NetworkRole.Server)
+            {
+                ServerStart();
+                return;
+            }
 
             _display.Username.value = PlayerPrefs.GetString("SAVED USERNAME", "");
 
@@ -28,15 +40,20 @@ namespace Networking.Playfab.Login
             }
         }
 
-        private void Login(ILogin loginMethod, object loginParams) {
-            loginMethod.Login(_loginInfoParams, OnLoginSuccess, OnLoginFailure, loginParams);
+        private void Login(ILogin loginMethod, object loginParams) 
+        {
+            if (_authentificating)
+                return;
 
-            //loginInProgress.SetActive(true);
+            SetAuthentificating(true);
+            Debug.Log("Starting Login...");
+            loginMethod.Login(_loginInfoParams, OnLoginSuccess, OnLoginFailure, loginParams);
         }
 
         #region Standard Login
 
-        public void Login() {
+        public void Login() 
+        {
             if (ValidateLoginData()) {
                 Login(new StandardLogin(), new StandardLogin.StandardLoginParams(_display.Username.value, _display.Password.value));
             }
@@ -83,7 +100,7 @@ namespace Networking.Playfab.Login
 
             PlayFabClientAPI.RegisterPlayFabUser(request, OnRegisterSuccess, OnLoginFailure);
 
-            //loginInProgress.SetActive(true);
+            SetAuthentificating(true);
         }
 
         bool ValidateRegisterData() {
@@ -118,9 +135,10 @@ namespace Networking.Playfab.Login
 
             Debug.Log(result.PlayFabId);
             Debug.Log(result.Username);
-            //loginInProgress.SetActive(false);
 
-            await _unityAuthLinker.InitializeUGSAsync(result.PlayFabId);
+            await _unityAuthLinker.InitializeUGSAsync();
+
+            SetAuthentificating(false);
 
             _display.SwitchToLogin();
         }
@@ -132,9 +150,7 @@ namespace Networking.Playfab.Login
 
             PlayerPrefs.SetString("SAVED USERNAME", _display.Username.value);
 
-            //loginInProgress.SetActive(false);
-
-            await _unityAuthLinker.InitializeUGSAsync(result.PlayFabId);
+            await _unityAuthLinker.InitializeUGSAsync();
             Constants.Instance.SetIDs(result.PlayFabId, AuthenticationService.Instance.PlayerId);
             PlayFabClientAPI.UpdateUserData(new UpdateUserDataRequest
             {
@@ -142,9 +158,11 @@ namespace Networking.Playfab.Login
             }, result =>
             {
                 Debug.Log("Synced Unity Player ID with PlayFab.");
-                SceneManager.LoadSceneAsync(1);
+                SceneManager.LoadSceneAsync("Hub");
 
             }, Debug.LogError);
+
+            SetAuthentificating(false);
         }
 
         private readonly GetPlayerCombinedInfoRequestParams _loginInfoParams =
@@ -157,13 +175,28 @@ namespace Networking.Playfab.Login
             };
 
         private void OnLoginFailure(PlayFabError error) {
-            Debug.LogError("Login failure: " + error.Error + "  " + error.ErrorDetails + error + "  " +
+            Debug.LogError("Login/Register failure: " + error.Error + "  " + error.ErrorDetails + error + "  " +
                            error.ApiEndpoint + "  " + error.ErrorMessage);
-            //loginInProgress.SetActive(false);
+
+            SetAuthentificating(false);
+        }
+
+        private async void ServerStart()
+        {
+            await _unityAuthLinker.InitializeUGSAsync();
+            Constants.Instance.SetIDs("noID", AuthenticationService.Instance.PlayerId);
+            await SceneManager.LoadSceneAsync("Hub");
         }
 
         public void Exit() {
             Application.Quit();
+        }
+    
+        
+        private void SetAuthentificating(bool state)
+        {
+            _authentificating = state;
+            Debug.Log("Authentification Blocker: " + state);
         }
     }
 }

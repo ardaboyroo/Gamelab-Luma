@@ -1,70 +1,90 @@
-﻿using Unity.Services.Core;
+﻿// -----------------------------------------------------------------------------
+// File: ClientHubBootstrap.cs
+// Purpose: Client connecting to local UGS server session post-authentication
+// -----------------------------------------------------------------------------
+
+using UnityEngine;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using Unity.Services.Core;
 using Unity.Services.Authentication;
 using Unity.Services.Multiplayer;
-using UnityEngine;
-using System.Threading.Tasks;
-using System.Collections.Generic;
 using System;
-using Unity.Netcode;
+using System.Threading.Tasks;
+using System.Threading;
+using UnityEngine.SceneManagement;
 
-namespace Networking.UGS
+public class ClientHubBootstrap : MonoBehaviour
 {
-    namespace Networking.UGS
+    [SerializeField] private string serverAddress = "127.0.0.1";
+    [SerializeField] private ushort serverPort = 8032;
+
+    private bool _connecting = false;
+
+    private async void Start()
     {
-        public class HubBootstrap : MonoBehaviour
+        await Connect();
+    }
+
+    private async Task Connect()
+    {
+        if (_connecting)
+            return;
+
+        SetConnecting(true);
+
+        var nm = NetworkManager.Singleton;
+        var utp = nm.GetComponent<UnityTransport>();
+        utp.SetConnectionData(serverAddress, serverPort);
+
+        int retry = 0;
+        const int maxRetries = 5;
+
+        while (retry < maxRetries)
         {
-            [SerializeField] private NetworkManager networkManagerPrefab;
-            private ISession _currentSession;
-
-            private async void Start()
+            try
             {
-                EnsureNetworkManager();
+                Debug.Log("Querrying Sessions on Server");
+                var result = await MultiplayerService.Instance.QuerySessionsAsync(new QuerySessionsOptions());
+                if (result.Sessions.Count == 0)
+                {
+                    Debug.LogWarning("[CLIENT] No sessions found, retrying...");
+                    await Task.Delay(1000 * (int)Mathf.Pow(2, retry));
+                    retry++;
+                    continue;
+                }
 
-                if (!UnityServices.State.Equals(ServicesInitializationState.Initialized))
-                    await UnityServices.InitializeAsync();
+                Debug.Log("Got Session, Joining.");
+                var id = result.Sessions[0].Id;
+                await MultiplayerService.Instance.JoinSessionByIdAsync(id);
+                Debug.Log("[CLIENT] Successfully connected to session!");
+                nm.StartClient();
 
-                if (!AuthenticationService.Instance.IsSignedIn)
-                    await AuthenticationService.Instance.SignInAnonymouslyAsync();
-
-                Debug.Log("UGS + Auth ready, starting session...");
-                await CreateOrJoinSession();
+                SetConnecting(false);
+                return;
             }
-
-            private void EnsureNetworkManager()
+            catch (Exception e)
             {
-                if (NetworkManager.Singleton == null)
-                {
-                    Instantiate(networkManagerPrefab);
-                    Debug.Log("NetworkManager instantiated.");
-                }
-            }
-
-            private async Task CreateOrJoinSession()
-            {
-                try
-                {
-                    var sessionOptions = new SessionOptions()
-                    {
-                        MaxPlayers = 40,
-                        SessionProperties = new Dictionary<string, SessionProperty>
-                        {
-                            { "GameMode", new ("Hub") },
-                            { "Map", new("Central") }
-                        },
-                        IsPrivate = false
-                    }
-                        .WithRelayNetwork() 
-                        .WithNetworkHandler(new NGoNetworkHandler()); 
-
-                    _currentSession = await MultiplayerService.Instance.CreateOrJoinSessionAsync("HubSession", sessionOptions);
-
-                    Debug.Log($"Session ready. ID: {_currentSession.Id}, Code: {_currentSession.Code}");
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"Failed to create or join session: {e.Message}");
-                }
+                Debug.LogWarning($"[CLIENT] Join attempt {retry + 1} failed: {e.Message}");
+                await Task.Delay(1000 * (int)Mathf.Pow(2, retry));
+                retry++;
             }
         }
+
+        Debug.LogError("[CLIENT] Could not join after multiple attempts.");
+        await SceneManager.LoadSceneAsync("Auth");
+
+        SetConnecting(false);
+    }
+
+    private void SetConnecting(bool state)
+    {
+        _connecting = state;
+        Debug.Log("Connection Blocker: " + state);
+    }
+
+    private void OnApplicationQuit()
+    {
+        NetworkManager.Singleton?.Shutdown();
     }
 }

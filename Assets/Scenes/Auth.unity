@@ -810,7 +810,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Shared: {fileID: 11400000, guid: 698b2db098268c640929a7b8090a31eb, type: 2}
   SavedUsername: Kirserd
-  PlayFabID: 
 --- !u!4 &1632633817
 Transform:
   m_ObjectHideFlags: 0
@@ -867,8 +866,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1825075096}
   - component: {fileID: 1825075098}
-  - component: {fileID: 1825075095}
   - component: {fileID: 1825075097}
+  - component: {fileID: 1825075095}
+  - component: {fileID: 1825075100}
+  - component: {fileID: 1825075099}
   m_Layer: 0
   m_Name: Authentification
   m_TagString: Untagged
@@ -890,6 +891,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _display: {fileID: 1825075098}
   _unityAuthLinker: {fileID: 1825075097}
+  _role: 0
 --- !u!4 &1825075096
 Transform:
   m_ObjectHideFlags: 0
@@ -931,6 +933,34 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _auth: {fileID: 1825075095}
   _doc: {fileID: 663952521}
+--- !u!1652712579 &1825075099
+MultiplayerRolesData:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825075094}
+  m_GameObjectRolesMask: 3
+  m_ComponentsRolesMasks:
+  - m_Object: {fileID: 1825075095}
+    m_RolesMask: 1
+  - m_Object: {fileID: 1825075100}
+    m_RolesMask: 2
+--- !u!114 &1825075100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825075094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00e0a7187d1a4a74b9038a1e2ab5f7b8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _display: {fileID: 1825075098}
+  _unityAuthLinker: {fileID: 1825075097}
+  _role: 1
 --- !u!1 &1879266446
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,7 +7,7 @@ namespace Networking.UGS
 {
     public class UnityAuthLinker : MonoBehaviour
     {
-        public async Task InitializeUGSAsync(string playFabId)
+        public async Task InitializeUGSAsync()
         {
             if (!AuthenticationService.Instance.IsSignedIn)
             {
@@ -15,7 +15,6 @@ namespace Networking.UGS
             }
 
             Debug.Log($"UGS Authenticated. Unity PlayerID: {AuthenticationService.Instance.PlayerId}");
-            Debug.Log($"Linked PlayFab ID: {playFabId}");
         }
     }
 

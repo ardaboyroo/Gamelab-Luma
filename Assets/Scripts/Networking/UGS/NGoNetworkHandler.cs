@@ -7,13 +7,8 @@ public class NGoNetworkHandler : INetworkHandler
 {
     public Task StartAsync(NetworkConfiguration configuration)
     {
-        if (NetworkManager.Singleton == null)
-            throw new InvalidOperationException("NetworkManager missing.");
-
         if (configuration.Role == NetworkRole.Server)
             NetworkManager.Singleton.StartServer();
-        else if (configuration.Role == NetworkRole.Host)
-            NetworkManager.Singleton.StartHost();
         else
             NetworkManager.Singleton.StartClient();
 
@@ -24,7 +19,7 @@ public class NGoNetworkHandler : INetworkHandler
     {
         if (NetworkManager.Singleton == null) return Task.CompletedTask;
 
-        if (NetworkManager.Singleton.IsHost)
+        if (NetworkManager.Singleton.IsServer)
             NetworkManager.Singleton.Shutdown();
 
         return Task.CompletedTask;
