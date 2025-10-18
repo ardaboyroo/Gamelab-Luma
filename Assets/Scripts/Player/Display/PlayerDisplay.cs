@@ -30,8 +30,7 @@ public class PlayerDisplay : NetworkBehaviour
     {
         if (IsServer)
         {
-            string id = OwnerClientId.ToString().PadLeft(5, '0');
-            _playerProfile.Value = new PlayerProfile($"Player_{id}");
+            _playerProfile.Value = ServerBootstrap.GetProfileForID(OwnerClientId);
         }
     }
 }
