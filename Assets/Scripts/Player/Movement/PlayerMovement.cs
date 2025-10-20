@@ -12,6 +12,16 @@ public class PlayerMovement : SnapshotBasedBehaviour<Vector3>
     private float _inputSendInterval = 1/30f;
     private float _inputSendTimer;
 
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            Camera.main.transform.SetParent(transform);
+        }
+
+        base.OnNetworkSpawn();
+    }
+
     protected override void Update()
     {
         if (IsOwner)

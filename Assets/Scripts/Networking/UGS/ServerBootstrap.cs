@@ -6,6 +6,9 @@ using System.Text;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Networking.Playfab;
+using UnityEditor.PackageManager.Requests;
+
+
 
 #if ENABLE_PLAYFABSERVER_API
 using PlayFab.ServerModels;
@@ -23,6 +26,7 @@ public class ServerBootstrap : MonoBehaviour
 
         nm.ConnectionApprovalCallback += OnConnectionApproval;
         nm.OnClientDisconnectCallback += OnClientDisconnect;
+        nm.OnClientConnectedCallback += OnClientConnected;
         nm.StartServer();
 
         try
@@ -73,13 +77,20 @@ public class ServerBootstrap : MonoBehaviour
 
             response.Approved = true; 
             response.CreatePlayerObject = true;
-            response.Pending = false; 
+            response.Pending = false;
+            
             Debug.Log($"[SERVER] Approved {nickname}");
         } 
         catch (Exception ex) 
         { 
             Debug.LogError($"[SERVER] ConnectionApproval error: {ex}"); 
         } 
+    }
+
+    private void OnClientConnected(ulong clientId)
+    {
+        Debug.Log($"[SERVER] Client {clientId} Connected");
+        NetworkRoom.ExistingRooms["Hub"].AddMember(clientId);
     }
 
     private void OnClientDisconnect(ulong clientId)
