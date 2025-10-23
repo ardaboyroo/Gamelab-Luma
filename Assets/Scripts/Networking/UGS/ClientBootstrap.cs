@@ -15,7 +15,7 @@ using System.Threading;
 using UnityEngine.SceneManagement;
 using Networking.Playfab.Login;
 
-public class ClientHubBootstrap : MonoBehaviour
+public class ClientBootstrap : MonoBehaviour
 {
     [SerializeField] private string serverAddress = "127.0.0.1";
     [SerializeField] private ushort serverPort = 8032;

@@ -38,7 +38,7 @@ public class NetworkRoom : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsServer)
+        if (IsClient)
         {
             if(!_initiallyActive)
                 Container.SetActive(false);
@@ -203,7 +203,7 @@ public class NetworkRoom : NetworkBehaviour
     [ClientRpc]
     private void SetRoomContainerActive_ClientRpc(bool active, ClientRpcParams rpcParams = default)
     {
-        if (IsServer) return;
+        if (!IsClient) return;
 
         Container.SetActive(active);
         Debug.Log($"[CLIENT] Room '{RoomName}' visuals {(active ? "activated" : "deactivated")}");

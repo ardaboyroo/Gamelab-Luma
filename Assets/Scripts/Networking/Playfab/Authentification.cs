@@ -23,11 +23,12 @@ namespace Networking.Playfab.Login
 
         private async void Awake() => await UnityServices.InitializeAsync();
 
-        public void Start() 
+        public async void Start() 
         {
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
 
+#if !AUTH_PASS_SECRET_1C92B72I001 // to remove -------------------------------------------------------------------------------------------------------------------------
             if (_role == NetworkRole.Server)
             {
                 ServerStart();
@@ -39,6 +40,18 @@ namespace Networking.Playfab.Login
             if (PlayFabClientAPI.IsClientLoggedIn()) {
                 Debug.LogWarning("User is already logged in");
             }
+#else // to remove whole else section, security breach  ----------------------------------------------------------------------------------------------------------------
+
+            if(_role == NetworkRole.Server)
+            {
+                ServerStart();
+                return;
+            }
+
+            Constants.Instance.SetIDs("", AuthenticationService.Instance.PlayerId);
+            Debug.Log($"Skipped sync Unity Player ID with PlayFab. {AuthenticationService.Instance.PlayerId}");
+            await SceneManager.LoadSceneAsync("Hub");
+#endif
         }
 
         private void Login(ILogin loginMethod, object loginParams) 

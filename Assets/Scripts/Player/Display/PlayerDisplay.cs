@@ -30,7 +30,9 @@ public class PlayerDisplay : NetworkBehaviour
     {
         if (IsServer)
         {
+#if ENABLE_PLAYFABSERVER_API
             _playerProfile.Value = ServerBootstrap.GetProfileForID(OwnerClientId);
+#endif
         }
     }
 }
