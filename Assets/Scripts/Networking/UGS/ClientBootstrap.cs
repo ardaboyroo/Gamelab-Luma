@@ -39,6 +39,7 @@ public class ClientBootstrap : MonoBehaviour
         utp.SetConnectionData(serverAddress, serverPort);
 
         int retry = 0;
+        ushort port = serverPort--;
         const int maxRetries = 5;
 
         while (retry < maxRetries)
@@ -69,6 +70,7 @@ public class ClientBootstrap : MonoBehaviour
             }
             catch (Exception e)
             {
+                utp.SetConnectionData(serverAddress, port++);
                 Debug.LogWarning($"[CLIENT] Join attempt {retry + 1} failed: {e.Message}");
                 await Task.Delay(1000 * (int)Mathf.Pow(2, retry));
                 retry++;

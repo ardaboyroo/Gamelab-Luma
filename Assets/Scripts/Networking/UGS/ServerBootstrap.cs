@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Networking.Playfab;
 using UnityEditor.PackageManager.Requests;
+using Unity.Netcode.Transports.UTP;
+
 
 
 
@@ -15,7 +17,8 @@ using PlayFab.ServerModels;
 
 public class ServerBootstrap : MonoBehaviour
 {
-    [SerializeField] private ushort _maxPlayersPerSession = 40;
+    [SerializeField] private ushort _maxPlayersPerSession = 512;
+    [SerializeField] private int _mtuSize = 1024 * 1024 * 1024;
 
     private static readonly Dictionary<string, ISession> _sessions = new();
     private static readonly Dictionary<ulong, UserModels.Display.PlayerProfile> _cachedProfiles = new();
@@ -23,14 +26,21 @@ public class ServerBootstrap : MonoBehaviour
     private async void Start()
     {
         var nm = NetworkManager.Singleton;
-
+        var transport = nm.GetComponent<UnityTransport>();
         nm.ConnectionApprovalCallback += OnConnectionApproval;
         nm.OnClientDisconnectCallback += OnClientDisconnect;
         nm.OnClientConnectedCallback += OnClientConnected;
-        nm.StartServer();
 
+        bool success = false;
+        transport.SetConnectionData(transport.ConnectionData.Address, transport.ConnectionData.Port--);
+        while (!success) 
+        {
+            transport.SetConnectionData(transport.ConnectionData.Address, transport.ConnectionData.Port++);
+            success = nm.StartServer();
+        }
         try
         {
+
             var options = new SessionOptions()
             {
                 MaxPlayers = _maxPlayersPerSession,
@@ -95,7 +105,7 @@ public class ServerBootstrap : MonoBehaviour
     private void OnClientConnected(ulong clientId)
     {
         Debug.Log($"[SERVER] Client {clientId} Connected");
-        NetworkRoom.ExistingRooms["Hub"].AddMember(clientId);
+        NetworkRoom.ExistingRooms["hub"].GetOrCreateInstance().AddMember(clientId);
     }
 
     private void OnClientDisconnect(ulong clientId)

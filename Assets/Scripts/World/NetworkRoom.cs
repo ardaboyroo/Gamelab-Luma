@@ -1,30 +1,184 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
+using Unity.VisualScripting;
 using UnityEditor.PackageManager;
 using UnityEngine;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
+using static UnityEngine.UI.Image;
+
+[Serializable]
+public class Party
+{
+    public static Dictionary<ulong, Party> ClientToPartyMap = new();
+
+    private List<ulong> _players = new();
+
+    public ulong Leader => _players.Count > 0 ? _players[0] : 0;
+
+    public Party(ulong leaderClientId)
+    {
+        AddPlayer(leaderClientId);
+        ClientToPartyMap[leaderClientId] = this;
+    }
+
+    public ulong[] GetPlayers() => _players.ToArray();
+    public void KickPlayer(ulong clientId)
+    {
+        _players.Remove(clientId);
+        ClientToPartyMap[clientId] = null;
+    }
+    public bool AddPlayer(ulong clientId)
+    {
+        if (_players.Contains(clientId))
+            return false;
+        _players.Add(clientId);
+        ClientToPartyMap[clientId] = this;
+        return true;
+    }
+    public void Disband()
+    {
+        foreach (var clientId in _players)
+            ClientToPartyMap[clientId] = null;
+        _players.Clear();
+    }
+}
+
+[Serializable]
+public class NetworkRoomInstances
+{
+    private readonly NetworkInstancer _instancer;
+    public Dictionary<int, NetworkRoom> Instances;
+    public NetworkRoom Original => Instances[0];
+
+    public NetworkRoomInstances(NetworkRoom originalInstance, NetworkInstancer instancer) 
+    { 
+        Instances = new Dictionary<int, NetworkRoom> { { 0, originalInstance } }; 
+        _instancer = instancer; 
+    }
+    public int GetInstanceID(NetworkRoom instance) 
+    {
+        foreach (var kvp in Instances)
+        {
+            if(kvp.Value == instance)
+                return kvp.Key;
+        }
+        return 0;
+    }
+    public NetworkRoom GetInstanceByID(int id) => Instances[id];
+    public NetworkRoom GetOrCreateInstance() 
+    {
+        if (Original.SingleInstance)
+            return Original;
+
+        NetworkRoom result = null;
+
+        foreach (var instance in Instances.Values)
+        {
+            if (instance == Original || instance.IsFull || instance.IsLocked)
+                continue;
+
+            result = instance;
+            break;
+        }
+
+        if (result == null)
+        {
+            var freeSpot = GetFreeSpotID();
+            var createdInstanceResult = _instancer.CreateInstance(freeSpot);
+            result = createdInstanceResult.Room;
+
+            Instances.Add(freeSpot, result);
+          
+            Debug.Log($"[SERVER] Created new instance of room '{Original.RoomName.ToLower()}' (InstanceID={Instances.Count - 1}, NetworkObjectId={result.NetworkObjectId})");
+        }
+
+        return result;
+    }
+
+    public int GetFreeSpotID()
+    {
+        for (int i = 1; i < Instances.Count; i++)
+            if (!Instances.ContainsKey(i))
+                return i;
+
+        var newID = Instances.Count;
+        while (Instances.ContainsKey(newID))
+            newID++;
+
+        return newID;
+    }
+
+    public void PurgeUnusedInstances()
+    {
+        List<NetworkRoom> toRemove = new();
+        for (int i = 1; i < Instances.Count-1; i++)
+        {
+            if (Instances[i].IsEmpty)
+                toRemove.Add(Instances[i]);
+        }
+
+        foreach (var instance in toRemove)
+        {
+            Instances.Remove(GetInstanceID(instance));
+            UnityEngine.Object.Destroy(instance.transform.parent.gameObject);
+        }
+    }
+}
 
 [DisallowMultipleComponent]
 public class NetworkRoom : NetworkBehaviour
 {
-    public static Dictionary<string, NetworkRoom> ExistingRooms = new();
+    public static Dictionary<string, NetworkRoomInstances> ExistingRooms = new();
+    public static Dictionary<ulong, NetworkRoom> PlayerRoomMap = new();
 
     [Header("Room Settings")]
     public string RoomName;
     public List<Transform> Entrances = new();
     public GameObject Container;
     [Space(5f)]
+    [SerializeField] public bool SingleInstance = true;
+    [SerializeField] public bool LockOnStart = false;
+    [SerializeField] public bool AllowsSingle = true;
+    [SerializeField] public bool AllowsParty = true;
+    [SerializeField] public bool AllowsFullParty = true;
+    [SerializeField] public int  InstanceCapacity = 512;
+
+    [Space(5f)]
     [SerializeField] private bool _initiallyActive = false;
 
+    [Space(15f)]
+    [Header("Room Metadata")]
+    [SerializeField][TextArea(2, 5)] public string ActivityDescription = "Default room activity.";
+    [SerializeField] public Sprite ActivityIcon;
+    
+    [Space(15f)]
     [Header("Room Zone Visualization")]
     [SerializeField] private bool _showRoomZone = true;
     [SerializeField] private Color _roomZoneColor = new Color(0.2f, 0.8f, 1f, 0.25f);
+    
+    [Space(15f)]
+    [Header("Room Zone Actor (Optional)")]
+    [SerializeField] private BaseNetworkRoomActor _actor;
+
+    //----------------------------------------------------------------------------
 
     public List<NetworkObject> NetObjects { get; private set; } = new();
     public HashSet<ulong> Members { get; private set; } = new();
 
+    public bool IsEmpty => Members.Count == 0;
+    public bool IsFull => Members.Count >= InstanceCapacity;
+    public bool IsLocked { get; private set; } = false;
+
+    //----------------------------------------------------------------------------
+
     private Collider _trigger;
     private static int _nextLayerIndex = 8;
     private int _roomLayer = 0;
+
+    //----------------------------------------------------------------------------
 
     private void Awake()
     {
@@ -36,23 +190,48 @@ public class NetworkRoom : NetworkBehaviour
         gameObject.layer = 0;
     }
 
+    private void Update()
+    {
+        if (!IsServer)
+            return;
+
+        List<ulong> toRemove = new();
+
+        foreach (var clientId in Members)
+        {
+            if (!NetworkManager.Singleton.ConnectedClientsIds.Contains(clientId))
+            {
+                toRemove.Add(clientId);
+                continue;
+            }
+            _actor?.OnClientUpdate(clientId);
+        }
+
+        foreach (var clientId in toRemove)
+            RemoveMember(clientId, clientIsOffline: true);
+    }
+
     public override void OnNetworkSpawn()
     {
         if (IsClient)
         {
             if(!_initiallyActive)
                 Container.SetActive(false);
-            return;
         }
+        if (!IsServer)
+            return;
 
-        ExistingRooms[RoomName] = this;
-        Debug.Log($"[ROOM] Registered '{RoomName}' on server (NetworkObjectId={NetworkObjectId}).");
+        if (!ExistingRooms.ContainsKey(RoomName.ToLower()))
+            ExistingRooms[RoomName.ToLower()] = new(this, GetComponentInParent<NetworkInstancer>());
 
-        // Assign a unique layer for this room
+        Debug.Log($"[ROOM] Registered '{RoomName.ToLower()}' on server (NetworkObjectId={NetworkObjectId}).");
+
+        if(!SingleInstance)
+            StartCoroutine(InstanceGarbageCollector());
+
         _roomLayer = GetNextFreeLayer();
-        Debug.Log($"[SERVER] Room '{RoomName}' uses layer {_roomLayer}");
+        Debug.Log($"[SERVER] Room '{RoomName.ToLower()}' uses layer {_roomLayer}");
 
-        // Physics: only collide with itself and Default (layer 0)
         for (int i = 0; i < 32; i++)
         {
             bool ignore = !(i == 0 || i == _roomLayer);
@@ -60,7 +239,6 @@ public class NetworkRoom : NetworkBehaviour
             Physics.IgnoreLayerCollision(i, _roomLayer, ignore);
         }
 
-        // Register & assign layer to objects
         NetObjects.Clear();
         foreach (var no in GetComponentsInChildren<NetworkObject>(true))
         {
@@ -76,109 +254,95 @@ public class NetworkRoom : NetworkBehaviour
     }
     public override void OnNetworkDespawn()
     {
-        if (IsServer)
+        if (IsServer && !IsClient)
         {
-            if (ExistingRooms.TryGetValue(RoomName, out var refRoom) && refRoom == this)
+            if (ExistingRooms.TryGetValue(RoomName.ToLower(), out var refRoom) && refRoom.Original == this)
             {
-                ExistingRooms.Remove(RoomName);
-                Debug.Log($"[ROOM] Unregistered '{RoomName}' (despawn).");
+                ExistingRooms.Remove(RoomName.ToLower());
+                Debug.Log($"[ROOM] Unregistered '{RoomName.ToLower()}' (despawn).");
             }
         }
     }
 
-    // ----------------------- Collision-based membership -----------------------
-
-    private void OnTriggerEnter(Collider other)
+    private IEnumerator InstanceGarbageCollector()
     {
         if (!IsServer)
-            return;
+            yield break;
 
-        var netObj = other.GetComponentInParent<NetworkObject>();
-        if (netObj == null || !netObj.IsPlayerObject)
-            return;
-
-        ulong clientId = netObj.OwnerClientId;
-        if (Members.Contains(clientId))
-            return;
-
-        // Remove from any previous room
-        foreach (var r in FindObjectsOfType<NetworkRoom>())
+        while (!this.IsDestroyed())
         {
-            if (r != this && r.Members.Contains(clientId))
-            {
-                r.RemoveMember(clientId);
-                break;
-            }
+            yield return new WaitForSeconds(60f);
+            ExistingRooms[RoomName.ToLower()].PurgeUnusedInstances();
         }
-
-        AddMember(clientId);
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (!IsServer)
-            return;
-
-        var netObj = other.GetComponentInParent<NetworkObject>();
-        if (netObj == null || !netObj.IsPlayerObject)
-            return;
-
-        ulong clientId = netObj.OwnerClientId;
-        if (Members.Contains(clientId))
-            RemoveMember(clientId);
     }
 
     // ----------------------- Membership logic ---------------------------------
 
-    public void AddMember(ulong newClientId)
+    public void JoinAsParty(Party party)
     {
-        if (!IsServer || !Members.Add(newClientId))
+        var players = party.GetPlayers();
+        foreach (var player in players)
+        {
+            PlayerRoomMap[player].RemoveMember(player);
+            AddMember(player);
+        }
+    }
+
+    public void AddMember(ulong clientId)
+    {
+        if (!IsServer || !Members.Add(clientId))
             return;
 
-        var newPlayer = NetworkManager.Singleton.ConnectedClients[newClientId].PlayerObject;
+        _actor?.OnClientEntering(clientId);
+
+        var newPlayer = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
         if (newPlayer != null)
             ApplyLayerRecursively(newPlayer.gameObject, _roomLayer);
 
-        // Show this room’s objects to that player
         foreach (var no in NetObjects)
-            no.NetworkShow(newClientId);
+            no.NetworkShow(clientId);
 
-        // Mutual visibility between all players in this room
         foreach (var existingId in Members)
         {
-            if (existingId == newClientId) continue;
+            if (existingId == clientId) continue;
 
             var existingPlayer = NetworkManager.Singleton.ConnectedClients[existingId].PlayerObject;
             if (existingPlayer != null && newPlayer != null)
             {
-                existingPlayer.NetworkShow(newClientId);
+                existingPlayer.NetworkShow(clientId);
                 newPlayer.NetworkShow(existingId);
             }
         }
+        PlayerRoomMap[clientId] = this;
 
-        SetRoomContainerActive_ClientRpc(true, new ClientRpcParams
+        SetRoomContainerActive_ClientRpc(true, new ClientRpcParams{ Send = new ClientRpcSendParams { TargetClientIds = new[] { clientId } }});
+
+        Debug.Log($"[SERVER] Player {clientId} joined room '{RoomName.ToLower()}' (layer {_roomLayer})");
+
+        if (_actor != null)
         {
-            Send = new ClientRpcSendParams { TargetClientIds = new[] { newClientId } }
-        });
+            _actor.OnClientAwake(clientId);
+            _actor.OnClientStart(clientId);
+        }
 
-        Debug.Log($"[SERVER] Player {newClientId} joined room '{RoomName}' (layer {_roomLayer})");
+        if (LockOnStart)
+            IsLocked = true;
     }
 
-    public void RemoveMember(ulong clientId)
+    public void RemoveMember(ulong clientId, bool clientIsOffline = false)
     {
-        if (!IsServer || !Members.Remove(clientId))
+        if (!IsServer || !Members.Remove(clientId) || clientIsOffline)
             return;
 
-        // Reset player back to Default layer
+        _actor?.OnClientExiting(clientId);
+
         var leavingPlayer = NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject;
         if (leavingPlayer != null)
             ApplyLayerRecursively(leavingPlayer.gameObject, 0);
 
-        // Hide this room’s objects from that player
         foreach (var no in NetObjects)
             no.NetworkHide(clientId);
 
-        // Remove mutual visibility
         foreach (var otherId in Members)
         {
             var other = NetworkManager.Singleton.ConnectedClients[otherId].PlayerObject;
@@ -189,13 +353,11 @@ public class NetworkRoom : NetworkBehaviour
                 other.NetworkHide(clientId);
             }
         }
+        PlayerRoomMap[clientId] = null;
 
-        SetRoomContainerActive_ClientRpc(false, new ClientRpcParams
-        {
-            Send = new ClientRpcSendParams { TargetClientIds = new[] { clientId } }
-        });
+        SetRoomContainerActive_ClientRpc(false, new ClientRpcParams{ Send = new ClientRpcSendParams { TargetClientIds = new[] { clientId } }});
 
-        Debug.Log($"[SERVER] Player {clientId} left room '{RoomName}' and reset to Default layer");
+        Debug.Log($"[SERVER] Player {clientId} left room '{RoomName.ToLower()}' and reset to Default layer");
     }
 
     // ----------------------- Utilities ---------------------------------------
@@ -206,7 +368,7 @@ public class NetworkRoom : NetworkBehaviour
         if (!IsClient) return;
 
         Container.SetActive(active);
-        Debug.Log($"[CLIENT] Room '{RoomName}' visuals {(active ? "activated" : "deactivated")}");
+        Debug.Log($"[CLIENT] Room '{RoomName.ToLower()}' visuals {(active ? "activated" : "deactivated")}");
     }
 
     private static int GetNextFreeLayer()

@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Container
+  - Portals
+  - Entrances
+  - Instancer
   layers:
   - Default
   - TransparentFX
