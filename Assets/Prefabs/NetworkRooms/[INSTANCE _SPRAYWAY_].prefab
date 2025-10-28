@@ -4907,7 +4907,7 @@ MonoBehaviour:
   - {fileID: 8391349313986160955}
   Container: {fileID: 5747564622783328976}
   SingleInstance: 0
-  LockOnStart: 1
+  LockOnStart: 0
   AllowsSingle: 1
   AllowsParty: 1
   AllowsFullParty: 1

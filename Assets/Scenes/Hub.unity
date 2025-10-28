@@ -1066,9 +1066,9 @@ MonoBehaviour:
   m_MaxConnectAttempts: 60
   m_DisconnectTimeoutMS: 30000
   ConnectionData:
-    Address: 127.0.0.1
+    Address: 26.59.209.54
     Port: 8032
-    ServerListenAddress: 0.0.0.0
+    ServerListenAddress: 26.59.209.54
   DebugSimulator:
     PacketDelayMS: 0
     PacketJitterMS: 0
@@ -1238,7 +1238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b00c6ee1f13d23742911e5d8c718dae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverAddress: 127.0.0.1
+  serverAddress: 26.59.209.54
   serverPort: 8032
 --- !u!1652712579 &1694343129
 MultiplayerRolesData:

@@ -169,8 +169,9 @@ public class Portal : NetworkBehaviour
             }
             else // In this case player was never register to any of the rooms, so security breach is possible. -> Kick just in case.
             {
-                NetworkManager.Singleton.DisconnectClient(netObj.OwnerClientId);
-                Debug.LogError($"[SERVER] Player {netObj.OwnerClientId} was kicked due to possible security breach (Teleport attempt with no previous room registration)");
+                nextRoom.AddMember(netObj.OwnerClientId);
+                //NetworkManager.Singleton.DisconnectClient(netObj.OwnerClientId);
+                //Debug.LogError($"[SERVER] Player {netObj.OwnerClientId} was kicked due to possible security breach (Teleport attempt with no previous room registration)");
             }
         }
         else
