@@ -18,8 +18,6 @@ using PlayFab.ServerModels;
 public class ServerBootstrap : MonoBehaviour
 {
     [SerializeField] private ushort _maxPlayersPerSession = 512;
-    [SerializeField] private int _mtuSize = 1024 * 1024 * 1024;
-
     private static readonly Dictionary<string, ISession> _sessions = new();
     private static readonly Dictionary<ulong, UserModels.Display.PlayerProfile> _cachedProfiles = new();
 

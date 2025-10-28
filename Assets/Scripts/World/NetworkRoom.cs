@@ -355,7 +355,7 @@ public class NetworkRoom : NetworkBehaviour
         }
         PlayerRoomMap[clientId] = null;
 
-        SetRoomContainerActive_ClientRpc(false, new ClientRpcParams{ Send = new ClientRpcSendParams { TargetClientIds = new[] { clientId } }});
+        //SetRoomContainerActive_ClientRpc(false, new ClientRpcParams{ Send = new ClientRpcSendParams { TargetClientIds = new[] { clientId } }});
 
         Debug.Log($"[SERVER] Player {clientId} left room '{RoomName.ToLower()}' and reset to Default layer");
     }
