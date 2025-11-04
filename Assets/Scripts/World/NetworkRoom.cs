@@ -349,7 +349,7 @@ public class NetworkRoom : NetworkBehaviour
             ApplyLayerRecursively(leavingPlayer.gameObject, 0);
 
         foreach (var no in NetObjects)
-            no.NetworkHide(clientId);
+            //no.NetworkHide(clientId);
 
         foreach (var otherId in Members)
         {
@@ -357,8 +357,8 @@ public class NetworkRoom : NetworkBehaviour
             var leaving = leavingPlayer;
             if (other != null && leaving != null)
             {
-                leaving.NetworkHide(otherId);
-                other.NetworkHide(clientId);
+                //leaving.NetworkHide(otherId);
+                //other.NetworkHide(clientId);
             }
         }
         PlayerRoomMap[clientId] = null;
@@ -375,7 +375,7 @@ public class NetworkRoom : NetworkBehaviour
     {
         if (!IsClient) return;
 
-        Container.SetActive(active);
+        Container.SetActive(true);
         Debug.Log($"[CLIENT] Room '{RoomName.ToLower()}' visuals {(active ? "activated" : "deactivated")}");
     }
 
