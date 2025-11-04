@@ -3210,7 +3210,7 @@ MonoBehaviour:
   AllowsParty: 1
   AllowsFullParty: 1
   InstanceCapacity: 4
-  _initiallyActive: 0
+  _initiallyActive: 1
   ActivityDescription: Sprayway - Progress through graphity-drawing obstacle course
     and get "caps"
   ActivityIcon: {fileID: 10915, guid: 0000000000000000f000000000000000, type: 0}

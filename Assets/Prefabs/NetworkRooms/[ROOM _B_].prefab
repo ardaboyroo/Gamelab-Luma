@@ -640,7 +640,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 020365d1b07a1834fac8df44326300d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefab: {fileID: 6159776335520642636}
 --- !u!114 &6159776335520642636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,7 +744,7 @@ MonoBehaviour:
   AllowsParty: 0
   AllowsFullParty: 0
   InstanceCapacity: 512
-  _initiallyActive: 0
+  _initiallyActive: 1
   ActivityDescription: Default room activity.
   ActivityIcon: {fileID: 0}
   _showRoomZone: 1
