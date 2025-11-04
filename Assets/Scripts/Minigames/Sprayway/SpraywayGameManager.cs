@@ -1,6 +1,5 @@
 ﻿using Unity.Netcode;
 using Unity.Netcode.Components;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 namespace Minigames.Sprayway

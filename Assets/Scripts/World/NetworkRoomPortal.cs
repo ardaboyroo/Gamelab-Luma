@@ -2,7 +2,6 @@
 using System.Linq;
 using Unity.Netcode;
 using Unity.Netcode.Components;
-using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class PendingParty
