@@ -12,9 +12,6 @@ using Networking.Playfab.Database;
 
 
 
-
-
-
 #if ENABLE_PLAYFABSERVER_API
 using PlayFab.ServerModels;
 
@@ -22,7 +19,7 @@ public class ServerBootstrap : MonoBehaviour
 {
     [SerializeField] private ushort _maxPlayersPerSession = 512;
     private static readonly Dictionary<string, ISession> _sessions = new();
-    private static readonly Dictionary<ulong, UserModels.Display.PlayerProfile> _cachedProfiles = new();
+    private static Dictionary<ulong, UserModels.Display.PlayerProfile> _cachedProfiles = new();
 
     private async void Start()
     {
@@ -192,5 +189,12 @@ public class ServerBootstrap : MonoBehaviour
 
     public static UserModels.Display.PlayerProfile GetProfileForID(ulong id) 
         => _cachedProfiles.TryGetValue(id, out var profile) ? profile : new UserModels.Display.PlayerProfile("Unknown", default);
+
+    public static void UpdateProfileAvatar(ulong id, UserModels.Display.AvatarData avatar)
+    {
+        var profile = _cachedProfiles[id];
+        profile.Avatar = avatar;
+        _cachedProfiles[id] = profile;
+    }
 }
 #endif

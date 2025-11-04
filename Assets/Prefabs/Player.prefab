@@ -135,7 +135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8712931249294916503
 Transform:
   m_ObjectHideFlags: 0
@@ -1470,7 +1470,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7331499927848999032
 Transform:
   m_ObjectHideFlags: 0
@@ -1824,5 +1824,5 @@ MultiplayerRolesData:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8563548725513843036}
-  m_GameObjectRolesMask: 1
+  m_GameObjectRolesMask: 3
   m_ComponentsRolesMasks: []

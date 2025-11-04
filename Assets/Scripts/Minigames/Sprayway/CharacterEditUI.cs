@@ -87,7 +87,7 @@ namespace Rooms.CharacterEdit
             var data = BuildAvatarData();
 
             GlobalController.Instance.SaveAvatarServerRpc(data, Networking.Playfab.Login.Constants.Instance.PlayFabID, NetworkManager.Singleton.LocalClientId);
-            PlayerDisplay.ApplyAvatar(data, true);
+            NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerDisplay>().RequestApplyAvatar(data);
 
             Debug.Log("[CharacterEditUI] Avatar finalized and saved.");
             Debug.Log(data.ToString());
@@ -97,9 +97,9 @@ namespace Rooms.CharacterEdit
 
         private void OnAnyValueChanged()
         {
-            if (!_initialized) return; 
+            if (!_initialized) return;
 
-            PlayerDisplay.ApplyAvatar(BuildAvatarData());
+            NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerDisplay>().Preview(BuildAvatarData());
         }
 
         private AvatarData BuildAvatarData() => new AvatarData
@@ -146,7 +146,7 @@ namespace Rooms.CharacterEdit
                 _hair.value = Mathf.Clamp(avatar.HairID, 0, _hairMax);
                 _haircolor.value = Mathf.Clamp(avatar.HairColorID, 0, _hairColorMax);
 
-                PlayerDisplay.ApplyAvatar(avatar);
+                NetworkManager.Singleton.LocalClient.PlayerObject.GetComponent<PlayerDisplay>().Preview(avatar);
                 _initialized = true;
             }
             else
