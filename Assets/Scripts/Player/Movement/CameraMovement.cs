@@ -56,7 +56,7 @@ namespace Player.Global
             );
 
             // Snap if close enough
-            if (Vector3.Distance(_worldPosition, targetWorldPos) < _snapThreshold)
+            if (Vector3.Distance(_worldPosition, targetWorldPos) < _snapThreshold || Vector3.Distance(_worldPosition, targetWorldPos) >= 4f)
                 _worldPosition = targetWorldPos;
 
             // Apply world position to transform

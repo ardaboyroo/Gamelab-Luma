@@ -6,7 +6,7 @@ namespace Minigames.Sprayway
     public class MinigameBootstrap : NetworkBehaviour
     {
         [SerializeField] private string introState = "Intro";
-        [SerializeField] private float duration = 6f;
+        [SerializeField] private float duration = 5.5f;
 
         // --------------------------------------------------------------------
 
@@ -22,11 +22,13 @@ namespace Minigames.Sprayway
 
             var global = playerObj.GetComponent<Player.Global.PlayerMovement>();
             var sprayway = playerObj.GetComponent<Minigames.Sprayway.PlayerMovement>();
+
             if (global != null) global.enabled = false;
             if (sprayway != null) sprayway.enabled = false;
 
             var animator = playerObj.GetComponent<Animator>();
             var introCtrl = playerObj.gameObject.AddComponent<IntroAnimatorController>();
+            
             introCtrl.Initialize(animator.runtimeAnimatorController, introState, duration);
 
             NotifyServerEnableSpraywayServerRpc();
@@ -46,9 +48,9 @@ namespace Minigames.Sprayway
             if (player == null)
                 return;
 
-            // Server switches to sprayway movement
             var global = player.GetComponent<Player.Global.PlayerMovement>();
             var sprayway = player.GetComponent<Minigames.Sprayway.PlayerMovement>();
+
             if (global != null) global.enabled = false;
             if (sprayway != null) sprayway.enabled = true;
         }
@@ -67,6 +69,7 @@ namespace Minigames.Sprayway
 
             var global = playerObj.GetComponent<Player.Global.PlayerMovement>();
             var sprayway = playerObj.GetComponent<Minigames.Sprayway.PlayerMovement>();
+
             if (sprayway != null) sprayway.enabled = false;
             if (global != null) global.enabled = true;
 
@@ -87,6 +90,7 @@ namespace Minigames.Sprayway
 
             var global = player.GetComponent<Player.Global.PlayerMovement>();
             var sprayway = player.GetComponent<Minigames.Sprayway.PlayerMovement>();
+
             if (sprayway != null) sprayway.enabled = false;
             if (global != null) global.enabled = true;
         }

@@ -3,7 +3,8 @@ using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine;
 
-namespace Networking.Playfab.Login {
+namespace Networking.Playfab.Login
+{
     public class StandardLogin : ILogin {
         public class StandardLoginParams {
             public string username;

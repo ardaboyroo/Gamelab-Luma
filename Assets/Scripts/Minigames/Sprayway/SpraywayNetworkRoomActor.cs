@@ -4,11 +4,18 @@ using UnityEngine;
 
 public class SpraywayNetworkRoomActor : BaseNetworkRoomActor
 {
+    private SpraywayGameManager _manager;
+
     public override void OnClientStart(ulong clientId)
     {
         base.OnClientStart(clientId);
 
-        NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.SetParent(GetComponent<NetworkRoom>().Container.transform);
+        if (_manager == null)
+        {
+            _manager = transform.parent.GetComponentInChildren<Minigames.Sprayway.SpraywayGameManager>(true);
+            _manager.Room = NetworkRoom.PlayerRoomMap[clientId];
+        }
+        _manager.SetUIClientRPC(clientId);
 
         MinigameBootstrap intro = FindActiveIntro();
         if (intro != null)
@@ -22,8 +29,6 @@ public class SpraywayNetworkRoomActor : BaseNetworkRoomActor
         MinigameBootstrap intro = FindActiveIntro();
         if (intro != null)
             intro.ReturnControlsClientRpc(clientId);
-
-        NetworkManager.Singleton.ConnectedClients[clientId].PlayerObject.transform.SetParent(gameObject.transform.root);
     }
 
     private MinigameBootstrap FindActiveIntro()

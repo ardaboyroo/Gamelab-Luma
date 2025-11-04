@@ -195,20 +195,28 @@ public class NetworkRoom : NetworkBehaviour
         if (!IsServer)
             return;
 
-        List<ulong> toRemove = new();
-
-        foreach (var clientId in Members)
+        try
         {
-            if (!NetworkManager.Singleton.ConnectedClientsIds.Contains(clientId))
-            {
-                toRemove.Add(clientId);
-                continue;
-            }
-            _actor?.OnClientUpdate(clientId);
-        }
 
-        foreach (var clientId in toRemove)
-            RemoveMember(clientId, clientIsOffline: true);
+            List<ulong> toRemove = new();
+
+            foreach (var clientId in Members)
+            {
+                if (!NetworkManager.Singleton.ConnectedClientsIds.Contains(clientId))
+                {
+                    toRemove.Add(clientId);
+                    continue;
+                }
+                _actor?.OnClientUpdate(clientId);
+            }
+
+            foreach (var clientId in toRemove)
+                RemoveMember(clientId, clientIsOffline: true);
+        }
+        catch
+        {
+
+        }
     }
 
     public override void OnNetworkSpawn()

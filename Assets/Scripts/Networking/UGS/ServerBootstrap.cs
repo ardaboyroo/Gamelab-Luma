@@ -6,8 +6,11 @@ using System.Text;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Networking.Playfab;
-using UnityEditor.PackageManager.Requests;
 using Unity.Netcode.Transports.UTP;
+using UnityEngine.Assertions.Must;
+using Networking.Playfab.Database;
+
+
 
 
 
@@ -72,27 +75,23 @@ public class ServerBootstrap : MonoBehaviour
 
             Debug.Log($"[SERVER] Connection request: UnityID={unityPlayerId} PlayFabID={playfabId}");
 
-#if !AUTH_PASS_SECRET_1C92B72I001 // to remove -------------------------------------------------------------------------------------------------------------------------
-            var nickname = await ValidatePlayerAsync(unityPlayerId, playfabId); 
-            if (nickname == null) 
+            profile = await ValidatePlayerAsync(unityPlayerId, playfabId);
+
+            if (profile.Nickname == "") 
             { 
                 Debug.LogWarning($"[SERVER] Player {playfabId} rejected (not linked / invalid).");
                 response.Approved = false; 
                 response.Reason = "PlayFab validation failed."; 
                 return;
             }
-            profile.Nickname = nickname;
-#else
-            var nickname = $"player_{request.ClientNetworkId}";
-            profile.Nickname = nickname; 
-#endif
+
             _cachedProfiles[request.ClientNetworkId] = profile;
 
             response.Approved = true; 
             response.CreatePlayerObject = true;
             response.Pending = false;
             
-            Debug.Log($"[SERVER] Approved {nickname}");
+            Debug.Log($"[SERVER] Approved {profile.Nickname}");
         } 
         catch (Exception ex) 
         { 
@@ -103,7 +102,17 @@ public class ServerBootstrap : MonoBehaviour
     private void OnClientConnected(ulong clientId)
     {
         Debug.Log($"[SERVER] Client {clientId} Connected");
+
         NetworkRoom.ExistingRooms["hub"].GetOrCreateInstance().AddMember(clientId);
+
+        if (!_cachedProfiles[clientId].Avatar.Initialized)
+        {
+            NetworkRoomPortal.ForceAssign(clientId, "character_edit", 0);
+        }
+        else
+        {
+            NetworkRoomPortal.ForceAssign(clientId, "hub", 0);
+        }
     }
 
     private void OnClientDisconnect(ulong clientId)
@@ -112,30 +121,33 @@ public class ServerBootstrap : MonoBehaviour
             Debug.Log($"[SERVER] {clientId} disconnected and removed from cache.");
     }
 
-    private async Task<string> ValidatePlayerAsync(string unityPlayerId, string playfabId)
+    private async Task<UserModels.Display.PlayerProfile> ValidatePlayerAsync(string unityPlayerId, string playfabId)
     {
+        var failed = new UserModels.Display.PlayerProfile("", default);
+        var result = new UserModels.Display.PlayerProfile("", default);
+
         if (string.IsNullOrEmpty(playfabId) || string.IsNullOrEmpty(unityPlayerId))
-            return null;
+            return failed;
 
         try
         {
             var userData = await PlayFabWrapperAPI.GetUserDataAsync(new GetUserDataRequest
             {
                 PlayFabId = playfabId,
-                Keys = new List<string> { "UnityPlayerId", "Nickname" }
+                Keys = new List<string> { "UnityPlayerId", "Nickname", "AvatarData" }
             });
 
             if (userData?.Data == null)
             {
                 Debug.LogWarning($"[SERVER] Could not get user data for {playfabId}");
-                return null;
+                return failed;
             }
 
             if (!userData.Data.TryGetValue("UnityPlayerId", out var stored) ||
                 stored?.Value != unityPlayerId)
             {
                 Debug.LogWarning($"[SERVER] UnityPlayerId mismatch for {playfabId}");
-                return null;
+                return failed;
             }
 
             string nickname;
@@ -155,12 +167,21 @@ public class ServerBootstrap : MonoBehaviour
                 });
             }
 
-            return nickname;
+            UserModels.Display.AvatarData avatar = default;
+            if (userData.Data.TryGetValue("AvatarData", out var avatarData) && !string.IsNullOrEmpty(n?.Value))
+            {
+                avatar = JsonUtility.FromJson<UserModels.Display.AvatarData>(avatarData.Value);
+            }
+
+            result.Nickname = nickname;
+            result.Avatar = avatar;
+
+            return result;
         }
         catch (Exception ex)
         {
             Debug.LogError($"[SERVER] ValidatePlayerAsync failed: {ex.Message}");
-            return null;
+            return failed;
         }
     }
 
@@ -170,6 +191,6 @@ public class ServerBootstrap : MonoBehaviour
     }
 
     public static UserModels.Display.PlayerProfile GetProfileForID(ulong id) 
-        => _cachedProfiles.TryGetValue(id, out var profile) ? profile : new UserModels.Display.PlayerProfile("Unknown");
+        => _cachedProfiles.TryGetValue(id, out var profile) ? profile : new UserModels.Display.PlayerProfile("Unknown", default);
 }
 #endif

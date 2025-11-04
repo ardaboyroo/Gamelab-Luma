@@ -8,7 +8,7 @@ public class PortalClientUI : MonoBehaviour
     private Label _title;
     private Label _desc;
     private Button _soloBtn, _partyBtn, _fullBtn;
-    private Portal _currentPortal;
+    private NetworkRoomPortal _currentPortal;
     private string _roomName;
 
     private void Awake()
@@ -29,7 +29,7 @@ public class PortalClientUI : MonoBehaviour
         _fullBtn.clicked += () => SelectMode(2);
     }
 
-    public static void Show(Portal portal, string roomName, string desc, bool allowSingle, bool allowParty, bool allowFull)
+    public static void Show(NetworkRoomPortal portal, string roomName, string desc, bool allowSingle, bool allowParty, bool allowFull)
     {
         _instance._roomName = roomName;
         _instance._currentPortal = portal;
@@ -50,9 +50,9 @@ public class PortalClientUI : MonoBehaviour
 
         switch (mode)
         {
-            case 0: _currentPortal.RequestEnterServerRpc((byte)Portal.EntryMode.Single); break;
-            case 1: _currentPortal.RequestEnterServerRpc((byte)Portal.EntryMode.Party); break;
-            case 2: _currentPortal.RequestEnterServerRpc((byte)Portal.EntryMode.Full); break;
+            case 0: _currentPortal.RequestEnterServerRpc((byte)NetworkRoomPortal.EntryMode.Single); break;
+            case 1: _currentPortal.RequestEnterServerRpc((byte)NetworkRoomPortal.EntryMode.Party); break;
+            case 2: _currentPortal.RequestEnterServerRpc((byte)NetworkRoomPortal.EntryMode.Full); break;
         }
     }
 }

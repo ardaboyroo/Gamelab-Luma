@@ -38,15 +38,15 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Eye:
-        m_Texture: {fileID: 2800000, guid: 6e42e2e8b06244949ae0e46de04a0e4b, type: 3}
+        m_Texture: {fileID: 2800000, guid: 938ca8f4aa9e6da41a7e7774e3541e8f, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Eyebrows:
-        m_Texture: {fileID: 2800000, guid: b5f3a228981637240822c8b895232d3f, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1b2b7a56f7437ed489969f6714e7bab7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Mouth:
-        m_Texture: {fileID: 2800000, guid: 695262a21e140a94f80057d3d7388db4, type: 3}
+        m_Texture: {fileID: 2800000, guid: 9ef214c99f555a546963d870f50f00fd, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Skin:
@@ -74,15 +74,15 @@ Material:
     - _QueueOffset: 0
     m_Colors:
     - _Eye_Color: {r: 0, g: 0, b: 0, a: 0}
-    - _Eye_Color_A: {r: 0.8584906, g: 0.5943319, b: 0, a: 0}
+    - _Eye_Color_A: {r: 0.8018868, g: 0.24586153, b: 0.664545, a: 0}
     - _Eye_Color_B: {r: 0, g: 0.02352953, b: 1, a: 0}
-    - _Eye_Position: {r: -0.03, g: 0, b: 0, a: 0}
-    - _Eye_Sclera: {r: 0.876246, g: 0.8980982, b: 0.9150943, a: 0}
-    - _Eyebrow_Position: {r: 0.03, g: 0, b: 0, a: 0}
+    - _Eye_Position: {r: 0.03, g: 0, b: 0, a: 0}
+    - _Eye_Sclera: {r: 0.8443396, g: 0.93773586, b: 1, a: 0}
+    - _Eyebrow_Position: {r: 0.09, g: 0, b: 0, a: 0}
     - _Lipstick: {r: 0.6698113, g: 0.40757385, b: 0.40757385, a: 0}
     - _MouthPosition: {r: 0, g: 0, b: 0, a: 0}
-    - _Mouth_Position: {r: -0.12, g: 0.02, b: 0, a: 0}
-    - _Outlines: {r: 0.15828943, g: 0.10145959, b: 0.2264151, a: 0}
+    - _Mouth_Position: {r: -0.11, g: 0.02, b: 0, a: 0}
+    - _Outlines: {r: 0, g: 0, b: 0, a: 0}
     - _Teeth: {r: 0.990566, g: 0.9695398, b: 0.88309896, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

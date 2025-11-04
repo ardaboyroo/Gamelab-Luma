@@ -29,8 +29,10 @@ public class PendingParty
     }
 }
 
-public class Portal : NetworkBehaviour
+public class NetworkRoomPortal : NetworkBehaviour
 {
+    public static NetworkRoomPortal _randomInstance;
+
     public enum EntryMode : byte { Single, Party, Full }
 
     [SerializeField] private string _roomName;
@@ -44,6 +46,8 @@ public class Portal : NetworkBehaviour
 
     private void Awake()
     {
+        _randomInstance = this;
+
         if (!IsServer)
             return;
 
@@ -133,6 +137,42 @@ public class Portal : NetworkBehaviour
         PortalClientUI.Show(this, roomName, description, allowSingle, allowParty, allowFull);
     }
 
+    public static void ForceAssign(ulong clientId, string roomName, byte entranceID)
+    {
+        if (!NetworkManager.Singleton.ConnectedClients.TryGetValue(clientId, out var client))
+            return;
+
+        var netObj = client.PlayerObject;
+
+        if (NetworkRoom.ExistingRooms.TryGetValue(roomName.ToLower(), out var roomInstances))
+        {
+            var nextRoom = roomInstances.GetOrCreateInstance();
+
+            var target = nextRoom.Entrances[entranceID];
+
+            if (netObj.TryGetComponent<NetworkTransform>(out var netTransform))
+                netTransform.Teleport(target.position, target.rotation, netObj.transform.localScale);
+            else
+                netObj.transform.SetPositionAndRotation(target.position, target.rotation);
+
+            _randomInstance.ForceClientTeleportClientRpc(target.position, target.rotation, netObj.OwnerClientId);
+
+            if (NetworkRoom.PlayerRoomMap.TryGetValue(netObj.OwnerClientId, out NetworkRoom previousRoom))
+            {
+                previousRoom.RemoveMember(netObj.OwnerClientId);
+                nextRoom.AddMember(netObj.OwnerClientId);
+            }
+            else // In this case player was never register to any of the rooms, so security breach is possible. -> Kick just in case.
+            {
+                nextRoom.AddMember(netObj.OwnerClientId);
+                //NetworkManager.Singleton.DisconnectClient(netObj.OwnerClientId);
+                Debug.LogError($"[SERVER] Player {netObj.OwnerClientId} was kicked due to possible security breach (Teleport attempt with no previous room registration)");
+            }
+        }
+        else
+            Debug.LogError($"[SERVER] Room {roomName} does not exist!");
+    }
+
     private void ValidatePendingParties()
     {
         List<PendingParty> toRemove = new();
@@ -162,6 +202,8 @@ public class Portal : NetworkBehaviour
             else
                 netObj.transform.SetPositionAndRotation(target.position, target.rotation);
 
+            //ForceClientTeleportClientRpc(target.position, target.rotation, netObj.OwnerClientId);
+
             if (NetworkRoom.PlayerRoomMap.TryGetValue(netObj.OwnerClientId, out NetworkRoom previousRoom))
             {
                 previousRoom.RemoveMember(netObj.OwnerClientId);
@@ -171,7 +213,7 @@ public class Portal : NetworkBehaviour
             {
                 nextRoom.AddMember(netObj.OwnerClientId);
                 //NetworkManager.Singleton.DisconnectClient(netObj.OwnerClientId);
-                //Debug.LogError($"[SERVER] Player {netObj.OwnerClientId} was kicked due to possible security breach (Teleport attempt with no previous room registration)");
+                Debug.LogError($"[SERVER] Player {netObj.OwnerClientId} was kicked due to possible security breach (Teleport attempt with no previous room registration)");
             }
         }
         else
@@ -199,5 +241,16 @@ public class Portal : NetworkBehaviour
     private void TeleportParty(Party party)
     {
 
+    }
+
+    [ClientRpc]
+    private void ForceClientTeleportClientRpc(Vector3 pos, Quaternion rot, ulong targetClientId)
+    {
+        if (NetworkManager.Singleton.LocalClientId != targetClientId)
+            return;
+
+        var player = NetworkManager.Singleton.LocalClient?.PlayerObject;
+        if (player != null)
+            player.transform.SetPositionAndRotation(pos, rot);
     }
 }
