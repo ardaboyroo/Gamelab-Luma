@@ -2,12 +2,8 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 3
-  tags:
-  - Container
-  - Portals
-  - Entrances
-  - Instancer
+  serializedVersion: 2
+  tags: []
   layers:
   - Default
   - TransparentFX
@@ -15,32 +11,32 @@ TagManager:
   - 
   - Water
   - UI
-  - Room_1
-  - Room_2
-  - Room_3
-  - Room_4
-  - Room_5
-  - Room_6
-  - Room_7
-  - Room_8
-  - Room_9
-  - Room_10
-  - Room_11
-  - Room_12
-  - Room_13
-  - Room_14
-  - Room_15
-  - Room_16
-  - Room_17
-  - Room_18
-  - Room_19
-  - Room_20
-  - Room_21
-  - Room_22
-  - Room_23
-  - Room_24
-  - Room_25
-  - Room_26
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
   m_SortingLayers:
   - name: Default
     uniqueID: 0
@@ -54,3 +50,27 @@ TagManager:
   - Light Layer 5
   - Light Layer 6
   - Light Layer 7
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
