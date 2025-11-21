@@ -1,0 +1,50 @@
+﻿using UnityEngine;
+
+public class DialoguePlayerState : PlayerState
+{
+    [Header("Rotate Toward Camera")]
+    [SerializeField] private float _rotateSpeed = 180f;
+
+    private Transform _player;
+    private Transform _camera;
+
+    private bool _active;
+
+    public override void OnEnter()
+    {
+        _camera = Camera.main.transform;
+        _player = transform;
+
+        _active = true;
+    }
+
+    public override void OnExit()
+    {
+        _active = false;
+    }
+
+    private void Update()
+    {
+        if (!_active || _camera == null)
+            return;
+
+        RotateToCamera();
+    }
+
+    private void RotateToCamera()
+    {
+        Vector3 dir = _camera.position - _player.position;
+        dir.y = 0f;
+
+        if (dir.sqrMagnitude < 0.01f)
+            return;
+
+        Quaternion targetRot = Quaternion.LookRotation(dir.normalized, Vector3.up);
+
+        _player.rotation = Quaternion.RotateTowards(
+            _player.rotation,
+            targetRot,
+            _rotateSpeed * Time.deltaTime
+        );
+    }
+}

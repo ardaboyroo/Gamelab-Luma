@@ -1,0 +1,12 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; top: auto; left: auto; position: absolute; bottom: 0%; background-color: rgb(255, 255, 255); background-image: none; right: auto; width: 813px; align-self: center; height: 559px; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+        <ui:VisualElement style="flex-grow: 0; background-color: rgb(171, 171, 171); -unity-background-scale-mode: stretch-to-fill; top: 1.5%; left: 0; bottom: 78px; right: -24px; flex-basis: auto; flex-shrink: 0; width: 98%; height: 35%; border-top-left-radius: 10px; border-top-right-radius: 10px; align-self: center;" />
+        <ui:VisualElement style="flex-grow: 0; background-color: rgb(255, 255, 255); -unity-background-scale-mode: stretch-to-fill; top: 4px; left: 7px; bottom: 63px; right: -24px; flex-basis: auto; flex-shrink: 0; width: 98%; height: 45%;">
+            <ui:Label text="Sprayway - Graffiti-Spraying Run!" style="-unity-text-align: upper-center; font-size: 30%; height: 15%; width: 100%; background-size: 163% 100%; top: 4%;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 0; background-color: rgb(255, 255, 255); -unity-background-scale-mode: stretch-to-fill; top: 4px; left: 7px; bottom: 63px; right: -24px; flex-basis: auto; flex-shrink: 0; width: 98%; height: 15%; flex-direction: row; align-items: stretch; justify-content: space-around; align-self: stretch;">
+            <ui:Button text="Close" name="close-btn" style="-unity-text-align: middle-center; width: 40%; height: auto; font-size: 24%; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" />
+            <ui:Button text="Start Activity" name="start-btn" style="width: 40%; font-size: 24%; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; border-top-right-radius: 10px; border-top-left-radius: 10px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

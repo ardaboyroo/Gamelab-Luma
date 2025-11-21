@@ -18,8 +18,8 @@ public class WorldMovement : MonoBehaviour
 
     private void Start()
     {
-        if (_rigidbody == null)
-            _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody = GetComponent<Rigidbody>();
+        _rigidbody.freezeRotation = true;
 
         _targetPosition = transform.position;
         _hasTarget = false;
@@ -42,30 +42,46 @@ public class WorldMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!_hasTarget || _rigidbody == null)
+        if (_rigidbody == null)
             return;
 
         Vector3 toTarget = _targetPosition - transform.position;
         toTarget.y = 0f;
 
         float distSq = toTarget.sqrMagnitude;
+        bool closeEnough = distSq < 0.1f;
 
+        if (closeEnough)
+        {
+            // --- FACE 180 DEGREES WHILE IDLING ---
+            // Choose your idle facing direction (world forward or backward)
+            Vector3 idleDirection = -Vector3.forward;   // 180° from world forward
 
-        if (distSq < 0.1f)
-            return;
+            Quaternion desiredIdleRotation = Quaternion.LookRotation(idleDirection, Vector3.up);
+            Quaternion newIdleRot = Quaternion.RotateTowards(
+                _rigidbody.rotation,
+                desiredIdleRotation,
+                _rotationSpeed * Time.fixedDeltaTime
+            );
 
-        // Rotate towards target
-        Quaternion desiredRotation = Quaternion.LookRotation(toTarget.normalized, Vector3.up);
+            _rigidbody.MoveRotation(newIdleRot);
+            return; // stop movement entirely
+        }
+
+        // — NORMAL MOVEMENT (when not close) —
+        Vector3 normalized = toTarget.normalized;
+
+        Quaternion desiredRotation = Quaternion.LookRotation(normalized, Vector3.up);
         Quaternion newRotation = Quaternion.RotateTowards(
             _rigidbody.rotation,
             desiredRotation,
             _rotationSpeed * Time.fixedDeltaTime
         );
+
         _rigidbody.MoveRotation(newRotation);
 
-        // Move forward only if not yet close
-        Vector3 newPosition = _rigidbody.position + transform.forward * _moveSpeed * Time.fixedDeltaTime;
-        _rigidbody.MovePosition(newPosition);
+        Vector3 move = transform.forward * _moveSpeed * Time.fixedDeltaTime;
+        _rigidbody.MovePosition(_rigidbody.position + move);
     }
 
 #if UNITY_EDITOR
