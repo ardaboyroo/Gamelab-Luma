@@ -120,4 +120,4 @@ MonoBehaviour:
   _progressBar: {fileID: 0}
   _fillPerSecond: 0.05
   _turnSpeed: 720
-  _descendAmount: 0.33
+  _descendAmount: 0.4
