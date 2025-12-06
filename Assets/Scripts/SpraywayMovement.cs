@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(Rigidbody))]
 public class SpraywayMovement : MonoBehaviour
 {
     [Header("Wall Orientation")]
@@ -42,9 +41,11 @@ public class SpraywayMovement : MonoBehaviour
     // input buffer from Update ? used in FixedUpdate
     private bool _wantsThrust;
     private bool _isSpraying;
+    private bool _stopped;
 
     private void Awake()
     {
+        _stopped = false;
         _rb = GetComponent<Rigidbody>();
         _rb.useGravity = false;                      // we do custom gravity
         _rb.constraints = RigidbodyConstraints.FreezeRotation;  // no spinning
@@ -60,6 +61,9 @@ public class SpraywayMovement : MonoBehaviour
 
     private void Update()
     {
+        if (_stopped)
+            return;
+
         // raw input (replace with your input system if needed)
         _wantsThrust = Input.GetMouseButton(0);
 
@@ -96,6 +100,13 @@ public class SpraywayMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_stopped)
+        {
+            _rb.linearVelocity = Vector3.zero;
+            return;
+        }
+
+
         if (_wall == null || _rb == null)
             return;
 
@@ -193,5 +204,8 @@ public class SpraywayMovement : MonoBehaviour
     {
         _sprayParticles.transform.parent.GetComponent<Renderer>().enabled = false;
     }
+
+    public void Stop() => _stopped = true;
+    public void Ressurect() => _stopped = false;
 
 }

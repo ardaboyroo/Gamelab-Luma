@@ -1,0 +1,11 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0.75);">
+        <ui:VisualElement style="flex-grow: 1;">
+            <ui:Label text="Game Over" style="-unity-text-align: lower-center; font-size: 50%; height: 45%; width: 100%; background-size: 163% 100%; top: 0%; color: rgb(255, 0, 0);" />
+            <ui:VisualElement style="flex-grow: 0; background-color: rgba(255, 255, 255, 0); -unity-background-scale-mode: stretch-to-fill; top: 5%; left: 0; bottom: 554px; right: 0; flex-basis: auto; flex-shrink: 0; width: 98%; height: 12%; flex-direction: column-reverse; align-items: center; justify-content: space-around; align-self: stretch;">
+                <ui:Button text="Close" name="close-btn" style="-unity-text-align: middle-center; width: 40%; height: 45%; font-size: 24%; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;" />
+                <ui:Button text="Restart" name="restart-btn" style="width: 40%; font-size: 24%; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; border-top-right-radius: 10px; border-top-left-radius: 10px; height: 45%;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -118,6 +118,6 @@ MonoBehaviour:
   _maxHeight: 50
   _sprayParticles: {fileID: 0}
   _progressBar: {fileID: 0}
-  _fillPerSecond: 0.05
+  _fillPerSecond: 0.025
   _turnSpeed: 720
   _descendAmount: 0.4
