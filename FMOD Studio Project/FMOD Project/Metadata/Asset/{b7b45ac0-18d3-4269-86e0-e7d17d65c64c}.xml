@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="EncodableAsset" id="{b7b45ac0-18d3-4269-86e0-e7d17d65c64c}">
+		<property name="assetPath">
+			<value>SprayWay_Music/FILL/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{478c8e0b-d21f-49cc-b65c-8540961098a5}</destination>
+		</relationship>
+	</object>
+</objects>

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{38d08c9b-5240-4425-a0ad-e4e41d0fab2d}">
 		<property name="assetPath">
-			<value>Exploration_Theme_City.ogg</value>
+			<value>Exploration_THeme/Exploration_Theme_City.ogg</value>
 		</property>
 		<property name="isStreaming">
 			<value>true</value>
