@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -61,8 +62,10 @@ public class ActivityPortal : MonoBehaviour
         }
     }
 
+        
     private void ShowUI()
     {
+        // Put Low-Pass Filter
         if (_uiDocument == null) return;
         var root = _uiDocument.rootVisualElement;
         root.style.display = DisplayStyle.Flex;
@@ -76,6 +79,7 @@ public class ActivityPortal : MonoBehaviour
 
     private void HideUI()
     {
+        // Remove Low-Pass Filter
         if (_uiDocument == null) return;
         var root = _uiDocument.rootVisualElement;
 
@@ -89,6 +93,12 @@ public class ActivityPortal : MonoBehaviour
     {
         HideUI();
         _activity.StartActivity();
+
+        FmodHipHop.Instance.gameIsRunning = true;
+        FmodHipHop.Instance.SetIntensity(100);
+        FmodHipHop.Instance.SetGameState(1); // Boom Bap
+        FmodHipHop.Instance.SetGameEnd(2);   // In Game
+
     }
 
     private void OnCloseClicked()

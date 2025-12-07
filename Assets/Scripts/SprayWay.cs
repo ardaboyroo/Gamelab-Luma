@@ -43,6 +43,7 @@ public class SprayWay : Activity
 
     protected override void OnStart()
     {
+        // Start Music 
         _finished = false;
 
         GameEndCamera.SetActive(false);
@@ -172,6 +173,8 @@ public class SprayWay : Activity
 
     public void GameOver()
     {
+        FmodHipHop.Instance.SetGameEnd(1); // lose
+        FmodHipHop.Instance.gameIsRunning = false;
         if (_finished)
             return;
         StartCoroutine(ShowGraffiti(false));
@@ -179,6 +182,8 @@ public class SprayWay : Activity
 
     public void GameWin()
     {
+        FmodHipHop.Instance.SetGameEnd(0); // win
+        FmodHipHop.Instance.gameIsRunning = false;
         if (_finished)
             return;
         StartCoroutine(ShowGraffiti(true));
@@ -257,6 +262,8 @@ public class SprayWay : Activity
 
     private void OnRestartClicked()
     {
+        //FmodHipHop.Instance.ResetToIdleHipHop();
+        //FmodHipHop.Instance.gameIsRunning = false;
         HideUI();
         Restart();
     }

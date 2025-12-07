@@ -15,14 +15,22 @@
 		<property name="maximum">
 			<value>100</value>
 		</property>
-		<property name="isGlobal">
-			<value>true</value>
-		</property>
 		<property name="initialValue">
 			<value>0</value>
 		</property>
 		<property name="isExposedRecursively">
 			<value>false</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{a4fc4407-377f-4d38-abd0-adf16084a15c}</destination>
+		</relationship>
+	</object>
+	<object class="SeekModulator" id="{a4fc4407-377f-4d38-abd0-adf16084a15c}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>cursorPosition</value>
+		</property>
+		<property name="speedAscending">
+			<value>0.20999999344348907</value>
 		</property>
 	</object>
 </objects>
