@@ -18,6 +18,8 @@ public class PlayerStateMachine : MonoBehaviour
     private PlayerState _pendingState;
     private bool _isApplyingState;
 
+    public PlayerState Current => _currentState;
+
     private static readonly string[] _ignoredTransformProps =
     {
         "m_LocalPosition",

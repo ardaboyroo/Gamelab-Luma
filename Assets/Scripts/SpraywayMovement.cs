@@ -42,6 +42,7 @@ public class SpraywayMovement : MonoBehaviour
     private bool _wantsThrust;
     private bool _isSpraying;
     private bool _stopped;
+    private bool _isPlayingAudioSpray;
 
     private void Awake()
     {
@@ -180,6 +181,15 @@ public class SpraywayMovement : MonoBehaviour
         {
             var emission = _sprayParticles.emission;
             emission.enabled = _isSpraying;
+
+            if(_isSpraying == true && _isPlayingAudioSpray == false)
+            {
+                StartSprayAudio();
+            }
+            else if (_isSpraying == false && _isPlayingAudioSpray == true)
+            {
+                StopSprayAudio();
+            }
         }
     }
 
@@ -205,7 +215,22 @@ public class SpraywayMovement : MonoBehaviour
         _sprayParticles.transform.parent.GetComponent<Renderer>().enabled = false;
     }
 
-    public void Stop() => _stopped = true;
+    public void Stop()
+    {
+        _isSpraying = false;
+        _stopped = true;
+        FixedUpdate();
+    }
     public void Ressurect() => _stopped = false;
+
+    private void StartSprayAudio()
+    {
+        _isPlayingAudioSpray = true;
+    }
+
+    private void StopSprayAudio()
+    {
+        _isPlayingAudioSpray = false;
+    }
 
 }

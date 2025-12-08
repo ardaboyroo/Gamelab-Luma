@@ -49,6 +49,7 @@ public class GuideDogBehaviour : MonoBehaviour
 
     void Update()
     {
+        if (PlayerStateMachine.Instance.Current is not StandardPlayerState) return;
         if (player == null) return;
         if (waypoints == null || waypoints.Length == 0) return;
 
