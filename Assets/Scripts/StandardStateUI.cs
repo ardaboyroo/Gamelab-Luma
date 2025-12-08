@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,6 +12,10 @@ public class StandardStateUI : MonoBehaviour
 
     private Vector3 _bufferedPosition;
     [SerializeField] private Vector3 _characterEdit;
+
+    [SerializeField] private EventReference click;
+
+    [SerializeField] private EventReference confirm;
 
     private bool _charedit;
 
@@ -75,6 +80,8 @@ public class StandardStateUI : MonoBehaviour
         back.clicked += MenuHideUI;
 
         PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<DialoguePlayerState>());
+
+        PlayClick();
     }
 
     private void MenuHideUI()
@@ -90,6 +97,8 @@ public class StandardStateUI : MonoBehaviour
         root.style.display = DisplayStyle.None;
 
         PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<StandardPlayerState>());
+
+        PlayClick();
     }
 
     private void CharacterEditShowUI()
@@ -111,6 +120,8 @@ public class StandardStateUI : MonoBehaviour
         done.clicked += CharacterEditHideUI;
 
         PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<DialoguePlayerState>());
+
+        PlayClick();
     }
 
     private void CharacterEditHideUI()
@@ -124,5 +135,10 @@ public class StandardStateUI : MonoBehaviour
         root.Q<Button>("done-btn").clicked -= CharacterEditHideUI;
 
         root.style.display = DisplayStyle.None;
+
+        PlayConfirm();
     }
+
+    private void PlayClick() => RuntimeManager.PlayOneShot(click);
+    private void PlayConfirm() => RuntimeManager.PlayOneShot(confirm);
 }

@@ -272,6 +272,9 @@ public class SprayWay : Activity
     {
         _gameplayRoot.SetActive(false);
 
+        _finished = false;
+        StopActivity();
+
         var sprayParticles = PlayerStateMachine.Instance.transform.Find("Model Container").Find("BaseMesh").Find("Spraycan").Find("SprayWayParticleSystem").GetComponent<ParticleSystem>();
         sprayParticles.transform.parent.GetComponent<Renderer>().enabled = false;
 

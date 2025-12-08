@@ -226,7 +226,10 @@ public class SpraywayMovement : MonoBehaviour
     {
         _isSpraying = false;
         _stopped = true;
-        FixedUpdate();
+
+        var emission = _sprayParticles.emission;
+        emission.enabled = false;
+        StopSprayAudio();
     }
     public void Ressurect() => _stopped = false;
 
