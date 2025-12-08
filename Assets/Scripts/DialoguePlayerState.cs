@@ -5,6 +5,10 @@ public class DialoguePlayerState : PlayerState
     [Header("Rotate Toward Camera")]
     [SerializeField] private float _rotateSpeed = 180f;
 
+    [SerializeField]
+    private string SnapshotPath = "snapshot:/PauseMenu";
+    private FMOD.Studio.EventInstance _pauseMenuSnapshot;
+
     private Transform _player;
     private Transform _camera;
 
@@ -16,11 +20,16 @@ public class DialoguePlayerState : PlayerState
         _player = transform;
 
         _active = true;
+
+
+        StartSnapshot();
     }
 
     public override void OnExit()
     {
         _active = false;
+
+        StopSnapshot();
     }
 
     private void Update()
@@ -46,5 +55,22 @@ public class DialoguePlayerState : PlayerState
             targetRot,
             _rotateSpeed * Time.deltaTime
         );
+    }
+
+    public void StartSnapshot()
+    {
+        _pauseMenuSnapshot = FMODUnity.RuntimeManager.CreateInstance(SnapshotPath);
+        _pauseMenuSnapshot.start();
+        Debug.Log("[FMOD] Snapshot started: " + SnapshotPath);
+    }
+
+    public void StopSnapshot()
+    {
+        _pauseMenuSnapshot.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        _pauseMenuSnapshot.release();
+
+        Debug.Log("[FMOD] Snapshot stopped: " + SnapshotPath);
+
+        _pauseMenuSnapshot = default;
     }
 }

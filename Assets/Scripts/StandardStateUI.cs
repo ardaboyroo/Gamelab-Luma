@@ -79,7 +79,7 @@ public class StandardStateUI : MonoBehaviour
         charedit.clicked += CharacterEditShowUI;
         back.clicked += MenuHideUI;
 
-        PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<DialoguePlayerState>());
+        PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<MenuPlayerState>());
 
         PlayClick();
     }
@@ -119,7 +119,7 @@ public class StandardStateUI : MonoBehaviour
 
         done.clicked += CharacterEditHideUI;
 
-        PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<DialoguePlayerState>());
+        PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<MenuPlayerState>());
 
         PlayClick();
     }
