@@ -121,3 +121,10 @@ MonoBehaviour:
   _fillPerSecond: 0.025
   _turnSpeed: 720
   _descendAmount: 0.4
+  sprayEvent:
+    Guid:
+      Data1: -1663380741
+      Data2: 1256802860
+      Data3: -2105400423
+      Data4: 586855507
+    Path: event:/Mini-Game/Spraying

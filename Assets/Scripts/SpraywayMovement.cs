@@ -31,6 +31,9 @@ public class SpraywayMovement : MonoBehaviour
     [Header("Auto Descend")]
     [SerializeField] private float _descendAmount = 0.25f; // how much to drop per turn
 
+    [SerializeField] private FMODUnity.EventReference sprayEvent;
+    private FMOD.Studio.EventInstance sprayInstance;
+
     private bool _isTurning;
     private Quaternion _targetRotation;
 
@@ -58,7 +61,11 @@ public class SpraywayMovement : MonoBehaviour
     public void SetSprayWay(SprayWay sprayWay) => _sprayWayActivity = sprayWay;
 
     public void SetWall(Transform wall) => _wall = wall;
-    
+
+    private void Start()
+    {
+        sprayInstance = FMODUnity.RuntimeManager.CreateInstance(sprayEvent);
+    }
 
     private void Update()
     {
@@ -223,14 +230,21 @@ public class SpraywayMovement : MonoBehaviour
     }
     public void Ressurect() => _stopped = false;
 
+    // SPRAYYYYYY
     private void StartSprayAudio()
     {
         _isPlayingAudioSpray = true;
+        _isPlayingAudioSpray = true;
+        sprayInstance.setParameterByName("Spray", 1f);
+        sprayInstance.start();
     }
 
     private void StopSprayAudio()
     {
         _isPlayingAudioSpray = false;
+        sprayInstance.setParameterByName("Spray", 0f);
+        _isPlayingAudioSpray = false;
+
     }
 
 }

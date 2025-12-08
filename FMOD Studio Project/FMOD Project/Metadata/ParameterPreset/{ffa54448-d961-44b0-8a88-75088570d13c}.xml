@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="ParameterPreset" id="{ffa54448-d961-44b0-8a88-75088570d13c}">
+		<property name="name">
+			<value>Spray</value>
+		</property>
+		<relationship name="folder">
+			<destination>{185da51d-51e4-4254-9657-99556a9bb024}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{ccdc5ffb-48d4-4cc6-9081-97e0cabe10c8}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{ccdc5ffb-48d4-4cc6-9081-97e0cabe10c8}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
