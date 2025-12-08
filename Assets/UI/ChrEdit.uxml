@@ -1,0 +1,9 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; top: auto; left: auto; position: absolute; bottom: 0%; background-color: rgb(255, 255, 255); background-image: none; right: auto; width: 813px; align-self: center; height: 559px; border-top-left-radius: 16px; border-top-right-radius: 16px; justify-content: space-between; align-items: stretch;">
+        <ui:Button text="Done" name="done-btn" style="width: 15%; font-size: 24%; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; border-top-right-radius: 10px; border-top-left-radius: 10px; top: 1%; right: 0; white-space: pre; flex-direction: row; left: 84%;" />
+        <ui:VisualElement style="flex-grow: 0; background-color: rgb(171, 171, 171); -unity-background-scale-mode: stretch-to-fill; top: -13.5%; left: -8%; bottom: 0; right: 20%; flex-basis: auto; flex-shrink: 0; width: 82%; height: 9%; border-top-left-radius: 10px; border-top-right-radius: 10px; align-self: center;" />
+        <ui:VisualElement style="flex-grow: 0; height: 2px; background-color: rgb(140, 140, 140); flex-basis: auto; flex-shrink: 0; top: -19%;" />
+        <ui:VisualElement style="flex-grow: 0; background-color: rgb(226, 226, 226); -unity-background-scale-mode: stretch-to-fill; top: -23%; left: 7px; bottom: 63px; right: -24px; flex-basis: auto; flex-shrink: 0; width: 98%; height: 45%;" />
+        <ui:VisualElement style="flex-grow: 0; background-color: rgb(255, 255, 255); -unity-background-scale-mode: stretch-to-fill; top: 4px; left: 7px; bottom: 63px; right: -24px; flex-basis: auto; flex-shrink: 0; width: 98%; height: 15%; flex-direction: row; align-items: stretch; justify-content: space-around; align-self: stretch;" />
+    </ui:VisualElement>
+</ui:UXML>

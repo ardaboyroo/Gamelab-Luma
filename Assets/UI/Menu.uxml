@@ -1,0 +1,15 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement name="VisualElement" style="flex-grow: 1; top: auto; left: auto; position: absolute; bottom: 0; background-color: rgb(255, 255, 255); background-image: none; right: 0; width: 225px; align-self: center; height: 122px; border-top-left-radius: 16px; border-top-right-radius: 16px;">
+        <ui:VisualElement style="flex-grow: 0; background-color: rgb(255, 255, 255); -unity-background-scale-mode: stretch-to-fill; top: 14px; left: 0; bottom: 63px; right: 0; flex-basis: auto; flex-shrink: 0; width: 98%; height: 80%; flex-direction: row; align-items: stretch; justify-content: space-around; align-self: stretch;">
+            <ui:Button text="Back" name="back-btn" style="width: 83%; font-size: 24%; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; border-top-right-radius: 10px; border-top-left-radius: 10px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+    <ui:VisualElement style="flex-grow: 1; position: absolute; background-color: rgb(255, 255, 255); right: 10%; bottom: 20%; left: 10%; top: 10%; border-top-left-radius: 15px; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; border-top-right-radius: 15px;">
+        <ui:Label text="Menu" style="-unity-text-align: upper-center; top: 30px; font-size: 32%;" />
+        <ui:VisualElement style="flex-grow: 1; position: absolute; background-color: rgb(188, 188, 188); right: 0%; bottom: 0%; left: 0%; top: 10%; border-top-left-radius: 0; border-bottom-left-radius: 15px; border-bottom-right-radius: 15px; border-top-right-radius: 0; align-items: center;">
+            <ui:Button text="Profile" name="profile-btn" style="background-color: rgb(255, 255, 255); font-size: 28%; height: 8%; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; top: 2%; right: 0%; left: 0%; width: 90%;" />
+            <ui:Button text="Edit Character" name="chr-btn" style="background-color: rgb(255, 255, 255); font-size: 28%; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; border-top-right-radius: 10px; border-top-left-radius: 10px; height: 8%; top: 3%; width: 90%; -unity-text-align: middle-center; white-space: pre;" />
+            <ui:Button text="Audio" name="audio-btn" style="background-color: rgb(255, 255, 255); font-size: 28%; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; border-top-right-radius: 10px; border-top-left-radius: 10px; height: 8%; top: 4%; width: 90%;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

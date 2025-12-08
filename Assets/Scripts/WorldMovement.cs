@@ -25,6 +25,8 @@ public class WorldMovement : MonoBehaviour
         _hasTarget = false;
     }
 
+    public void NullifyTarget() => _targetPosition = transform.position;
+
     private void Update()
     {
         // Sample click on the floor
