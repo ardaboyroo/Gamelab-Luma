@@ -1,4 +1,5 @@
 using FMODUnity;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -111,7 +112,6 @@ public class StandardStateUI : MonoBehaviour
         _bufferedPosition = PlayerStateMachine.Instance.transform.position;
         PlayerStateMachine.Instance.transform.position = _characterEdit;
 
-        if (_chrEdit == null) return;
         var root = _chrEdit.rootVisualElement;
         root.style.display = DisplayStyle.Flex;
 
@@ -122,6 +122,8 @@ public class StandardStateUI : MonoBehaviour
         PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<MenuPlayerState>());
 
         PlayClick();
+
+        Debug.Log("Buffered position set to: " + _bufferedPosition);
     }
 
     private void CharacterEditHideUI()
@@ -129,7 +131,6 @@ public class StandardStateUI : MonoBehaviour
         _charedit = false;
         PlayerStateMachine.Instance.transform.position = _bufferedPosition;
 
-        if (_chrEdit == null) return;
         var root = _chrEdit.rootVisualElement;
 
         root.Q<Button>("done-btn").clicked -= CharacterEditHideUI;
@@ -137,6 +138,20 @@ public class StandardStateUI : MonoBehaviour
         root.style.display = DisplayStyle.None;
 
         PlayConfirm();
+
+        StartCoroutine(TeleportBack(_bufferedPosition));
+        Debug.Log("Buffered position set derived from: " + _bufferedPosition);
+    }
+
+    private IEnumerator TeleportBack(Vector3 pos)
+    {
+        float elapsedTime = 0f;
+        while (elapsedTime < 0.4f)
+        {
+            PlayerStateMachine.Instance.transform.position = _bufferedPosition;
+            yield return null;
+            elapsedTime += Time.deltaTime;
+        }
     }
 
     private void PlayClick() => RuntimeManager.PlayOneShot(click);

@@ -1,54 +1,103 @@
 <ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/UI/chrEdit.uss?fileID=7433441132597879392&amp;guid=a7a0bc4030a33004d8e3e1a255a3684b&amp;type=3#chrEdit" />
     <ui:VisualElement name="VisualElement" style="flex-grow: 1; top: auto; left: auto; position: absolute; bottom: 0%; background-color: rgb(255, 255, 255); background-image: none; right: auto; width: 813px; align-self: center; height: 559px; border-top-left-radius: 16px; border-top-right-radius: 16px; justify-content: flex-start; align-items: stretch;">
-        <ui:Button text="Done" name="done-btn" style="width: 15%; font-size: 24%; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; border-top-right-radius: 10px; border-top-left-radius: 10px; top: 1%; right: 0; white-space: pre; flex-direction: row; left: 84%;" />
-        <ui:VisualElement style="flex-grow: 0; background-color: rgb(171, 171, 171); -unity-background-scale-mode: stretch-to-fill; top: -8.5%; left: -8%; bottom: 0; right: 20%; flex-basis: auto; flex-shrink: 0; width: 82%; height: 9%; border-top-left-radius: 10px; border-top-right-radius: 10px; align-self: center;" />
-        <ui:VisualElement style="flex-grow: 0; height: 2px; background-color: rgb(140, 140, 140); flex-basis: auto; flex-shrink: 0; top: -8.5%;" />
+        <ui:VisualElement style="flex-grow: 0; background-color: rgb(171, 171, 171); -unity-background-scale-mode: stretch-to-fill; top: 1.5%; left: -8%; bottom: 0; right: 20%; flex-basis: auto; flex-shrink: 0; width: 82%; height: 9%; border-top-left-radius: 10px; border-top-right-radius: 10px; align-self: center;" />
+        <ui:VisualElement style="flex-grow: 0; height: 2px; background-color: rgb(140, 140, 140); flex-basis: auto; flex-shrink: 0; top: 2%;" />
     </ui:VisualElement>
-    <ui:TabView style="position: absolute; width: 92%; height: 33%; top: 65.7%; align-self: center; flex-shrink: 0;">
-        <ui:Tab label="Hair" focusable="true" style="width: 100%; height: 100%; flex-shrink: 0;">
-            <ui:GroupBox name="HairTypes" style="top: 7px;">
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
+    <ui:TabView style="position: relative; width: 92%; height: 33%; top: 63.8%; align-self: center; flex-shrink: 0; bottom: 0;">
+        <ui:Tab label="Hair" focusable="true" name="Hairs" style="width: 100%; height: 100%; flex-shrink: 0;">
+            <ui:GroupBox style="top: 7px; flex-direction: row; flex-wrap: wrap;">
+                <ui:Button text="Bald" name="hair_0" style="width: 100px; height: 80px;" />
+                <ui:Button text="1" name="hair_1" style="width: 100px; height: 80px;" />
+                <ui:Button text="2" name="hair_2" style="width: 100px; height: 80px;" />
+                <ui:Button text="3" name="hair_3" style="width: 100px; height: 80px;" />
+                <ui:Button text="4&#10;" name="hair_4" style="width: 100px; height: 80px;" />
+                <ui:Button text="5" name="hair_5" style="width: 100px; height: 80px;" />
+                <ui:Button text="6" name="hair_6" style="width: 100px; height: 80px;" />
+            </ui:GroupBox>
+            <ui:Label text="Color:" parse-escape-sequences="false" style="font-size: 24%; top: 20px; left: 9px; -unity-font-style: normal;" />
+            <ui:GroupBox name="GroupBox" style="top: 7px;">
+                <ui:Slider label="R" value="42" high-value="100" name="hair_r" />
+                <ui:Slider label="G" value="42" high-value="100" name="hair_g" />
+                <ui:Slider label="B" value="42" high-value="100" name="hair_b" />
             </ui:GroupBox>
         </ui:Tab>
-        <ui:Tab label="Eyes" closeable="false" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
-            <ui:GroupBox style="top: 7px;">
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
+        <ui:Tab label="Eyes" closeable="false" name="Eyes" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
+            <ui:GroupBox style="top: 7px; flex-direction: row; flex-wrap: wrap;">
+                <ui:Button text="Bald" name="eye_0" style="width: 100px; height: 80px;" />
+                <ui:Button text="1" name="eye_1" style="width: 100px; height: 80px;" />
+                <ui:Button text="2" name="eye_2" style="width: 100px; height: 80px;" />
+                <ui:Button text="3" name="eye_3" style="width: 100px; height: 80px;" />
+                <ui:Button text="4&#10;" name="eye_4" style="width: 100px; height: 80px;" />
+                <ui:Button text="5" name="eye_5" style="width: 100px; height: 80px;" />
+                <ui:Button text="7" name="eye_6" style="width: 100px; height: 80px;" />
+                <ui:Button text="8" name="eye_7" style="width: 100px; height: 80px;" />
+                <ui:Button text="9" name="eye_8" style="width: 100px; height: 80px;" />
+                <ui:Button text="10" name="eye_9" style="width: 100px; height: 80px;" />
+                <ui:Button text="11" name="eye_10" style="width: 100px; height: 80px;" />
+                <ui:Button text="12" name="eye_11" style="width: 100px; height: 80px;" />
+                <ui:Button text="13" name="eye_12" style="width: 100px; height: 80px;" />
+                <ui:Button text="14&#10;" name="eye_13" style="width: 100px; height: 80px;" />
+            </ui:GroupBox>
+            <ui:Label text="Color:" parse-escape-sequences="false" style="font-size: 24%; top: 20px; left: 9px; -unity-font-style: normal;" />
+            <ui:GroupBox name="GroupBox" style="top: 7px;">
+                <ui:Slider label="R" value="42" high-value="100" name="eye_r" />
+                <ui:Slider label="G" value="42" high-value="100" name="eye_g" />
+                <ui:Slider label="B" value="42" high-value="100" name="eye_b" />
             </ui:GroupBox>
         </ui:Tab>
-        <ui:Tab label="Brows" closeable="false" focusable="false" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
-            <ui:GroupBox style="top: 7px;">
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
+        <ui:Tab label="Brows" closeable="false" focusable="false" name="Brows" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
+            <ui:GroupBox style="top: 7px; flex-direction: row; flex-wrap: wrap;">
+                <ui:Button text="1" name="brows_0" style="width: 100px; height: 80px;" />
+                <ui:Button text="2" name="brows_1" style="width: 100px; height: 80px;" />
+                <ui:Button text="3" name="brows_2" style="width: 100px; height: 80px;" />
+                <ui:Button text="4" name="brows_3" style="width: 100px; height: 80px;" />
+                <ui:Button text="5" name="brows_4" style="width: 100px; height: 80px;" />
+                <ui:Button text="6" name="brows_5" style="width: 100px; height: 80px;" />
+                <ui:Button text="7" name="brows_6" style="width: 100px; height: 80px;" />
+                <ui:Button text="8" name="brows_7" style="width: 100px; height: 80px;" />
             </ui:GroupBox>
         </ui:Tab>
-        <ui:Tab label="Mouths" closeable="false" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
-            <ui:GroupBox style="top: 7px;">
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
+        <ui:Tab label="Mouths" closeable="false" name="Mouths" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
+            <ui:GroupBox style="top: 7px; flex-direction: row; flex-wrap: wrap;">
+                <ui:Button text="1" name="mouth_0" style="width: 100px; height: 80px;" />
+                <ui:Button text="2" name="mouth_1" style="width: 100px; height: 80px;" />
+                <ui:Button text="3" name="mouth_2" style="width: 100px; height: 80px;" />
+                <ui:Button text="4" name="mouth_3" style="width: 100px; height: 80px;" />
+                <ui:Button text="5" name="mouth_4" style="width: 100px; height: 80px;" />
+                <ui:Button text="6" name="mouth_5" style="width: 100px; height: 80px;" />
+                <ui:Button text="7" name="mouth_6" style="width: 100px; height: 80px;" />
             </ui:GroupBox>
         </ui:Tab>
-        <ui:Tab label="Outfits" closeable="false" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
-            <ui:GroupBox style="top: 7px;">
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
+        <ui:Tab label="Outfits" closeable="false" name="Outfits" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
+            <ui:GroupBox style="top: 7px; flex-direction: row; flex-wrap: wrap;">
+                <ui:Button text="None" name="topPart_0" style="width: 100px; height: 80px;" />
+                <ui:Button text="1" name="topPart_1" style="width: 100px; height: 80px;" />
+                <ui:Button text="2" name="topPart_2" style="width: 100px; height: 80px;" />
+                <ui:Button text="3" name="topPart_3" style="width: 100px; height: 80px;" />
+            </ui:GroupBox>
+            <ui:Label text="Color:" parse-escape-sequences="false" style="font-size: 24%; top: 20px; left: 9px; -unity-font-style: normal;" />
+            <ui:GroupBox name="GroupBox" style="top: 7px;">
+                <ui:Slider label="R" value="42" high-value="100" name="topPart_r" />
+                <ui:Slider label="G" value="42" high-value="100" name="topPart_g" />
+                <ui:Slider label="B" value="42" high-value="100" name="topPart_b" />
             </ui:GroupBox>
         </ui:Tab>
-        <ui:Tab label="Pants" closeable="false" focusable="false" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
-            <ui:GroupBox style="top: 7px;">
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
-                <ui:Button text="Button" />
+        <ui:Tab label="Pants" closeable="false" focusable="false" name="Pants" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
+            <ui:GroupBox style="top: 7px; flex-direction: row; flex-wrap: wrap;">
+                <ui:Button text="None" name="pants_0" style="width: 100px; height: 80px;" />
+                <ui:Button text="1" name="pants_1" style="width: 100px; height: 80px;" />
+                <ui:Button text="2" name="pants_2" style="width: 100px; height: 80px;" />
+                <ui:Button text="3" name="pants_3" style="width: 100px; height: 80px;" />
+            </ui:GroupBox>
+            <ui:Label text="Color:" parse-escape-sequences="false" style="font-size: 24%; top: 20px; left: 9px; -unity-font-style: normal;" />
+            <ui:GroupBox name="GroupBox" style="top: 7px;">
+                <ui:Slider label="R" value="42" high-value="100" name="pants_r" />
+                <ui:Slider label="G" value="42" high-value="100" name="pants_g" />
+                <ui:Slider label="B" value="42" high-value="100" name="pants_b" />
             </ui:GroupBox>
         </ui:Tab>
-        <ui:Tab label="Shoes" closeable="false" focusable="false" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
+        <ui:Tab label="Shoes" closeable="false" focusable="false" name="Shoes" style="width: 100%; height: 100%; flex-shrink: 0; background-image: none; background-color: rgb(255, 255, 255);">
             <ui:GroupBox style="top: 7px; flex-direction: row; flex-wrap: wrap;">
                 <ui:Button text="No Boots" name="boots_0" style="width: 100px; height: 80px;" />
                 <ui:Button text="Boots" name="boots_1" style="width: 100px; height: 80px;" />
@@ -61,4 +110,5 @@
             </ui:GroupBox>
         </ui:Tab>
     </ui:TabView>
+    <ui:Button text="Done" name="done-btn" style="width: 15%; font-size: 24%; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; border-top-right-radius: 10px; border-top-left-radius: 10px; top: 30.2%; right: 0; white-space: pre; flex-direction: row; left: 81%;" />
 </ui:UXML>
