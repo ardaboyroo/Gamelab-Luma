@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{f0d73eb2-cf68-4232-afde-b51b11f22d02}">
 		<property name="assetPath">
-			<value>Mogeko Castle Mogege.wav</value>
+			<value>UI/Mogeko Castle Mogege.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>8</value>

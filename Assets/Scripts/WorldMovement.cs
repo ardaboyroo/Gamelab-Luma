@@ -1,4 +1,5 @@
 using UnityEngine;
+using FMODUnity;
 
 public class WorldMovement : MonoBehaviour
 {
@@ -11,6 +12,13 @@ public class WorldMovement : MonoBehaviour
     [Header("Ground Raycast")]
     [SerializeField] private LayerMask _groundMask;
     [SerializeField] private float _rayLength = 1000f;
+
+    [Header("Audio Settings")]
+    [SerializeField] private EventReference _footstepEvent;
+    [SerializeField] private float _stepDistance = 1.8f;
+
+    // Internal tracker for audio
+    private float _currentStepTracker = 0f;
 
     // Buffered target position on the floor
     private Vector3 _targetPosition;
@@ -29,7 +37,6 @@ public class WorldMovement : MonoBehaviour
 
     private void Update()
     {
-        // Sample click on the floor
         if (Input.GetMouseButton(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -53,13 +60,15 @@ public class WorldMovement : MonoBehaviour
         float distSq = toTarget.sqrMagnitude;
         bool closeEnough = distSq < 0.1f;
 
+        // --- IDLE LOGIC ---
         if (closeEnough)
         {
-            // --- FACE 180 DEGREES WHILE IDLING ---
-            // Choose your idle facing direction (world forward or backward)
-            Vector3 idleDirection = -Vector3.forward;   // 180° from world forward
+            _currentStepTracker = 0f;
 
+            Vector3 idleDirection = -Vector3.forward;
             Quaternion desiredIdleRotation = Quaternion.LookRotation(idleDirection, Vector3.up);
+
+            // We define 'newIdleRot' here. It only exists inside these brackets { }.
             Quaternion newIdleRot = Quaternion.RotateTowards(
                 _rigidbody.rotation,
                 desiredIdleRotation,
@@ -67,10 +76,10 @@ public class WorldMovement : MonoBehaviour
             );
 
             _rigidbody.MoveRotation(newIdleRot);
-            return; // stop movement entirely
+            return;
         }
 
-        // — NORMAL MOVEMENT (when not close) —
+        // --- MOVING LOGIC ---
         Vector3 normalized = toTarget.normalized;
 
         Quaternion desiredRotation = Quaternion.LookRotation(normalized, Vector3.up);
@@ -80,10 +89,28 @@ public class WorldMovement : MonoBehaviour
             _rotationSpeed * Time.fixedDeltaTime
         );
 
+        // ERROR WAS HERE: You were trying to use 'newIdleRot' (which is dead/out of scope).
+        // FIX: Use 'newRotation' which you just calculated above.
         _rigidbody.MoveRotation(newRotation);
 
         Vector3 move = transform.forward * _moveSpeed * Time.fixedDeltaTime;
         _rigidbody.MovePosition(_rigidbody.position + move);
+
+        PlayFootstepIfMoved(move.magnitude);
+    }
+
+    private void PlayFootstepIfMoved(float distanceMoved)
+    {
+        _currentStepTracker += distanceMoved;
+
+        if (_currentStepTracker >= _stepDistance)
+        {
+            if (!_footstepEvent.IsNull)
+            {
+                RuntimeManager.PlayOneShot(_footstepEvent, transform.position);
+            }
+            _currentStepTracker = 0f;
+        }
     }
 
 #if UNITY_EDITOR

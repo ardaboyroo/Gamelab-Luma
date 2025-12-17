@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="MixerGroup" id="{f9686d71-abaa-49da-8505-ea6d3233be45}">
+		<property name="name">
+			<value>Sprayway</value>
+		</property>
+		<relationship name="effectChain">
+			<destination>{3c6f8659-001d-45dd-aabf-515ab3caedf6}</destination>
+		</relationship>
+		<relationship name="panner">
+			<destination>{b408230b-c51b-44c7-9980-7a0bb29a333c}</destination>
+		</relationship>
+		<relationship name="output">
+			<destination>{e400ed95-406d-4627-9d56-d8ded908e6b1}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusEffectChain" id="{3c6f8659-001d-45dd-aabf-515ab3caedf6}">
+		<relationship name="effects">
+			<destination>{fa0c109b-8570-4cfe-a179-9a35e0d85fc6}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusPanner" id="{b408230b-c51b-44c7-9980-7a0bb29a333c}" />
+	<object class="MixerBusFader" id="{fa0c109b-8570-4cfe-a179-9a35e0d85fc6}" />
+</objects>

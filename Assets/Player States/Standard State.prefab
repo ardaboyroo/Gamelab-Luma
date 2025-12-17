@@ -104,6 +104,14 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   _rayLength: 1000
+  _footstepEvent:
+    Guid:
+      Data1: -1072803667
+      Data2: 1086068508
+      Data3: -1588762203
+      Data4: 1289844759
+    Path: event:/Player/Footsteps
+  _stepDistance: 2
 --- !u!114 &-97409435976898910
 MonoBehaviour:
   m_ObjectHideFlags: 0
