@@ -1,5 +1,6 @@
 using UnityEngine;
 using FMODUnity;
+using System.Collections;
 
 public class WorldMovement : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class WorldMovement : MonoBehaviour
     [SerializeField] private EventReference _footstepEvent;
     [SerializeField] private float _stepDistance = 1.8f;
 
+    private Animator _animator;
+
     // Internal tracker for audio
     private float _currentStepTracker = 0f;
 
@@ -31,6 +34,10 @@ public class WorldMovement : MonoBehaviour
 
         _targetPosition = transform.position;
         _hasTarget = false;
+
+        _animator = transform.Find("Model Container").GetComponent<Animator>();
+        
+        StartCoroutine(IdleActiveAnimation());
     }
 
     public void NullifyTarget() => _targetPosition = transform.position;
@@ -46,6 +53,16 @@ public class WorldMovement : MonoBehaviour
                 _targetPosition = hit.point;
                 _hasTarget = true;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            _animator.SetTrigger("dance_1");
+        }
+
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            _animator.SetTrigger("dance_2");
         }
     }
 
@@ -65,10 +82,26 @@ public class WorldMovement : MonoBehaviour
         {
             _currentStepTracker = 0f;
 
-            Vector3 idleDirection = -Vector3.forward;
+            // Direction we want to face when idle = camera forward on XZ
+            Vector3 idleDirection;
+
+            if (Camera.main != null)
+            {
+                idleDirection = -Camera.main.transform.forward;
+                idleDirection.y = 0f;
+
+                if (idleDirection.sqrMagnitude < 0.0001f)
+                    idleDirection = -transform.forward; // fallback
+                else
+                    idleDirection.Normalize();
+            }
+            else
+            {
+                idleDirection = -transform.forward; // no camera -> keep current
+            }
+
             Quaternion desiredIdleRotation = Quaternion.LookRotation(idleDirection, Vector3.up);
 
-            // We define 'newIdleRot' here. It only exists inside these brackets { }.
             Quaternion newIdleRot = Quaternion.RotateTowards(
                 _rigidbody.rotation,
                 desiredIdleRotation,
@@ -76,8 +109,11 @@ public class WorldMovement : MonoBehaviour
             );
 
             _rigidbody.MoveRotation(newIdleRot);
+            _animator.SetFloat("speed", 0);
             return;
         }
+
+        _animator.SetFloat("speed", 1);
 
         // --- MOVING LOGIC ---
         Vector3 normalized = toTarget.normalized;
@@ -89,8 +125,6 @@ public class WorldMovement : MonoBehaviour
             _rotationSpeed * Time.fixedDeltaTime
         );
 
-        // ERROR WAS HERE: You were trying to use 'newIdleRot' (which is dead/out of scope).
-        // FIX: Use 'newRotation' which you just calculated above.
         _rigidbody.MoveRotation(newRotation);
 
         Vector3 move = transform.forward * _moveSpeed * Time.fixedDeltaTime;
@@ -110,6 +144,15 @@ public class WorldMovement : MonoBehaviour
                 RuntimeManager.PlayOneShot(_footstepEvent, transform.position);
             }
             _currentStepTracker = 0f;
+        }
+    }
+
+    private IEnumerator IdleActiveAnimation()
+    {
+        while (_animator != null)
+        {
+            _animator.SetTrigger("idle_active");
+            yield return new WaitForSeconds(Random.Range(7, 15));
         }
     }
 

@@ -19,6 +19,10 @@ public class DialoguePlayerState : PlayerState
         _camera = Camera.main.transform;
         _player = transform;
 
+        var animator = transform.Find("Model Container").GetComponent<Animator>();
+        animator.SetBool("mid_air", false);
+        animator.SetFloat("speed", 0);
+
         _active = true;
 
 

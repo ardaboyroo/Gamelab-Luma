@@ -38,6 +38,7 @@ public class SpraywayMovement : MonoBehaviour
     private Quaternion _targetRotation;
 
     private Rigidbody _rb;
+    private Animator _animator;
 
     private SprayWay _sprayWayActivity;
 
@@ -47,12 +48,16 @@ public class SpraywayMovement : MonoBehaviour
     private bool _stopped;
     private bool _isPlayingAudioSpray;
 
+    private float _prevHeight;
+
     private void Awake()
     {
         _stopped = false;
         _rb = GetComponent<Rigidbody>();
         _rb.useGravity = false;                      // we do custom gravity
         _rb.constraints = RigidbodyConstraints.FreezeRotation;  // no spinning
+
+        _animator = transform.Find("Model Container").GetComponent<Animator>();
 
         _sprayParticles = transform.Find("Model Container").Find("BaseMesh").Find("Spraycan").Find("SprayWayParticleSystem").GetComponent<ParticleSystem>();
         _sprayParticles.transform.parent.GetComponent<Renderer>().enabled = true;
@@ -70,7 +75,14 @@ public class SpraywayMovement : MonoBehaviour
     private void Update()
     {
         if (_stopped)
+        {
+            _animator.SetBool("mid_air", false);
+            _animator.SetFloat("speed", 0);
             return;
+        }
+
+
+        _animator.SetFloat("speed", 1);
 
         // raw input (replace with your input system if needed)
         _wantsThrust = Input.GetMouseButton(0);
@@ -82,6 +94,7 @@ public class SpraywayMovement : MonoBehaviour
         }
         if (_progressBar != null && _isSpraying)
         {
+            _animator.SetBool("mid_air", true);
             _sprayWayActivity.AddProgress(_fillPerSecond * Time.deltaTime);
         }
 
@@ -114,7 +127,6 @@ public class SpraywayMovement : MonoBehaviour
             return;
         }
 
-
         if (_wall == null || _rb == null)
             return;
 
@@ -133,6 +145,9 @@ public class SpraywayMovement : MonoBehaviour
                 AutoDescend();   // <<< NEW
             }
         }
+
+        if (Mathf.Abs(transform.position.y - _prevHeight) <= 0.01f)
+            _animator.SetBool("mid_air", false);
 
         // Define wall axes
         Vector3 wallUp = _wall.up;      // along the wall: "up" (spray direction)
@@ -178,6 +193,8 @@ public class SpraywayMovement : MonoBehaviour
 
         // Determine when we are actually "flying up" vs falling/walking
         _isSpraying = _wantsThrust && verticalVel > 0.01f;
+
+        _prevHeight = transform.position.y;
 
         // Toggle spray particles
         if (_sprayParticles == null)

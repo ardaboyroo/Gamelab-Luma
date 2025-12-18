@@ -98,7 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody: {fileID: 7860876225290291057}
-  _moveSpeed: 5
+  _moveSpeed: 7
   _rotationSpeed: 720
   _groundMask:
     serializedVersion: 2
@@ -111,7 +111,7 @@ MonoBehaviour:
       Data3: -1588762203
       Data4: 1289844759
     Path: event:/Player/Footsteps
-  _stepDistance: 2
+  _stepDistance: 2.7
 --- !u!114 &-97409435976898910
 MonoBehaviour:
   m_ObjectHideFlags: 0
