@@ -9,6 +9,8 @@ public class StandardStateUI : MonoBehaviour
     [SerializeField] private UIDocument _menu;
     [SerializeField] private UIDocument _chrEdit;
 
+    [SerializeField] private GuideDogBehaviour _dog;
+
     private bool _isShown;
 
     private Vector3 _bufferedPosition;
@@ -123,6 +125,7 @@ public class StandardStateUI : MonoBehaviour
 
         PlayClick();
 
+        _dog.enabled = false;
         Debug.Log("Buffered position set to: " + _bufferedPosition);
     }
 
@@ -140,6 +143,7 @@ public class StandardStateUI : MonoBehaviour
         PlayConfirm();
 
         StartCoroutine(TeleportBack(_bufferedPosition));
+        _dog.enabled = true;
         Debug.Log("Buffered position set derived from: " + _bufferedPosition);
     }
 
