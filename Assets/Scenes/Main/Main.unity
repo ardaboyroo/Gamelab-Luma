@@ -2154,14 +2154,8 @@ MonoBehaviour:
   pathSnapRadius: 3
   wrongWayBacktrackDistance: 0.5
   switchCooldown: 0.35
-  useBezierSmoothing: 1
-  bezierSmoothness: 0.7
-  bezierSamplesPerSegment: 10
-  followStopDistance: 2
+  followStopDistance: 2.5
   followStopHysteresis: 0.25
-  trailSampleSpacing: 0.35
-  trailMaxPoints: 128
-  trailReachRadius: 0.35
   leashDogToPath: 1
   dogMaxPathDrift: 0.75
   leashPullSpeed: 10

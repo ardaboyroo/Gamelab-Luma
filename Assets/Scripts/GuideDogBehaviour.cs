@@ -18,39 +18,30 @@ public class GuideDogBehaviour : MonoBehaviour
     public float barkSuppressEndDistance = 1.5f;
     public string[] barkMessages = { "Woof woof!" };
 
-
     [Header("Animator")]
     public Animator dogAnimator;
     public string speedParam = "speed";
-    public float movingThreshold = 0.05f; // m/s threshold for speed=1
+    public float movingThreshold = 0.05f;
 
     [Header("Movement")]
     [Min(0.01f)] public float moveSpeed = 3.5f;
-    [Min(0.01f)] public float rotationSpeed = 8f; // smoothing coefficient
+    [Min(0.01f)] public float rotationSpeed = 8f;
 
-    [Header("Leading distances")]
-    [Min(0.01f)] public float leadMaxDistance = 7f;     // if dog-player distance exceeds this, dog returns
-    [Min(0.0f)] public float leadAheadOnPath = 2.5f;    // dog tries to stay this far ahead along the path
-    [Min(0.0f)] public float leadReturnHysteresis = 0.75f; // return stops when dist < leadMaxDistance * this
+    [Header("Leading Settings")]
+    [Min(0.01f)] public float leadMaxDistance = 7f;
+    [Min(0.0f)] public float leadAheadOnPath = 2.5f;
+    [Min(0.0f)] public float leadReturnHysteresis = 0.75f;
 
-    [Header("Path logic")]
-    [Min(0.01f)] public float pathSnapRadius = 3f;              // player considered "on path" if within this
-    [Min(0.01f)] public float wrongWayBacktrackDistance = 0.5f;  // along-path meters negative delta => backtracking
+    [Header("Path Logic")]
+    [Min(0.01f)] public float pathSnapRadius = 3f;
+    [Min(0.01f)] public float wrongWayBacktrackDistance = 0.5f;
     [Min(0.0f)] public float switchCooldown = 0.35f;
 
-    [Header("Bezier smoothing")]
-    public bool useBezierSmoothing = true;
-    [Range(0f, 1f)] public float bezierSmoothness = 0.7f; // 0 = straight, 1 = smooth
-    [Range(2, 30)] public int bezierSamplesPerSegment = 10;
+    [Header("Following Settings")]
+    [Min(0.0f)] public float followStopDistance = 2f;
+    [Min(0.0f)] public float followStopHysteresis = 0.25f;
 
-    [Header("Following (footsteps)")]
-    [Min(0.0f)] public float followStopDistance = 2f;   // desired distance to keep from player
-    [Min(0.0f)] public float followStopHysteresis = 0.25f; // prevents jitter (0.2–0.5 is fine)
-    [Min(0.01f)] public float trailSampleSpacing = 0.35f;
-    [Min(4)] public int trailMaxPoints = 128;
-    [Min(0.01f)] public float trailReachRadius = 0.35f;
-
-    [Header("Keep dog near path")]
+    [Header("Path Leashing")]
     public bool leashDogToPath = true;
     [Min(0.0f)] public float dogMaxPathDrift = 0.75f;
     [Min(0.01f)] public float leashPullSpeed = 10f;
@@ -63,10 +54,10 @@ public class GuideDogBehaviour : MonoBehaviour
     public bool stickToGround = true;
     [Min(0.0f)] public float groundSnapSpeed = 25f;
 
-    private enum DogState { Leading, FollowingPlayer }
+    private enum DogState { Leading, Following }
     [SerializeField] private DogState _state = DogState.Leading;
 
-    // Smoothed path polyline (XZ) + cumulative length
+    // Path polyline (XZ) + cumulative length
     private Vector3[] _pathXZ;
     private float[] _cumLen;
     private float _totalLen;
@@ -75,12 +66,6 @@ public class GuideDogBehaviour : MonoBehaviour
     private float _prevPlayerS;
     private float _switchLockUntil;
     private bool _returningToPlayer;
-
-    // Trail ring buffer (XZ)
-    private Vector3[] _trail;
-    private int _trailHead;
-    private int _trailCount;
-    private Vector3 _lastTrailSample;
 
     // Runtime
     private float _currentSpeed;
@@ -93,13 +78,11 @@ public class GuideDogBehaviour : MonoBehaviour
         if (dogAnimator == null)
             dogAnimator = GetComponentInChildren<Animator>();
 
-        EnsureTrailCapacity();
         RebuildPath();
     }
 
     void OnValidate()
     {
-        EnsureTrailCapacity();
         RebuildPath();
     }
 
@@ -140,12 +123,12 @@ public class GuideDogBehaviour : MonoBehaviour
             {
                 float distDogPlayer = Vector3.Distance(transform.position, player.position);
                 if (playerOnPath && !playerBacktracking && distDogPlayer <= leadMaxDistance)
+                {
                     EnterLeading();
+                    ProjectToPathXZ(player.position, out _prevPlayerS, out _, out _);
+                }
             }
         }
-
-        if (_state == DogState.FollowingPlayer)
-            SampleTrailFromPlayer();
 
         // --- choose target (XZ only) ---
         Vector3 targetXZ = (_state == DogState.Leading)
@@ -157,7 +140,7 @@ public class GuideDogBehaviour : MonoBehaviour
         // --- move XZ ---
         MoveTowardsXZ(targetXZ, moveSpeed, dt);
 
-        // leash to path only when it makes sense (don’t fight “follow player off-path”)
+        // leash to path only when it makes sense
         if (leashDogToPath && (_state == DogState.Leading || playerOnPath))
             PullDogToPath(dt);
 
@@ -183,12 +166,9 @@ public class GuideDogBehaviour : MonoBehaviour
         _wasWaiting = false;
         _nextBarkAt = 0f;
 
-        _state = DogState.FollowingPlayer;
+        _state = DogState.Following;
         _switchLockUntil = Time.time + switchCooldown;
         _returningToPlayer = false;
-
-        ClearTrail();
-        SampleTrailFromPlayer(force: true);
     }
 
     private void EnterLeading()
@@ -199,15 +179,12 @@ public class GuideDogBehaviour : MonoBehaviour
         _state = DogState.Leading;
         _switchLockUntil = Time.time + switchCooldown;
         _returningToPlayer = false;
-
-        ClearTrail();
     }
 
     // -------------------- targets --------------------
 
     private Vector3 GetLeadTargetXZ(float playerS)
     {
-        // If dog is too far from player, do NOT freeze: return toward player along the path.
         float distDogPlayer = Vector3.Distance(transform.position, player.position);
 
         if (!_returningToPlayer && distDogPlayer > leadMaxDistance)
@@ -215,85 +192,57 @@ public class GuideDogBehaviour : MonoBehaviour
         else if (_returningToPlayer && distDogPlayer < leadMaxDistance * Mathf.Clamp01(leadReturnHysteresis))
             _returningToPlayer = false;
 
-        // Compute desired target s along the path
-        float targetS;
         if (_returningToPlayer)
         {
-            // Retrace back toward the player's path position
-            targetS = playerS;
+            return PointAtS(playerS);
         }
-        else
+
+        Vector3 playerPosXZ = new Vector3(player.position.x, 0f, player.position.z);
+        Vector3 pathDir = GetPathDirectionAtS(playerS);
+        Vector3 rightDir = new Vector3(pathDir.z, 0f, -pathDir.x).normalized;
+
+        float sideOffset = 1.5f;
+        Vector3 desiredSidePosition = playerPosXZ + (rightDir * sideOffset);
+
+        float currentDistToTarget = Vector3.Distance(new Vector3(transform.position.x, 0f, transform.position.z), desiredSidePosition);
+        if (currentDistToTarget < 0.1f && _currentSpeed <= movingThreshold)
         {
-            // Lead a bit ahead of the player's progress
-            targetS = Mathf.Min(playerS + Mathf.Max(0f, leadAheadOnPath), _totalLen);
+            return new Vector3(transform.position.x, 0f, transform.position.z);
         }
 
-        return PointAtS(targetS);
+        return desiredSidePosition;
     }
 
-   private Vector3 GetFollowTargetXZ()
-{
-    Vector3 dogXZ = new Vector3(transform.position.x, 0f, transform.position.z);
-    Vector3 plXZ  = new Vector3(player.position.x, 0f, player.position.z);
-
-    float distToPlayer = Vector3.Distance(dogXZ, plXZ);
-
-    // If we're already close enough to the player, don't keep chasing into them.
-    // Also don't consume the trail while within this radius, so we can resume smoothly.
-    float stop = Mathf.Max(0f, followStopDistance);
-    float stopIn = stop;
-    float stopOut = stop + Mathf.Max(0f, followStopHysteresis);
-
-    if (distToPlayer <= stopIn)
-        return dogXZ; // stand (then FacePlayerWhenStopped handles looking)
-
-    // If we are a bit outside, we can move, but don't overshoot into the player:
-    // target a point on the trail, but allow fallback to a point "stop" meters away from player.
-    float reach = Mathf.Clamp(trailReachRadius, 0.05f, 2f);
-
-    // Only dequeue trail points if we're NOT already near the player,
-    // otherwise the trail gets eaten and dog ends up inside the player.
-    while (_trailCount > 0 && distToPlayer > stopOut)
+    private Vector3 GetPathDirectionAtS(float s)
     {
-        Vector3 p = _trail[_trailHead];
-
-        float dx = p.x - transform.position.x;
-        float dz = p.z - transform.position.z;
-
-        if ((dx * dx + dz * dz) <= reach * reach)
-            DequeueTrail();
-        else
-            break;
+        float sampleDelta = 0.5f;
+        Vector3 p1 = PointAtS(s);
+        Vector3 p2 = PointAtS(s + sampleDelta);
+        Vector3 dir = (p2 - p1);
+        if (dir.sqrMagnitude < 0.0001f) return Vector3.forward;
+        return dir.normalized;
     }
 
-    if (_trailCount > 0)
+    private Vector3 GetFollowTargetXZ()
     {
-        Vector3 p = _trail[_trailHead];
+        Vector3 dogXZ = new Vector3(transform.position.x, 0f, transform.position.z);
+        Vector3 plXZ = new Vector3(player.position.x, 0f, player.position.z);
 
-        // If the next trail point would put us inside stop distance, clamp target
-        // to a ring around the player.
+        float distToPlayer = Vector3.Distance(dogXZ, plXZ);
+        float stop = Mathf.Max(0f, followStopDistance);
+
+        if (distToPlayer <= stop)
+            return dogXZ;
+
         Vector3 toDog = dogXZ - plXZ;
         if (toDog.sqrMagnitude < 0.0001f)
-            toDog = Vector3.forward;
+        {
+            toDog = -new Vector3(player.forward.x, 0f, player.forward.z).normalized;
+            if (toDog.sqrMagnitude < 0.0001f) toDog = -Vector3.forward;
+        }
 
-        Vector3 desiredOnRing = plXZ + toDog.normalized * stop;
-
-        // Choose the target that is "more outside" so we don't move into the player.
-        // (If trail point is still far, use it; otherwise use the ring.)
-        if (Vector3.Distance(p, plXZ) < stop)
-            return desiredOnRing;
-
-        return new Vector3(p.x, 0f, p.z);
+        return plXZ + toDog.normalized * stop;
     }
-
-    // Fallback: head towards a point at 'stop' distance from the player (not onto them).
-    Vector3 away = dogXZ - plXZ;
-    if (away.sqrMagnitude < 0.0001f)
-        away = -Vector3.forward;
-
-    return plXZ + away.normalized * stop;
-}
-
 
     // -------------------- movement & facing --------------------
 
@@ -378,72 +327,10 @@ public class GuideDogBehaviour : MonoBehaviour
         }
     }
 
-    // -------------------- trail ring buffer --------------------
-
-    private void EnsureTrailCapacity()
-    {
-        int cap = Mathf.Max(4, trailMaxPoints);
-        if (_trail == null || _trail.Length != cap)
-        {
-            _trail = new Vector3[cap];
-            _trailHead = 0;
-            _trailCount = 0;
-        }
-    }
-
-    private void ClearTrail()
-    {
-        _trailHead = 0;
-        _trailCount = 0;
-    }
-
-    private void SampleTrailFromPlayer(bool force = false)
-    {
-        EnsureTrailCapacity();
-
-        Vector3 p = player.position;
-        Vector3 pXZ = new Vector3(p.x, 0f, p.z);
-
-        if (_trailCount == 0)
-        {
-            EnqueueTrail(pXZ);
-            _lastTrailSample = pXZ;
-            return;
-        }
-
-        float d = (pXZ - _lastTrailSample).magnitude;
-        if (force || d >= trailSampleSpacing)
-        {
-            EnqueueTrail(pXZ);
-            _lastTrailSample = pXZ;
-        }
-    }
-
-    private void EnqueueTrail(Vector3 p)
-    {
-        if (_trailCount == _trail.Length)
-        {
-            _trailHead = (_trailHead + 1) % _trail.Length;
-            _trailCount--;
-        }
-
-        int idx = (_trailHead + _trailCount) % _trail.Length;
-        _trail[idx] = p;
-        _trailCount++;
-    }
-
-    private void DequeueTrail()
-    {
-        if (_trailCount <= 0) return;
-        _trailHead = (_trailHead + 1) % _trail.Length;
-        _trailCount--;
-    }
-
     // -------------------- path build + projection --------------------
 
     private void RebuildPath()
     {
-        // Build raw XZ points from waypoint transforms
         if (waypoints == null || waypoints.Length < 2)
         {
             _pathXZ = null;
@@ -459,7 +346,6 @@ public class GuideDogBehaviour : MonoBehaviour
             Vector3 w = waypoints[i].position;
             Vector3 p = new Vector3(w.x, 0f, w.z);
 
-            // drop near-duplicates
             if (raw.Count == 0 || (raw[raw.Count - 1] - p).sqrMagnitude > 0.0001f)
                 raw.Add(p);
         }
@@ -472,11 +358,7 @@ public class GuideDogBehaviour : MonoBehaviour
             return;
         }
 
-        List<Vector3> sampled = useBezierSmoothing
-            ? BuildBezierSampledPath(raw, bezierSmoothness, bezierSamplesPerSegment)
-            : raw;
-
-        _pathXZ = sampled.ToArray();
+        _pathXZ = raw.ToArray();
 
         _cumLen = new float[_pathXZ.Length];
         _cumLen[0] = 0f;
@@ -485,57 +367,6 @@ public class GuideDogBehaviour : MonoBehaviour
             _cumLen[i] = _cumLen[i - 1] + Vector3.Distance(_pathXZ[i - 1], _pathXZ[i]);
 
         _totalLen = _cumLen[_cumLen.Length - 1];
-    }
-
-    // Catmull-Rom -> cubic Bezier per segment, sampled into a polyline
-    private static List<Vector3> BuildBezierSampledPath(List<Vector3> pts, float smoothness01, int samplesPerSeg)
-    {
-        smoothness01 = Mathf.Clamp01(smoothness01);
-        samplesPerSeg = Mathf.Clamp(samplesPerSeg, 2, 60);
-
-        float k = (smoothness01 / 6f); // standard Catmull->Bezier uses 1/6; scale by smoothness
-
-        List<Vector3> outPts = new List<Vector3>(pts.Count * samplesPerSeg);
-
-        int n = pts.Count;
-        for (int i = 0; i < n - 1; i++)
-        {
-            Vector3 p0 = (i == 0) ? pts[i] : pts[i - 1];
-            Vector3 p1 = pts[i];
-            Vector3 p2 = pts[i + 1];
-            Vector3 p3 = (i + 2 < n) ? pts[i + 2] : pts[i + 1];
-
-            // Bezier control points
-            Vector3 b0 = p1;
-            Vector3 b1 = p1 + (p2 - p0) * k;
-            Vector3 b2 = p2 - (p3 - p1) * k;
-            Vector3 b3 = p2;
-
-            // Sample segment (avoid duplicating end points)
-            int steps = samplesPerSeg;
-            for (int s = 0; s < steps; s++)
-            {
-                float t = (float)s / (steps - 1);
-                if (i > 0 && s == 0) continue; // skip start point except first segment
-                outPts.Add(CubicBezier(b0, b1, b2, b3, t));
-            }
-        }
-
-        return outPts;
-    }
-
-    private static Vector3 CubicBezier(Vector3 b0, Vector3 b1, Vector3 b2, Vector3 b3, float t)
-    {
-        float u = 1f - t;
-        float tt = t * t;
-        float uu = u * u;
-        float uuu = uu * u;
-        float ttt = tt * t;
-
-        return (uuu * b0) +
-               (3f * uu * t * b1) +
-               (3f * u * tt * b2) +
-               (ttt * b3);
     }
 
     private void ProjectToPathXZ(Vector3 worldPos, out float s, out Vector3 closestPoint, out float distance)
@@ -580,7 +411,6 @@ public class GuideDogBehaviour : MonoBehaviour
         if (s <= 0f) return _pathXZ[0];
         if (s >= _totalLen) return _pathXZ[_pathXZ.Length - 1];
 
-        // binary search cumLen
         int lo = 0;
         int hi = _cumLen.Length - 1;
 
@@ -605,12 +435,6 @@ public class GuideDogBehaviour : MonoBehaviour
 
         bool notAtEnd = dogS < (_totalLen - Mathf.Max(0f, barkSuppressEndDistance));
 
-        // "Waiting" definition:
-        // - dog is basically not moving
-        // - and we are not at the end of the path
-        // - and either:
-        //    a) player is off-path/backtracking (dog is effectively waiting for them to correct)
-        //    b) player is not progressing while dog is in Leading and not returning-to-player
         bool dogIdle = _currentSpeed <= movingThreshold;
         bool playerNotProgressing = Mathf.Abs(deltaS) < 0.01f;
 
@@ -618,7 +442,7 @@ public class GuideDogBehaviour : MonoBehaviour
             dogIdle &&
             notAtEnd &&
             (
-                (_state == DogState.FollowingPlayer && (playerOffPath || playerBacktracking)) ||
+                (_state == DogState.Following && (playerOffPath || playerBacktracking)) ||
                 (_state == DogState.Leading && !_returningToPlayer && playerNotProgressing)
             );
 
@@ -653,7 +477,6 @@ public class GuideDogBehaviour : MonoBehaviour
 
         popup.Init(msg, barkLifetimeSeconds, barkCamera != null ? barkCamera : Camera.main, barkYawOnly);
     }
-
 
 #if UNITY_EDITOR
     private void OnDrawGizmosSelected()
