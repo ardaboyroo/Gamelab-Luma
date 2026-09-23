@@ -1,7 +1,5 @@
-﻿using NUnit.Framework;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
@@ -12,14 +10,6 @@ public class SprayWay : Activity
     [SerializeField] private GameObject _gameplayRoot;
     [SerializeField] private GraphittiProgress _graphittiProgress;
     [SerializeField] private UIDocument _gameOver, _gameWin;
-
-    [Header("Cutscene")]
-    [SerializeField] private float _time;
-    [SerializeField] private string _cutsceneName;
-    [SerializeField] private Transform _endTransform;
-    [SerializeField] private Transform _initTransform;
-
-    private bool _startingCutscenePlayed;
 
     public float Progress => _progress;
     private float _progress;
@@ -43,21 +33,28 @@ public class SprayWay : Activity
 
     protected override void OnStart()
     {
-        // Start Music 
         _finished = false;
 
         GameEndCamera.SetActive(false);
         NormalCamera.SetActive(true);
-        PlayerStateMachine.Instance.OnStateChanged += OnStateChanged;
 
         _gameplayRoot.SetActive(true);
-        Debug.Log("Activity started!");
+        Debug.Log("Activity started directly!");
 
-        _startingCutscenePlayed = false;
-
-        var state = PlayerStateMachine.Instance.GetState<CutscenePlayerState>();
-        PlayerStateMachine.Instance.ChangeState(state);
         _graphittiProgress.SetMaskFromValue(0);
+        _progress = 0f;
+        _currentLayer = -1;
+
+        // Initialize player movement directly
+        var movement = PlayerStateMachine.Instance.GetComponent<SpraywayMovement>();
+        if (movement != null)
+        {
+            movement.Ressurect();
+            movement.SetSprayWay(this);
+            movement.SetWall(_gameplayRoot.transform.Find("Wall"));
+        }
+
+        NextLayer();
     }
 
     public void AddProgress(float amount)
@@ -75,51 +72,25 @@ public class SprayWay : Activity
         {
             StartCoroutine(HideLayer(_currentLayer));
         }
-        PostCutscene();
-    }
 
-    private void PostCutscene()
-    {
-        Debug.Log("Cutscene over");
+        _finished = false;
+        _currentLayer = -1;
+        _graphittiProgress.SetMaskFromValue(0);
+        _progress = 0f;
 
-        _startingCutscenePlayed = true;
-
-        PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<SpraywayPlayerState>());
-
-        PlayerStateMachine.Instance.transform.localScale = _endTransform.localScale;
-        PlayerStateMachine.Instance.transform.SetPositionAndRotation(_endTransform.position, _endTransform.rotation);
-    }
-
-    private void OnStateChanged(PlayerState state)
-    {
-        if (state is CutscenePlayerState cutsceneState)
-        {
-            cutsceneState.PlayCutscene(_cutsceneName, PostCutscene);
-        }
-        if (state is SpraywayPlayerState spraywayState)
-        {
-            _finished = false;
-            _currentLayer = -1;
-            _graphittiProgress.SetMaskFromValue(0);
-            _progress = 0f;
-
-            GameEndCamera.SetActive(false);
-            NormalCamera.SetActive(true);
-            PlayerStateMachine.Instance.GetComponent<SpraywayMovement>().Ressurect();
-
-            Debug.Log("SpraywayStart");
-            var movement = PlayerStateMachine.Instance.GetComponent<SpraywayMovement>();
-
-            movement.SetSprayWay(this);
-            movement.SetWall(_gameplayRoot.transform.Find("Wall"));
-            NextLayer();
-        }
+        GameEndCamera.SetActive(false);
+        NormalCamera.SetActive(true);
+        PlayerStateMachine.Instance.GetComponent<SpraywayMovement>().Ressurect();
+        NextLayer();
     }
 
     public void NextLayer()
     {
         _currentLayer++;
-        StartCoroutine(ShowLayer(_currentLayer));
+        if (_currentLayer < Layers.Count)
+        {
+            StartCoroutine(ShowLayer(_currentLayer));
+        }
 
         for (int i = 0; i < Layers.Count; i++)
         {
@@ -131,23 +102,26 @@ public class SprayWay : Activity
 
     private IEnumerator ShowLayer(int layer)
     {
-        var transform = Layers[layer];
+        if (layer >= Layers.Count) yield break;
+        var layerTransform = Layers[layer];
         var initPos = -6;
 
-        while (transform.localPosition.y < initPos + 6f)
+        while (layerTransform.localPosition.y < initPos + 6f)
         {
-            transform.localPosition += Vector3.up * Time.deltaTime * 6;
+            layerTransform.localPosition += Vector3.up * Time.deltaTime * 6;
             yield return new WaitForEndOfFrame();
         }
     }
 
     private IEnumerator HideLayer(int layer)
     {
-        var transform = Layers[layer];
+        if (layer >= Layers.Count) yield break;
+        var layerTransform = Layers[layer];
         var initPos = 0;
 
-        while (transform.localPosition.y > initPos - 6) {
-            transform.localPosition += Vector3.down * Time.deltaTime * 6;
+        while (layerTransform.localPosition.y > initPos - 6)
+        {
+            layerTransform.localPosition += Vector3.down * Time.deltaTime * 6;
             yield return new WaitForEndOfFrame();
         }
     }
@@ -160,8 +134,6 @@ public class SprayWay : Activity
 
     protected override void OnStop()
     {
-        PlayerStateMachine.Instance.OnStateChanged -= OnStateChanged;
-
         _gameplayRoot.SetActive(false);
         Debug.Log("Activity stopped!");
     }
@@ -212,7 +184,6 @@ public class SprayWay : Activity
     {
         if (win)
         {
-
             if (_gameWin == null) return;
             var root = _gameWin.rootVisualElement;
             root.style.display = DisplayStyle.Flex;
@@ -262,8 +233,6 @@ public class SprayWay : Activity
 
     private void OnRestartClicked()
     {
-        //FmodHipHop.Instance.ResetToIdleHipHop();
-        //FmodHipHop.Instance.gameIsRunning = false;
         HideUI();
         Restart();
     }
@@ -271,17 +240,12 @@ public class SprayWay : Activity
     private void OnCloseClicked()
     {
         _gameplayRoot.SetActive(false);
-
         _finished = false;
         StopActivity();
 
         var sprayParticles = PlayerStateMachine.Instance.transform.Find("Model Container").Find("BaseMesh").Find("Spraycan").Find("SprayWayParticleSystem").GetComponent<ParticleSystem>();
         sprayParticles.transform.parent.GetComponent<Renderer>().enabled = false;
 
-        PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<StandardPlayerState>());
-        PlayerStateMachine.Instance.transform.localScale = _initTransform.localScale;
-        PlayerStateMachine.Instance.transform.SetPositionAndRotation(_initTransform.position, _initTransform.rotation);
-        
         HideUI();
     }
 }

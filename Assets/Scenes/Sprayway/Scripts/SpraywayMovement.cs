@@ -20,7 +20,7 @@ public class SpraywayMovement : MonoBehaviour
 
     [Header("Spray FX")]
     [SerializeField] private ParticleSystem _sprayParticles;
-    [Tooltip("UI Slider used as progress bar (0�1).")]
+    [Tooltip("UI Slider used as progress bar (0–1).")]
     [SerializeField] private Slider _progressBar;
     [Tooltip("How fast the progress fills per second while spraying.")]
     [SerializeField] private float _fillPerSecond = 0.2f;
@@ -42,7 +42,7 @@ public class SpraywayMovement : MonoBehaviour
 
     private SprayWay _sprayWayActivity;
 
-    // input buffer from Update ? used in FixedUpdate
+    // input buffer from Update – used in FixedUpdate
     private bool _wantsThrust;
     private bool _isSpraying;
     private bool _stopped;
@@ -54,7 +54,7 @@ public class SpraywayMovement : MonoBehaviour
     {
         _stopped = false;
         _rb = GetComponent<Rigidbody>();
-        _rb.useGravity = false;                      // we do custom gravity
+        _rb.useGravity = false;                     // we do custom gravity
         _rb.constraints = RigidbodyConstraints.FreezeRotation;  // no spinning
 
         _animator = transform.Find("Model Container").GetComponent<Animator>();
@@ -81,14 +81,13 @@ public class SpraywayMovement : MonoBehaviour
             return;
         }
 
-
         _animator.SetFloat("speed", 1);
 
         // raw input (replace with your input system if needed)
         _wantsThrust = Input.GetMouseButton(0);
 
         // FX & progress bar are easier to handle here
-        if (_progressBar == null) 
+        if (_progressBar == null)
         {
             _progressBar = _sprayWayActivity.transform.Find("Root").Find("Canvas").Find("Progress").GetComponent<Slider>();
         }
@@ -142,7 +141,7 @@ public class SpraywayMovement : MonoBehaviour
             if (Quaternion.Angle(transform.rotation, _targetRotation) < 0.5f)
             {
                 _isTurning = false;
-                AutoDescend();   // <<< NEW
+                AutoDescend();
             }
         }
 
@@ -151,7 +150,7 @@ public class SpraywayMovement : MonoBehaviour
 
         // Define wall axes
         Vector3 wallUp = _wall.up;      // along the wall: "up" (spray direction)
-        Vector3 wallForward = Vector3.ProjectOnPlane(transform.forward, _wall.forward).normalized;   // along the wall: run direction
+        Vector3 wallForward = _wall.right; // Aangepast naar _wall.right voor correcte voorwaartse beweging
         Vector3 gravityDir = -wallUp;       // gravity goes down the wall
 
         Vector3 vel = _rb.linearVelocity;
@@ -166,7 +165,7 @@ public class SpraywayMovement : MonoBehaviour
         // Apply custom gravity along the wall
         verticalVel += -_gravityStrength * Time.fixedDeltaTime;
 
-        // Thrust when holding input, but only if we�re not past max height
+        // Thrust when holding input, but only if we’re not past max height
         float currentHeight = GetHeightAlongWall(transform.position, _wall.position, wallUp);
 
         bool canGoUp = currentHeight < _maxHeight - 0.01f;
@@ -206,7 +205,7 @@ public class SpraywayMovement : MonoBehaviour
             var emission = _sprayParticles.emission;
             emission.enabled = _isSpraying;
 
-            if(_isSpraying == true && _isPlayingAudioSpray == false)
+            if (_isSpraying == true && _isPlayingAudioSpray == false)
             {
                 StartSprayAudio();
             }
@@ -236,7 +235,10 @@ public class SpraywayMovement : MonoBehaviour
 
     private void OnDestroy()
     {
-        _sprayParticles.transform.parent.GetComponent<Renderer>().enabled = false;
+        if (_sprayParticles != null && _sprayParticles.transform.parent != null)
+        {
+            _sprayParticles.transform.parent.GetComponent<Renderer>().enabled = false;
+        }
     }
 
     public void Stop()
@@ -244,8 +246,11 @@ public class SpraywayMovement : MonoBehaviour
         _isSpraying = false;
         _stopped = true;
 
-        var emission = _sprayParticles.emission;
-        emission.enabled = false;
+        if (_sprayParticles != null)
+        {
+            var emission = _sprayParticles.emission;
+            emission.enabled = false;
+        }
         StopSprayAudio();
     }
     public void Ressurect() => _stopped = false;
@@ -253,7 +258,6 @@ public class SpraywayMovement : MonoBehaviour
     // SPRAYYYYYY
     private void StartSprayAudio()
     {
-        _isPlayingAudioSpray = true;
         _isPlayingAudioSpray = true;
         sprayInstance.setParameterByName("Spray", 1f);
         sprayInstance.start();
@@ -263,8 +267,5 @@ public class SpraywayMovement : MonoBehaviour
     {
         _isPlayingAudioSpray = false;
         sprayInstance.setParameterByName("Spray", 0f);
-        _isPlayingAudioSpray = false;
-
     }
-
 }
