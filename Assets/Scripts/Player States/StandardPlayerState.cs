@@ -4,7 +4,7 @@
     {
         base.OnEnter();
 
-        PlayerStateMachine.Instance.GetComponent<WorldMovement>().NullifyTarget();
+        //PlayerStateMachine.Instance.GetComponent<WorldMovement>().NullifyTarget();
     }
 
     // Extra logic for this state if you need it later.

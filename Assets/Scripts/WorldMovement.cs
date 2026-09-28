@@ -4,166 +4,176 @@ using System.Collections;
 
 public class WorldMovement : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rigidbody;
+	[SerializeField] private Rigidbody _rigidbody;
 
-    [Header("Movement")]
-    [SerializeField] private float _moveSpeed = 5f;
-    [SerializeField] private float _rotationSpeed = 360f;
+	[Header("Movement")]
+	[SerializeField] private float _moveSpeed = 5f;
+	[SerializeField] private float _rotationSpeed = 360f;
 
-    [Header("Ground Raycast")]
-    [SerializeField] private LayerMask _groundMask;
-    [SerializeField] private float _rayLength = 1000f;
+	[Header("Touch Joystick")]
+	[SerializeField] private FloatingJoystick _joystick;
 
-    [Header("Audio Settings")]
-    [SerializeField] private EventReference _footstepEvent;
-    [SerializeField] private float _stepDistance = 1.8f;
+	[Header("Ground Raycast")]
+	[SerializeField] private LayerMask _groundMask;
+	[SerializeField] private float _rayLength = 1000f;
 
-    private Animator _animator;
+	[Header("Audio Settings")]
+	[SerializeField] private EventReference _footstepEvent;
+	[SerializeField] private float _stepDistance = 1.8f;
 
-    // Internal tracker for audio
-    private float _currentStepTracker = 0f;
+	private Animator _animator;
 
-    // Buffered target position on the floor
-    private Vector3 _targetPosition;
-    private bool _hasTarget;
+	private float _currentStepTracker = 0f;
 
-    private void Start()
-    {
-        _rigidbody = GetComponent<Rigidbody>();
-        _rigidbody.freezeRotation = true;
+	private void Start()
+	{
+		_rigidbody = GetComponent<Rigidbody>();
+		_rigidbody.freezeRotation = true;
 
-        _targetPosition = transform.position;
-        _hasTarget = false;
+		// Abysmal dogshit way of finding components, rework this entirely!
+		_animator = transform.Find("Model Container").GetComponent<Animator>();
+		_joystick = GameObject.Find("JoystickContainer").GetComponent<FloatingJoystick>();
 
-        _animator = transform.Find("Model Container").GetComponent<Animator>();
-        
-        StartCoroutine(IdleActiveAnimation());
-    }
+		StartCoroutine(IdleActiveAnimation());
+	}
 
-    public void NullifyTarget() => _targetPosition = transform.position;
+	private void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.F1))
+		{
+			_animator.SetTrigger("dance_1");
+		}
 
-    private void Update()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		if (Input.GetKeyDown(KeyCode.F2))
+		{
+			_animator.SetTrigger("dance_2");
+		}
+	}
 
-            if (Physics.Raycast(ray, out RaycastHit hit, _rayLength, _groundMask))
-            {
-                _targetPosition = hit.point;
-                _hasTarget = true;
-            }
-        }
+	private void FixedUpdate()
+	{
+		if (_rigidbody == null)
+			return;
 
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            _animator.SetTrigger("dance_1");
-        }
+		Vector2 joystickInput = _joystick.Direction;
 
-        if (Input.GetKeyDown(KeyCode.F2))
-        {
-            _animator.SetTrigger("dance_2");
-        }
-    }
+		Vector3 movementDirection = new Vector3(
+			joystickInput.x,
+			0f,
+			joystickInput.y
+		);
 
-    private void FixedUpdate()
-    {
-        if (_rigidbody == null)
-            return;
+		// No joystick input
+		if (movementDirection.sqrMagnitude < 0.01f)
+		{
+			HandleIdle();
+			return;
+		}
 
-        Vector3 toTarget = _targetPosition - transform.position;
-        toTarget.y = 0f;
+		movementDirection.Normalize();
 
-        float distSq = toTarget.sqrMagnitude;
-        bool closeEnough = distSq < 0.1f;
+		HandleMovement(movementDirection);
+	}
 
-        // --- IDLE LOGIC ---
-        if (closeEnough)
-        {
-            _currentStepTracker = 0f;
+	private void HandleMovement(Vector3 movementDirection)
+	{
+		_animator.SetFloat("speed", 1f);
 
-            // Direction we want to face when idle = camera forward on XZ
-            Vector3 idleDirection;
+		// Rotate toward joystick direction
+		Quaternion desiredRotation = Quaternion.LookRotation(
+			movementDirection,
+			Vector3.up
+		);
 
-            if (Camera.main != null)
-            {
-                idleDirection = -Camera.main.transform.forward;
-                idleDirection.y = 0f;
+		Quaternion newRotation = Quaternion.RotateTowards(
+			_rigidbody.rotation,
+			desiredRotation,
+			_rotationSpeed * Time.fixedDeltaTime
+		);
 
-                if (idleDirection.sqrMagnitude < 0.0001f)
-                    idleDirection = -transform.forward; // fallback
-                else
-                    idleDirection.Normalize();
-            }
-            else
-            {
-                idleDirection = -transform.forward; // no camera -> keep current
-            }
+		_rigidbody.MoveRotation(newRotation);
 
-            Quaternion desiredIdleRotation = Quaternion.LookRotation(idleDirection, Vector3.up);
+		// Move in the desired direction
+		Vector3 move = movementDirection *
+					   _moveSpeed *
+					   Time.fixedDeltaTime;
 
-            Quaternion newIdleRot = Quaternion.RotateTowards(
-                _rigidbody.rotation,
-                desiredIdleRotation,
-                _rotationSpeed * Time.fixedDeltaTime
-            );
+		_rigidbody.MovePosition(
+			_rigidbody.position + move
+		);
 
-            _rigidbody.MoveRotation(newIdleRot);
-            _animator.SetFloat("speed", 0);
-            return;
-        }
+		PlayFootstepIfMoved(move.magnitude);
+	}
 
-        _animator.SetFloat("speed", 1);
+	private void HandleIdle()
+	{
+		_currentStepTracker = 0f;
 
-        // --- MOVING LOGIC ---
-        Vector3 normalized = toTarget.normalized;
+		// Face opposite the camera direction while idle
+		Vector3 idleDirection;
 
-        Quaternion desiredRotation = Quaternion.LookRotation(normalized, Vector3.up);
-        Quaternion newRotation = Quaternion.RotateTowards(
-            _rigidbody.rotation,
-            desiredRotation,
-            _rotationSpeed * Time.fixedDeltaTime
-        );
+		if (Camera.main != null)
+		{
+			idleDirection = -Camera.main.transform.forward;
+			idleDirection.y = 0f;
 
-        _rigidbody.MoveRotation(newRotation);
+			if (idleDirection.sqrMagnitude < 0.0001f)
+			{
+				idleDirection = -transform.forward;
+			}
+			else
+			{
+				idleDirection.Normalize();
+			}
+		}
+		else
+		{
+			idleDirection = -transform.forward;
+		}
 
-        Vector3 move = transform.forward * _moveSpeed * Time.fixedDeltaTime;
-        _rigidbody.MovePosition(_rigidbody.position + move);
+		Quaternion desiredIdleRotation = Quaternion.LookRotation(
+			idleDirection,
+			Vector3.up
+		);
 
-        PlayFootstepIfMoved(move.magnitude);
-    }
+		Quaternion newIdleRotation = Quaternion.RotateTowards(
+			_rigidbody.rotation,
+			desiredIdleRotation,
+			_rotationSpeed * Time.fixedDeltaTime
+		);
 
-    private void PlayFootstepIfMoved(float distanceMoved)
-    {
-        _currentStepTracker += distanceMoved;
+		_rigidbody.MoveRotation(newIdleRotation);
 
-        if (_currentStepTracker >= _stepDistance)
-        {
-            if (!_footstepEvent.IsNull)
-            {
-                RuntimeManager.PlayOneShot(_footstepEvent, transform.position);
-            }
-            _currentStepTracker = 0f;
-        }
-    }
+		_animator.SetFloat("speed", 0f);
+	}
 
-    private IEnumerator IdleActiveAnimation()
-    {
-        while (_animator != null)
-        {
-            _animator.SetTrigger("idle_active");
-            yield return new WaitForSeconds(Random.Range(7, 15));
-        }
-    }
+	private void PlayFootstepIfMoved(float distanceMoved)
+	{
+		_currentStepTracker += distanceMoved;
 
-#if UNITY_EDITOR
-    private void OnDrawGizmosSelected()
-    {
-        if (_hasTarget)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(_targetPosition + Vector3.up * 0.05f, 0.15f);
-        }
-    }
-#endif
+		if (_currentStepTracker >= _stepDistance)
+		{
+			if (!_footstepEvent.IsNull)
+			{
+				RuntimeManager.PlayOneShot(
+					_footstepEvent,
+					transform.position
+				);
+			}
+
+			_currentStepTracker = 0f;
+		}
+	}
+
+	private IEnumerator IdleActiveAnimation()
+	{
+		while (_animator != null)
+		{
+			_animator.SetTrigger("idle_active");
+
+			yield return new WaitForSeconds(
+				Random.Range(7, 15)
+			);
+		}
+	}
 }
