@@ -18,6 +18,9 @@ public class SpraywayMovement : MonoBehaviour
     [Tooltip("Maximum height along the wall (top limit).")]
     [SerializeField] private float _maxHeight = 10f;
 
+    [Header("Auto Descend")]
+    [SerializeField] private float _descendAmount = 0.25f; // how much to drop when descending
+
     [Header("Spray FX")]
     [SerializeField] private ParticleSystem _sprayParticles;
     [Tooltip("UI Slider used as progress bar (0–1).")]
@@ -25,21 +28,11 @@ public class SpraywayMovement : MonoBehaviour
     [Tooltip("How fast the progress fills per second while spraying.")]
     [SerializeField] private float _fillPerSecond = 0.2f;
 
-    [Header("Turning")]
-    [SerializeField] private float _turnSpeed = 180f;   // degrees per second
-
-    [Header("Auto Descend")]
-    [SerializeField] private float _descendAmount = 0.25f; // how much to drop per turn
-
     [SerializeField] private FMODUnity.EventReference sprayEvent;
     private FMOD.Studio.EventInstance sprayInstance;
 
-    private bool _isTurning;
-    private Quaternion _targetRotation;
-
     private Rigidbody _rb;
     private Animator _animator;
-
     private SprayWay _sprayWayActivity;
 
     // input buffer from Update – used in FixedUpdate
@@ -54,7 +47,7 @@ public class SpraywayMovement : MonoBehaviour
     {
         _stopped = false;
         _rb = GetComponent<Rigidbody>();
-        _rb.useGravity = false;                     // we do custom gravity
+        _rb.useGravity = false;                     // custom gravity
         _rb.constraints = RigidbodyConstraints.FreezeRotation;  // no spinning
 
         _animator = transform.Find("Model Container").GetComponent<Animator>();
@@ -86,36 +79,22 @@ public class SpraywayMovement : MonoBehaviour
         // raw input (replace with your input system if needed)
         _wantsThrust = Input.GetMouseButton(0);
 
-        // FX & progress bar are easier to handle here
-        if (_progressBar == null)
+        // FX & progress bar are handled here
+        if (_progressBar == null && _sprayWayActivity != null)
         {
             _progressBar = _sprayWayActivity.transform.Find("Root").Find("Canvas").Find("Progress").GetComponent<Slider>();
         }
-        if (_progressBar != null && _isSpraying)
+
+        if (_progressBar != null && _sprayWayActivity != null)
         {
-            _animator.SetBool("mid_air", true);
-            _sprayWayActivity.AddProgress(_fillPerSecond * Time.deltaTime);
+            if (_isSpraying)
+            {
+                _animator.SetBool("mid_air", true);
+                _sprayWayActivity.AddProgress(_fillPerSecond * Time.deltaTime);
+            }
+
+            _progressBar.value = Mathf.Clamp01(_sprayWayActivity.Progress);
         }
-
-        _progressBar.value = Mathf.Clamp01(
-            _sprayWayActivity.Progress
-        );
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("SprayWayTurn"))
-        {
-            StartTurn();
-        }
-    }
-
-    private void StartTurn()
-    {
-        _isTurning = true;
-
-        // 180° flip relative to current orientation
-        _targetRotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y + 180f, transform.eulerAngles.z + 180);
     }
 
     private void FixedUpdate()
@@ -129,29 +108,12 @@ public class SpraywayMovement : MonoBehaviour
         if (_wall == null || _rb == null)
             return;
 
-        if (_isTurning)
-        {
-            transform.rotation = Quaternion.RotateTowards(
-                transform.rotation,
-                _targetRotation,
-                _turnSpeed * Time.fixedDeltaTime
-            );
-
-            // stop when we reach target
-            if (Quaternion.Angle(transform.rotation, _targetRotation) < 0.5f)
-            {
-                _isTurning = false;
-                AutoDescend();
-            }
-        }
-
         if (Mathf.Abs(transform.position.y - _prevHeight) <= 0.01f)
             _animator.SetBool("mid_air", false);
 
         // Define wall axes
-        Vector3 wallUp = _wall.up;      // along the wall: "up" (spray direction)
-        Vector3 wallForward = _wall.right; // Aangepast naar _wall.right voor correcte voorwaartse beweging
-        Vector3 gravityDir = -wallUp;       // gravity goes down the wall
+        Vector3 wallUp = _wall.up;         // along the wall: "up" (spray direction)
+        Vector3 wallForward = _wall.right; // forward movement along wall
 
         Vector3 vel = _rb.linearVelocity;
 
@@ -169,7 +131,6 @@ public class SpraywayMovement : MonoBehaviour
         float currentHeight = GetHeightAlongWall(transform.position, _wall.position, wallUp);
 
         bool canGoUp = currentHeight < _maxHeight - 0.01f;
-        bool onGround = currentHeight <= _minHeight + 0.01f;
 
         if (_wantsThrust && canGoUp)
         {
@@ -195,7 +156,7 @@ public class SpraywayMovement : MonoBehaviour
 
         _prevHeight = transform.position.y;
 
-        // Toggle spray particles
+        // Toggle spray particles and audio
         if (_sprayParticles == null)
         {
             _sprayParticles = transform.Find("Model Container").Find("BaseMesh").Find("Spraycan").Find("SprayWayParticleSystem").GetComponent<ParticleSystem>();
@@ -205,27 +166,30 @@ public class SpraywayMovement : MonoBehaviour
             var emission = _sprayParticles.emission;
             emission.enabled = _isSpraying;
 
-            if (_isSpraying == true && _isPlayingAudioSpray == false)
+            if (_isSpraying && !_isPlayingAudioSpray)
             {
                 StartSprayAudio();
             }
-            else if (_isSpraying == false && _isPlayingAudioSpray == true)
+            else if (!_isSpraying && _isPlayingAudioSpray)
             {
                 StopSprayAudio();
             }
         }
     }
 
-    private void AutoDescend()
+    public void AutoDescend()
     {
-        // move down along the wall: use -wallUp
+        // move down along the wall using wall forward/up references depending on your layout setup
         Vector3 wallUp = _wall.forward;
         Vector3 descendDir = -wallUp * _descendAmount;
 
         // apply movement without physics impulses
         transform.position += descendDir;
 
-        _sprayWayActivity.NextLayer();
+        if (_sprayWayActivity != null)
+        {
+            _sprayWayActivity.NextLayer();
+        }
     }
 
     private float GetHeightAlongWall(Vector3 worldPos, Vector3 wallOrigin, Vector3 wallUp)
@@ -239,6 +203,7 @@ public class SpraywayMovement : MonoBehaviour
         {
             _sprayParticles.transform.parent.GetComponent<Renderer>().enabled = false;
         }
+        sprayInstance.release();
     }
 
     public void Stop()
@@ -253,9 +218,10 @@ public class SpraywayMovement : MonoBehaviour
         }
         StopSprayAudio();
     }
+
     public void Ressurect() => _stopped = false;
 
-    // SPRAYYYYYY
+    // AUDIO
     private void StartSprayAudio()
     {
         _isPlayingAudioSpray = true;
