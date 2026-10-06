@@ -5,28 +5,28 @@ public class SpraywayMovement : MonoBehaviour
 {
     [Header("Wall Orientation")]
     [SerializeField] private Transform _wall;          // defines wall "up" and "forward"
-    [Tooltip("Down-the-wall gravity strength (like 9.81).")]
-    [SerializeField] private float _gravityStrength = 9.81f;
+    [Tooltip("Heavy gravity so you drop instantly when letting go.")]
+    [SerializeField] private float _gravityStrength = 45f;
 
-    [Header("Movement")]
+    [Header("Movement (Jetpack / Flappy Style)")]
     [Tooltip("Constant forward speed along the wall.")]
-    [SerializeField] private float _forwardSpeed = 5f;
-    [Tooltip("Acceleration upward along the wall while spraying.")]
-    [SerializeField] private float _thrustAcceleration = 25f;
+    [SerializeField] private float _forwardSpeed = 10f;
+    [Tooltip("Instant upward flight speed when holding the mouse button.")]
+    [SerializeField] private float _flySpeed = 18f;
     [Tooltip("Minimum height along the wall (bottom limit).")]
     [SerializeField] private float _minHeight = 0f;
     [Tooltip("Maximum height along the wall (top limit).")]
     [SerializeField] private float _maxHeight = 10f;
 
     [Header("Auto Descend")]
-    [SerializeField] private float _descendAmount = 0.25f; // how much to drop when descending
+    [SerializeField] private float _descendAmount = 0.25f;
 
     [Header("Spray FX")]
     [SerializeField] private ParticleSystem _sprayParticles;
     [Tooltip("UI Slider used as progress bar (0–1).")]
     [SerializeField] private Slider _progressBar;
     [Tooltip("How fast the progress fills per second while spraying.")]
-    [SerializeField] private float _fillPerSecond = 0.2f;
+    [SerializeField] private float _fillPerSecond = 0.3f;
 
     [SerializeField] private FMODUnity.EventReference sprayEvent;
     private FMOD.Studio.EventInstance sprayInstance;
@@ -35,7 +35,6 @@ public class SpraywayMovement : MonoBehaviour
     private Animator _animator;
     private SprayWay _sprayWayActivity;
 
-    // input buffer from Update – used in FixedUpdate
     private bool _wantsThrust;
     private bool _isSpraying;
     private bool _stopped;
@@ -47,8 +46,8 @@ public class SpraywayMovement : MonoBehaviour
     {
         _stopped = false;
         _rb = GetComponent<Rigidbody>();
-        _rb.useGravity = false;                     // custom gravity
-        _rb.constraints = RigidbodyConstraints.FreezeRotation;  // no spinning
+        _rb.useGravity = false;
+        _rb.constraints = RigidbodyConstraints.FreezeRotation;
 
         _animator = transform.Find("Model Container").GetComponent<Animator>();
 
@@ -74,12 +73,11 @@ public class SpraywayMovement : MonoBehaviour
             return;
         }
 
-        _animator.SetFloat("speed", 1);
+        _animator.SetFloat("speed", 2f);
 
-        // raw input (replace with your input system if needed)
+        // Raw input
         _wantsThrust = Input.GetMouseButton(0);
 
-        // FX & progress bar are handled here
         if (_progressBar == null && _sprayWayActivity != null)
         {
             _progressBar = _sprayWayActivity.transform.Find("Root").Find("Canvas").Find("Progress").GetComponent<Slider>();
@@ -111,33 +109,29 @@ public class SpraywayMovement : MonoBehaviour
         if (Mathf.Abs(transform.position.y - _prevHeight) <= 0.01f)
             _animator.SetBool("mid_air", false);
 
-        // Define wall axes
-        Vector3 wallUp = _wall.up;         // along the wall: "up" (spray direction)
-        Vector3 wallForward = _wall.right; // forward movement along wall
+        Vector3 wallUp = _wall.up;
+        Vector3 wallForward = _wall.right;
 
         Vector3 vel = _rb.linearVelocity;
-
-        // Decompose current velocity into vertical + forward components in wall space
         float verticalVel = Vector3.Dot(vel, wallUp);
-        float forwardVel = Vector3.Dot(vel, wallForward);
+        float forwardVel = _forwardSpeed;
 
-        // Base forward movement (constant auto-run)
-        forwardVel = _forwardSpeed;
-
-        // Apply custom gravity along the wall
-        verticalVel += -_gravityStrength * Time.fixedDeltaTime;
-
-        // Thrust when holding input, but only if we’re not past max height
         float currentHeight = GetHeightAlongWall(transform.position, _wall.position, wallUp);
-
         bool canGoUp = currentHeight < _maxHeight - 0.01f;
 
+        // INSTANT SNAP MOVEMENT (No Lerp/Smoothing lag)
         if (_wantsThrust && canGoUp)
         {
-            verticalVel += _thrustAcceleration * Time.fixedDeltaTime;
+            // Jetpack Joyride style: Instantly lock to high upward speed
+            verticalVel = _flySpeed;
+        }
+        else
+        {
+            // Flappy Bird style: Heavy, immediate gravity pull down
+            verticalVel -= _gravityStrength * Time.fixedDeltaTime;
         }
 
-        // Clamp movement at top/bottom boundaries
+        // Clamp movement at boundaries
         if (currentHeight >= _maxHeight && verticalVel > 0f)
         {
             verticalVel = 0f;
@@ -147,16 +141,13 @@ public class SpraywayMovement : MonoBehaviour
             verticalVel = 0f;
         }
 
-        // Build new velocity back in world space
-        Vector3 newVel = wallUp * verticalVel + wallForward * forwardVel;
+        // Apply velocity instantly
+        Vector3 newVel = (wallUp * verticalVel) + (wallForward * forwardVel);
         _rb.linearVelocity = newVel;
 
-        // Determine when we are actually "flying up" vs falling/walking
         _isSpraying = _wantsThrust && verticalVel > 0.01f;
-
         _prevHeight = transform.position.y;
 
-        // Toggle spray particles and audio
         if (_sprayParticles == null)
         {
             _sprayParticles = transform.Find("Model Container").Find("BaseMesh").Find("Spraycan").Find("SprayWayParticleSystem").GetComponent<ParticleSystem>();
@@ -179,11 +170,8 @@ public class SpraywayMovement : MonoBehaviour
 
     public void AutoDescend()
     {
-        // move down along the wall using wall forward/up references depending on your layout setup
         Vector3 wallUp = _wall.forward;
         Vector3 descendDir = -wallUp * _descendAmount;
-
-        // apply movement without physics impulses
         transform.position += descendDir;
 
         if (_sprayWayActivity != null)
@@ -221,7 +209,6 @@ public class SpraywayMovement : MonoBehaviour
 
     public void Ressurect() => _stopped = false;
 
-    // AUDIO
     private void StartSprayAudio()
     {
         _isPlayingAudioSpray = true;

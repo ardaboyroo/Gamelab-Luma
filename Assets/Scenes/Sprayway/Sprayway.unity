@@ -289,7 +289,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2696413747832787974, guid: b1f1c4d4ed611164880d1ecfb46b9e2f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: -31.7
       objectReference: {fileID: 0}
     - target: {fileID: 2696413747832787974, guid: b1f1c4d4ed611164880d1ecfb46b9e2f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -349,7 +349,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2696413747832787974, guid: b1f1c4d4ed611164880d1ecfb46b9e2f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 961739753}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 8283830527365144878, guid: b1f1c4d4ed611164880d1ecfb46b9e2f, type: 3}
       insertIndex: -1
@@ -361,6 +364,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1324588960}
   m_SourcePrefab: {fileID: 100100000, guid: b1f1c4d4ed611164880d1ecfb46b9e2f, type: 3}
+--- !u!4 &362156279 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3849889970188967423, guid: b1f1c4d4ed611164880d1ecfb46b9e2f, type: 3}
+  m_PrefabInstance: {fileID: 351241391}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &436352480
 GameObject:
   m_ObjectHideFlags: 0
@@ -443,8 +451,8 @@ Transform:
   m_GameObject: {fileID: 564178276}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0.9, y: 0, z: 0}
-  m_LocalScale: {x: 75.16, y: 23.38, z: 1.1}
+  m_LocalPosition: {x: 0.9, y: -0.00000095367, z: 0}
+  m_LocalScale: {x: 75.16, y: 74.90196, z: 1.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1818528218}
@@ -568,6 +576,7 @@ GameObject:
   - component: {fileID: 961739752}
   - component: {fileID: 961739751}
   - component: {fileID: 961739750}
+  - component: {fileID: 961739754}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -660,7 +669,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 91
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -686,13 +695,28 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 961739749}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.025034223, y: -0.70666355, z: -0.02503423, w: 0.70666355}
-  m_LocalPosition: {x: -29.2, y: 3.9, z: 1.8}
+  m_LocalRotation: {x: -0.052094977, y: -0.70518523, z: -0.052094977, w: 0.70518523}
+  m_LocalPosition: {x: 11.96, y: 5.45, z: 0.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -4.058, y: -90, z: 0}
+  m_Father: {fileID: 1324588963}
+  m_LocalEulerAnglesHint: {x: -8.45, y: -90, z: 0}
+--- !u!114 &961739754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 961739749}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82f42caa3037d834fb50481c3d5635ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 362156279}
+  _offset: {x: 0, y: 2, z: -10}
+  _smoothSpeed: 5
 --- !u!1 &981416376
 GameObject:
   m_ObjectHideFlags: 0
@@ -834,6 +858,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _componentListPrefab: {fileID: 0}
+--- !u!4 &1324588963 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2696413747832787974, guid: b1f1c4d4ed611164880d1ecfb46b9e2f, type: 3}
+  m_PrefabInstance: {fileID: 351241391}
+  m_PrefabAsset: {fileID: 0}
 --- !u!198 &1549750710 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 5594284954447534480, guid: b1f1c4d4ed611164880d1ecfb46b9e2f, type: 3}
@@ -1023,7 +1052,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 6.21, y: 0, z: 1}
-  m_LocalScale: {x: 1, y: 1, z: 7.2811}
+  m_LocalScale: {x: 2.1741, y: 1, z: 7.2811}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 981416377}
@@ -1244,7 +1273,6 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 961739753}
   - {fileID: 203844589}
   - {fileID: 1937117520}
   - {fileID: 1028178935}
