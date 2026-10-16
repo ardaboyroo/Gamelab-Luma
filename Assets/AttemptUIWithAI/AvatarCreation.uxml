@@ -1,0 +1,41 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <ui:Style src="AvatarCreation.uss" />
+    <ui:VisualElement name="avatarCreation" class="avatar-creation">
+        <ui:VisualElement class="header-wave" picking-mode="Ignore" />
+        <ui:VisualElement class="decorative-trails" picking-mode="Ignore" />
+        <ui:Label text="Avatar Creation" class="title" picking-mode="Ignore" />
+        <ui:VisualElement name="avatarPreview" class="avatar-preview" picking-mode="Ignore" />
+        <ui:VisualElement name="mainTabs" class="main-tabs">
+            <ui:Button name="bodyTab" text="Body" class="pill main-tab" />
+            <ui:Button name="faceTab" text="Face" class="pill main-tab selected-tab" />
+            <ui:Button name="clothesTab" text="Clothes" class="pill main-tab clothes-tab" />
+        </ui:VisualElement>
+        <ui:VisualElement name="customizationPanel" class="customization-panel">
+            <ui:VisualElement name="faceCategories" class="categories">
+                <ui:Button name="eyesButton" text="Eyes" class="pill category selected-option" />
+                <ui:Button name="eyebrowsButton" text="Eyebrows" class="pill category" />
+                <ui:Button name="noseButton" text="Nose" class="pill category" />
+                <ui:Button name="mouthButton" text="Mouth" class="pill category" />
+                <ui:Button name="hairButton" text="Hair" class="pill category" />
+            </ui:VisualElement>
+            <ui:VisualElement name="optionsPanel" class="options-panel">
+                <ui:VisualElement class="mode-tabs">
+                    <ui:Button name="styleTab" text="Style" class="pill mode-tab" />
+                    <ui:Button name="colorTab" text="Color" class="pill mode-tab selected-option" />
+                </ui:VisualElement>
+                <ui:VisualElement name="stylePanel" class="selection-panel is-hidden">
+                    <ui:ScrollView name="styleOptions" class="style-options" mode="Vertical" />
+                </ui:VisualElement>
+                <ui:VisualElement name="colorPanel" class="selection-panel color-controls">
+                    <ui:VisualElement name="hueWheel" class="hue-wheel">
+                        <ui:VisualElement name="colorSwatch" class="color-swatch" />
+                        <ui:VisualElement name="hueHandle" class="handle hue-handle" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="saturationSlider" class="gradient saturation" tooltip="Saturation"><ui:VisualElement name="saturationHandle" class="handle slider-handle" picking-mode="Ignore" /></ui:VisualElement>
+                    <ui:VisualElement name="brightnessSlider" class="gradient value" tooltip="Brightness"><ui:VisualElement name="valueHandle" class="handle slider-handle" picking-mode="Ignore" /></ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:Button name="startButton" text="Start" class="pill start-button" />
+    </ui:VisualElement>
+</ui:UXML>
