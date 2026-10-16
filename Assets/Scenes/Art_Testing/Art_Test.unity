@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 7416536dbe0334cfd888dd1beb75a9fb, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -1527,7 +1527,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: a4cf42d2cd7a7b24e9667412a1e5fa33, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 161
+      value: 98.3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a4cf42d2cd7a7b24e9667412a1e5fa33, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1535,7 +1535,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a4cf42d2cd7a7b24e9667412a1e5fa33, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 266.8
+      value: 239.6
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a4cf42d2cd7a7b24e9667412a1e5fa33, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1571,7 +1571,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: a4cf42d2cd7a7b24e9667412a1e5fa33, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1630,6 +1630,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: OakTree_MainHub
       objectReference: {fileID: 0}
+    - target: {fileID: 3696312012253974582, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1687,6 +1691,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bush_Big
       objectReference: {fileID: 0}
+    - target: {fileID: 8063997577576848313, guid: 3ef5a012584a04746867ef1c5f192eba, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1703,6 +1711,10 @@ PrefabInstance:
     - target: {fileID: 147551780775281871, guid: 1c5436d3087be444296206b33eca3401, type: 3}
       propertyPath: m_Name
       value: Boulder_Big
+      objectReference: {fileID: 0}
+    - target: {fileID: 147551780775281871, guid: 1c5436d3087be444296206b33eca3401, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8170399100228482398, guid: 1c5436d3087be444296206b33eca3401, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1761,6 +1773,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Boulder_Medium
       objectReference: {fileID: 0}
+    - target: {fileID: 1716863263112122477, guid: 9c961aaecccca204087bceb46a655427, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8000903313317238651, guid: 9c961aaecccca204087bceb46a655427, type: 3}
       propertyPath: m_LocalPosition.x
       value: 101.90159
@@ -1817,6 +1833,10 @@ PrefabInstance:
     - target: {fileID: 4610163329247922802, guid: d8e0618700abbef49bdca38450d83a1f, type: 3}
       propertyPath: m_Name
       value: Bush_Small
+      objectReference: {fileID: 0}
+    - target: {fileID: 4610163329247922802, guid: d8e0618700abbef49bdca38450d83a1f, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6215284080221718525, guid: d8e0618700abbef49bdca38450d83a1f, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1935,6 +1955,10 @@ PrefabInstance:
     - target: {fileID: 2305085270343342743, guid: df0c4a6405ef1464aad30af8d25bb1a2, type: 3}
       propertyPath: m_Name
       value: Boulder_small
+      objectReference: {fileID: 0}
+    - target: {fileID: 2305085270343342743, guid: df0c4a6405ef1464aad30af8d25bb1a2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3204181067184937606, guid: df0c4a6405ef1464aad30af8d25bb1a2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2263,6 +2287,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PineTree
       objectReference: {fileID: 0}
+    - target: {fileID: 4088454911566822978, guid: 745ff85bdb6d0e549a42d481a4611512, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8966948943758774206, guid: 745ff85bdb6d0e549a42d481a4611512, type: 3}
       propertyPath: m_LocalPosition.x
       value: 175.7
@@ -2273,7 +2301,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8966948943758774206, guid: 745ff85bdb6d0e549a42d481a4611512, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 241
+      value: 265.39
       objectReference: {fileID: 0}
     - target: {fileID: 8966948943758774206, guid: 745ff85bdb6d0e549a42d481a4611512, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2319,6 +2347,10 @@ PrefabInstance:
     - target: {fileID: 6378883603249006100, guid: 3eed1493857765f468a42b460a9049cf, type: 3}
       propertyPath: m_Name
       value: Oak_Tree_V1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6378883603249006100, guid: 3eed1493857765f468a42b460a9049cf, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8674539754685658451, guid: 3eed1493857765f468a42b460a9049cf, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2416,6 +2448,10 @@ PrefabInstance:
     - target: {fileID: 7572587674588852137, guid: f300faecaba2f0e4ea03fc9fc1ce9093, type: 3}
       propertyPath: m_Name
       value: Oak_Tree_V2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7572587674588852137, guid: f300faecaba2f0e4ea03fc9fc1ce9093, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
