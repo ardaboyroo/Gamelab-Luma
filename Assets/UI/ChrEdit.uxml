@@ -15,7 +15,7 @@
                 <ui:Button text="5" name="hair_5" style="width: 100px; height: 80px;" />
                 <ui:Button text="6" name="hair_6" style="width: 100px; height: 80px;" />
             </ui:GroupBox>
-            <ui:Label text="Color:" parse-escape-sequences="false" style="font-size: 24%; top: 20px; left: 9px; -unity-font-style: normal;" />
+            <ui:Label text="Color:" parse-escape-sequences="false" name="Label" style="font-size: 24%; top: 20px; left: 9px; -unity-font-style: normal;" />
             <ui:GroupBox name="GroupBox" style="top: 7px;">
                 <ui:Slider label="R" value="42" high-value="100" name="hair_r" />
                 <ui:Slider label="G" value="42" high-value="100" name="hair_g" />
