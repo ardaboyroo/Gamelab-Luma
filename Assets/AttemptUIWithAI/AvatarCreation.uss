@@ -100,6 +100,10 @@
 .selection-panel { flex-grow: 1; min-height: 0; padding-top: 24px; }
 .style-options { flex-grow: 1; }
 .style-options .unity-scroll-view__content-container { flex-direction: row; flex-wrap: wrap; }
+.dynamic-button-grid { width: 100%; flex-shrink: 0; }
+.dynamic-button-row { flex-direction: row; flex-shrink: 0; }
+.dynamic-button-cell { flex-grow: 1; flex-basis: 0; min-width: 0; padding: 6px; }
+.dynamic-option-button { height: 80px; font-size: 30px; }
 .is-hidden { display: none; }
 .color-controls { flex-direction: row; align-items: center; justify-content: space-between; }
 .hue-wheel {

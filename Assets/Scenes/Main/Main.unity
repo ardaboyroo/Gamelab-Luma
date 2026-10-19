@@ -15368,6 +15368,50 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: hairValues.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: noseValues.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: mouthValues.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: 'noseValues.Array.data[4]'
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: 'noseValues.Array.data[5]'
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: eyebrowsValues.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: 'mouthValues.Array.data[4]'
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: 'mouthValues.Array.data[5]'
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: 'mouthValues.Array.data[6]'
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: 'mouthValues.Array.data[7]'
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1861443776289931726, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
+      propertyPath: 'eyebrowsValues.Array.data[4]'
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 4808613158917550845, guid: 89ecebf9601f971428c89e0cd798289a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

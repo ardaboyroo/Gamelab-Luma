@@ -24,7 +24,11 @@
                     <ui:Button name="colorTab" text="Color" class="pill mode-tab selected-option" />
                 </ui:VisualElement>
                 <ui:VisualElement name="stylePanel" class="selection-panel is-hidden">
-                    <ui:ScrollView name="styleOptions" class="style-options" mode="Vertical" />
+                    <ui:ScrollView name="eyesStylePanel" class="style-options" mode="Vertical" />
+                    <ui:ScrollView name="eyebrowsStylePanel" class="style-options is-hidden" mode="Vertical" />
+                    <ui:ScrollView name="noseStylePanel" class="style-options is-hidden" mode="Vertical" />
+                    <ui:ScrollView name="mouthStylePanel" class="style-options is-hidden" mode="Vertical" />
+                    <ui:ScrollView name="hairStylePanel" class="style-options is-hidden" mode="Vertical" />
                 </ui:VisualElement>
                 <ui:VisualElement name="colorPanel" class="selection-panel color-controls">
                     <ui:VisualElement name="hueWheel" class="hue-wheel">
