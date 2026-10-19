@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [Serializable]
-public class AvatarTextureClass : MonoBehaviour
+public class AvatarTextureClass
 {
     public Texture avatarOptionTexture;
     public String avatarOptionName;
