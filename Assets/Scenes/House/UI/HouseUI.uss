@@ -1,0 +1,134 @@
+/* ==========================================
+   PERMANENTE HUD KNOPPEN
+   ========================================== */
+#btn-toggle-ui {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 120px;
+    height: 120px;
+    font-size: 60px;
+    border-radius: 24px;
+    background-color: rgba(40, 40, 40, 0.9);
+    color: white;
+    border-color: rgba(255, 255, 255, 0.8);
+    border-width: 3px;
+}
+
+.turn-btn {
+    position: absolute;
+    top: 50%;
+    margin-top: -90px;
+    width: 120px;
+    height: 180px;
+    font-size: 70px;
+    border-radius: 24px;
+    background-color: rgba(40, 40, 40, 0.8);
+    color: white;
+}
+.turn-left  { left: 20px; }
+.turn-right { right: 20px; }
+
+#btn-categories {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    height: 100px;
+    padding: 0 30px;
+    font-size: 40px;
+    border-radius: 20px;
+    background-color: rgba(40, 40, 40, 0.9);
+    color: white;
+    border-color: white;
+    border-width: 2px;
+}
+
+/* ==========================================
+   CONTAINER & TOUCH AREA
+   ========================================== */
+#house-ui-container {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+}
+
+#touch-area {
+    position: absolute;
+    left: 0; right: 0; top: 0; bottom: 0;
+}
+
+/* ==========================================
+   CATEGORIEËN MENU
+   ========================================== */
+#category-panel {
+    position: absolute;
+    top: 150px;
+    right: 30px;
+    width: 350px;
+    background-color: rgba(30, 30, 30, 0.95);
+    border-radius: 20px;
+    padding: 20px;
+    border-color: rgba(255, 255, 255, 0.3);
+    border-width: 2px;
+}
+
+.category-title {
+    font-size: 36px;
+    color: white;
+    -unity-text-align: middle-center;
+    margin-bottom: 15px;
+}
+
+.cat-btn {
+    height: 90px;
+    margin-bottom: 12px;
+    font-size: 34px;
+    border-radius: 15px;
+    background-color: rgba(70, 70, 70, 1);
+    color: white;
+}
+
+.cat-btn-back {
+    height: 80px;
+    margin-top: 10px;
+    font-size: 32px;
+    border-radius: 15px;
+    background-color: rgba(170, 50, 50, 1);
+    color: white;
+}
+
+/* ==========================================
+   ONDERSTE INVENTARIS BALK
+   ========================================== */
+.bottom-panel {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 24px 24px 60px 24px;
+    background-color: rgba(20, 20, 20, 0.88);
+}
+
+#inventory-list { height: 230px; }
+
+.inv-item {
+    width: 200px;
+    height: 210px;
+    margin-right: 18px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 20px;
+    background-color: rgba(70, 70, 70, 1);
+    color: white;
+}
+
+.inv-icon {
+    width: 120px;
+    height: 120px;
+    -unity-background-scale-mode: scale-to-fit;
+}
+
+.inv-label {
+    font-size: 32px;
+    color: white;
+    margin-top: 8px;
+}
+

@@ -1,0 +1,33 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <!-- Altijd zichtbare HUD knoppen -->
+    <ui:Button name="btn-toggle-ui" text="🏠" />
+    <ui:Button name="turn-left" text="&lt;" class="turn-btn turn-left" />
+    <ui:Button name="turn-right" text="&gt;" class="turn-btn turn-right" />
+    <ui:Button name="btn-categories" text="Inventaris" />
+
+    <!-- Container voor alle bouw-elementen -->
+    <ui:VisualElement name="house-ui-container" picking-mode="Ignore">
+        <ui:VisualElement name="touch-area" picking-mode="Ignore" />
+
+        <!-- Categorieën Keuzemenu -->
+        <ui:VisualElement name="category-panel" picking-mode="Position">
+            <ui:Label text="Kies Categorie" class="category-title" />
+            <ui:Button name="cat-beds" text="Bedden" class="cat-btn" />
+            <ui:Button name="cat-desks" text="Bureaus" class="cat-btn" />
+            <ui:Button name="cat-nightstands" text="Nachtkastjes" class="cat-btn" />
+            <ui:Button name="cat-back" text="Terug" class="cat-btn-back" />
+        </ui:VisualElement>
+
+        <!-- Onderste inventaris balk (alleen zichtbaar bij kiezen van meubel) -->
+        <ui:VisualElement name="inventory" class="bottom-panel" picking-mode="Position">
+            <ui:ScrollView name="inventory-list" mode="Horizontal" />
+        </ui:VisualElement>
+
+        <!-- Rechter- en linksonder/boven actieknoppen tijdens het plaatsen -->
+        <ui:VisualElement name="placement-bar" picking-mode="Position">
+            <ui:Button name="btn-cancel" text="✕" class="place-icon-btn cancel-btn" />
+            <ui:Button name="btn-rotate" text="↻" class="place-icon-btn rotate-btn" />
+            <ui:Button name="btn-confirm" text="✓" class="place-icon-btn confirm-btn" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
