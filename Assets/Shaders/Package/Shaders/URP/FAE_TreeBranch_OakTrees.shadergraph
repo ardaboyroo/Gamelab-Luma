@@ -2537,8 +2537,8 @@
     "m_ObjectId": "1c1a8e24398c43ada21e3f6d000b6ec8",
     "m_Title": "Top_Brightness",
     "m_Position": {
-        "x": -1403.0001220703125,
-        "y": -955.9999389648438
+        "x": -1403.199951171875,
+        "y": -957.5999755859375
     }
 }
 
@@ -3825,8 +3825,8 @@
     "m_ObjectId": "3e85ffb61282403cb9e1d9560fbff8ec",
     "m_Title": "Translucency",
     "m_Position": {
-        "x": -1899.0,
-        "y": 50.9998779296875
+        "x": -1900.0,
+        "y": 49.60009765625
     }
 }
 
@@ -5779,7 +5779,7 @@
     "m_AdditionalMotionVectorMode": 0,
     "m_AlembicMotionVectors": false,
     "m_SupportsLODCrossFade": false,
-    "m_CustomEditorGUI": "FAE.TreeBranchShaderGUI",
+    "m_CustomEditorGUI": "",
     "m_SupportVFX": false
 }
 
@@ -6315,8 +6315,8 @@
     "m_ObjectId": "8064c1f5b5fb4bba8275eb45daf7b83a",
     "m_Title": "Wind",
     "m_Position": {
-        "x": 1394.0,
-        "y": -1202.0
+        "x": 1393.60009765625,
+        "y": -1204.0
     }
 }
 
@@ -7682,8 +7682,8 @@
     "m_ObjectId": "a92364609ca649fcac030b7b3aa53a33",
     "m_Title": "Color",
     "m_Position": {
-        "x": -2466.0,
-        "y": -2024.9998779296875
+        "x": -2466.39990234375,
+        "y": -2026.400146484375
     }
 }
 
@@ -8978,8 +8978,8 @@
     "m_ObjectId": "cab162191cea471980dfe653dd8232fd",
     "m_Title": "AO",
     "m_Position": {
-        "x": -4048.0,
-        "y": -2607.0
+        "x": -4048.800048828125,
+        "y": -2608.7998046875
     }
 }
 
