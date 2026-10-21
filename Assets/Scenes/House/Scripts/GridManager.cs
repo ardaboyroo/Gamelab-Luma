@@ -18,14 +18,17 @@ public class GridManager : MonoBehaviour
     public float cellSize = 1f;
 
     [Header("Cell visuals")]
-    public Color freeColor = new Color(0.2f, 0.8f, 0.3f, 0.25f);
-    public Color occupiedColor = new Color(0.9f, 0.2f, 0.2f, 0.45f);
-    public Color previewOk = new Color(0.2f, 1f, 0.4f, 0.7f);
-    public Color previewBad = new Color(1f, 0.3f, 0.2f, 0.7f);
+    [Tooltip("Colour of the grid lines on free cells. Dark = easy to see on a light floor.")]
+    public Color gridColor = new Color(0.23f, 0.14f, 0.09f, 0.7f);
+    public Color blockedColor = new Color(0.9f, 0.25f, 0.2f, 0.9f);
+    public Color previewValid = new Color(0.3f, 0.85f, 0.35f, 1f);
+    public Color previewInvalid = new Color(0.95f, 0.25f, 0.2f, 1f);
+    public Color selectedColor = new Color(1f, 0.85f, 0.25f, 1f);
 
     PlacedFurniture[,] cells;
     Renderer[,] quads;
-    Material freeMat, occMat, okMat, badMat;
+    Material freeMat, occMat, okMat, badMat, selMat;
+    Texture2D lineTex, fillTex;
     GameObject visualsRoot;
     readonly List<Vector2Int> previewCells = new List<Vector2Int>();
 
@@ -38,7 +41,12 @@ public class GridManager : MonoBehaviour
         SetCellsVisible(false);
     }
 
-    void OnDestroy() { if (visualsRoot) Destroy(visualsRoot); }
+    void OnDestroy()
+    {
+        if (visualsRoot) Destroy(visualsRoot);
+        if (lineTex) Destroy(lineTex);
+        if (fillTex) Destroy(fillTex);
+    }
 
     // ---------- coordinates ----------
     public bool InBounds(Vector2Int c) => c.x >= 0 && c.y >= 0 && c.x < width && c.y < height;
@@ -78,6 +86,7 @@ public class GridManager : MonoBehaviour
 
         var go = Instantiate(data.prefab, FootprintCenter(origin, size), Quaternion.Euler(0, rotation * 90f, 0));
         var p = new PlacedFurniture { data = data, origin = origin, rotation = rotation, instance = go };
+        go.AddComponent<FurnitureHandle>().placed = p;   // lets a tap on its collider find this entry
 
         for (int x = 0; x < size.x; x++)
             for (int y = 0; y < size.y; y++)
@@ -120,6 +129,21 @@ public class GridManager : MonoBehaviour
             }
     }
 
+    /// Marks the cells of an already placed piece as selected.
+    public void ShowHighlight(PlacedFurniture p)
+    {
+        ClearPreview();
+        Vector2Int size = RotatedSize(p.data.size, p.rotation);
+        for (int x = 0; x < size.x; x++)
+            for (int y = 0; y < size.y; y++)
+            {
+                var c = p.origin + new Vector2Int(x, y);
+                if (!InBounds(c)) continue;
+                quads[c.x, c.y].sharedMaterial = selMat;
+                previewCells.Add(c);
+            }
+    }
+
     public void ClearPreview()
     {
         foreach (var c in previewCells) Refresh(c);
@@ -132,19 +156,44 @@ public class GridManager : MonoBehaviour
         quads[c.x, c.y].sharedMaterial = cells[c.x, c.y] != null ? occMat : freeMat;
     }
 
-    Material MakeMat(Color c)
+    /// White square outline; the inside is see-through (fillAlpha 0) or lightly filled.
+    /// The material colour tints it, so one texture serves every cell colour.
+    Texture2D MakeCellTexture(float fillAlpha)
+    {
+        const int n = 64, border = 2;
+        var t = new Texture2D(n, n, TextureFormat.RGBA32, false);
+        var px = new Color[n * n];
+        for (int y = 0; y < n; y++)
+            for (int x = 0; x < n; x++)
+            {
+                bool edge = x < border || y < border || x >= n - border || y >= n - border;
+                px[y * n + x] = new Color(1, 1, 1, edge ? 1f : fillAlpha);
+            }
+        t.SetPixels(px);
+        t.wrapMode = TextureWrapMode.Clamp;
+        t.filterMode = FilterMode.Bilinear;
+        t.Apply();
+        return t;
+    }
+
+    Material MakeMat(Color c, Texture2D tex)
     {
         var m = new Material(Shader.Find("Sprites/Default"));
+        m.mainTexture = tex;
         m.color = c;
         return m;
     }
 
     void BuildVisuals()
     {
-        freeMat = MakeMat(freeColor);
-        occMat = MakeMat(occupiedColor);
-        okMat = MakeMat(previewOk);
-        badMat = MakeMat(previewBad);
+        lineTex = MakeCellTexture(0f);      // free cells: only the dark outline
+        fillTex = MakeCellTexture(0.4f);    // occupied / preview cells: outline + tinted fill
+
+        freeMat = MakeMat(gridColor, lineTex);
+        occMat = MakeMat(blockedColor, fillTex);
+        okMat = MakeMat(previewValid, fillTex);
+        badMat = MakeMat(previewInvalid, fillTex);
+        selMat = MakeMat(selectedColor, fillTex);
 
         quads = new Renderer[width, height];
         visualsRoot = new GameObject("GridCells");   // not parented, so this object's scale can't distort it
@@ -158,7 +207,7 @@ public class GridManager : MonoBehaviour
                 q.transform.SetParent(visualsRoot.transform, true);
                 q.transform.position = CellCenter(new Vector2Int(x, y)) + Vector3.up * 0.02f;
                 q.transform.rotation = Quaternion.Euler(90, 0, 0);
-                q.transform.localScale = Vector3.one * cellSize * 0.94f;
+                q.transform.localScale = Vector3.one * cellSize;   // outline is part of the texture
                 quads[x, y] = q.GetComponent<Renderer>();
                 Refresh(new Vector2Int(x, y));
             }

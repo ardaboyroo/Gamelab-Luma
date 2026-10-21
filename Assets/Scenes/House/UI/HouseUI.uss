@@ -1,134 +1,310 @@
-/* ==========================================
-   PERMANENTE HUD KNOPPEN
-   ========================================== */
+/* ============================================================
+   HouseUI.uss - palette sampled from the yellow pattern.
+   Swap the hex values below for your exact brand colours.
+   ============================================================ */
+:root {
+    --yellow: rgb(255, 218, 92);
+    --yellow-dark: rgb(251, 187, 75);
+    --cream: rgb(255, 246, 214);
+    --brown: rgb(112, 74, 52);
+    --brown-dark: rgb(70, 44, 30);
+    --green: rgb(112, 190, 96);
+    --green-dark: rgb(84, 160, 72);
+    --red: rgb(226, 93, 76);
+    --red-dark: rgb(190, 66, 52);
+}
+
+/* ---------- full-screen layers ---------- */
+#house-ui-container,
+#touch-area {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+/* ============================================================
+   Buttons. Every button gets class "btn" plus one colour variant.
+   Hover/focus/active are restated so the default Unity theme
+   (grey hover) never shows through.
+   ============================================================ */
+.btn {
+    margin: 0;
+    padding: 0 40px;
+    border-width: 6px;
+    border-radius: 40px;
+    font-size: 48px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    transition-property: scale;
+    transition-duration: 0.08s;
+}
+
+/* yellow (default) */
+.btn,
+.btn:hover,
+.btn:focus {
+    background-color: var(--yellow);
+    border-color: var(--brown);
+    color: var(--brown-dark);
+}
+.btn:active {
+    background-color: var(--yellow-dark);
+    scale: 0.94 0.94;
+}
+
+/* brown */
+.btn.btn-brown,
+.btn.btn-brown:hover,
+.btn.btn-brown:focus {
+    background-color: var(--brown);
+    border-color: var(--cream);
+    color: var(--cream);
+}
+.btn.btn-brown:active {
+    background-color: var(--brown-dark);
+    scale: 0.94 0.94;
+}
+
+/* brown button in its "on" state (edit mode open) */
+.btn.btn-brown.btn-active,
+.btn.btn-brown.btn-active:hover,
+.btn.btn-brown.btn-active:focus {
+    background-color: var(--yellow);
+    border-color: var(--brown);
+    color: var(--brown-dark);
+}
+.btn.btn-brown.btn-active:active {
+    background-color: var(--yellow-dark);
+    scale: 0.94 0.94;
+}
+
+/* cream */
+.btn.btn-cream,
+.btn.btn-cream:hover,
+.btn.btn-cream:focus {
+    background-color: var(--cream);
+    border-color: var(--yellow-dark);
+    color: var(--brown-dark);
+}
+.btn.btn-cream:active {
+    background-color: var(--yellow);
+    scale: 0.94 0.94;
+}
+
+/* green (confirm) */
+.btn.btn-green,
+.btn.btn-green:hover,
+.btn.btn-green:focus {
+    background-color: var(--green);
+    border-color: var(--cream);
+    color: var(--cream);
+}
+.btn.btn-green:active {
+    background-color: var(--green-dark);
+    scale: 0.94 0.94;
+}
+
+/* red (cancel) */
+.btn.btn-red,
+.btn.btn-red:hover,
+.btn.btn-red:focus {
+    background-color: var(--red);
+    border-color: var(--cream);
+    color: var(--cream);
+}
+.btn.btn-red:active {
+    background-color: var(--red-dark);
+    scale: 0.94 0.94;
+}
+
+.btn:disabled {
+    opacity: 0.4;
+}
+
+/* ============================================================
+   HUD buttons (always visible)
+   ============================================================ */
 #btn-toggle-ui {
     position: absolute;
-    top: 30px;
-    left: 30px;
-    width: 120px;
-    height: 120px;
-    font-size: 60px;
-    border-radius: 24px;
-    background-color: rgba(40, 40, 40, 0.9);
-    color: white;
-    border-color: rgba(255, 255, 255, 0.8);
-    border-width: 3px;
+    left: 50px;
+    top: 80px;
+    width: 150px;
+    height: 150px;
+    padding: 0;
+    border-radius: 75px;
+    font-size: 84px;
 }
 
 .turn-btn {
     position: absolute;
     top: 50%;
-    margin-top: -90px;
-    width: 120px;
-    height: 180px;
-    font-size: 70px;
-    border-radius: 24px;
-    background-color: rgba(40, 40, 40, 0.8);
-    color: white;
+    width: 130px;
+    height: 220px;
+    margin-top: -110px;
+    padding: 0;
+    border-radius: 44px;
+    font-size: 90px;
 }
-.turn-left  { left: 20px; }
-.turn-right { right: 20px; }
+.turn-left { left: 30px; }
+.turn-right { right: 30px; }
 
+/* ============================================================
+   Edit-mode buttons
+   ============================================================ */
 #btn-categories {
     position: absolute;
-    top: 30px;
-    right: 30px;
-    height: 100px;
-    padding: 0 30px;
-    font-size: 40px;
-    border-radius: 20px;
-    background-color: rgba(40, 40, 40, 0.9);
-    color: white;
-    border-color: white;
-    border-width: 2px;
+    right: 50px;
+    top: 80px;
+    height: 150px;
+    padding: 0 56px;
+    border-radius: 75px;
+    font-size: 56px;
 }
 
-/* ==========================================
-   CONTAINER & TOUCH AREA
-   ========================================== */
-#house-ui-container {
-    position: absolute;
-    left: 0; right: 0; top: 0; bottom: 0;
-}
-
-#touch-area {
-    position: absolute;
-    left: 0; right: 0; top: 0; bottom: 0;
-}
-
-/* ==========================================
-   CATEGORIEËN MENU
-   ========================================== */
+/* ---------- category picker ---------- */
 #category-panel {
     position: absolute;
-    top: 150px;
-    right: 30px;
-    width: 350px;
-    background-color: rgba(30, 30, 30, 0.95);
-    border-radius: 20px;
-    padding: 20px;
-    border-color: rgba(255, 255, 255, 0.3);
-    border-width: 2px;
+    left: 110px;
+    right: 110px;
+    top: 18%;
+    padding: 50px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: var(--cream);
+    border-width: 8px;
+    border-color: var(--yellow-dark);
+    border-radius: 60px;
 }
 
 .category-title {
-    font-size: 36px;
-    color: white;
+    width: 100%;
+    margin-bottom: 30px;
+    font-size: 64px;
+    -unity-font-style: bold;
     -unity-text-align: middle-center;
-    margin-bottom: 15px;
+    color: var(--brown-dark);
 }
 
-.cat-btn {
-    height: 90px;
-    margin-bottom: 12px;
-    font-size: 34px;
-    border-radius: 15px;
-    background-color: rgba(70, 70, 70, 1);
-    color: white;
-}
-
+.cat-btn,
 .cat-btn-back {
-    height: 80px;
-    margin-top: 10px;
-    font-size: 32px;
-    border-radius: 15px;
-    background-color: rgba(170, 50, 50, 1);
-    color: white;
+    height: 130px;
+    margin-bottom: 24px;
+    padding: 0 16px;
+    font-size: 44px;
 }
+.cat-btn { width: 48%; }
+.cat-btn-back { width: 100%; margin-bottom: 0; font-size: 50px; }
 
-/* ==========================================
-   ONDERSTE INVENTARIS BALK
-   ========================================== */
-.bottom-panel {
+/* ---------- inventory bar ---------- */
+#inventory {
     position: absolute;
-    left: 0; right: 0; bottom: 0;
-    padding: 24px 24px 60px 24px;
-    background-color: rgba(20, 20, 20, 0.88);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 380px;
+    padding: 40px 40px 60px 40px;
+    background-color: var(--cream);
+    border-width: 0;
+    border-top-width: 10px;
+    border-color: var(--yellow-dark);
+    border-top-left-radius: 70px;
+    border-top-right-radius: 70px;
 }
 
-#inventory-list { height: 230px; }
+#inventory-list {
+    flex-grow: 1;
+}
 
 .inv-item {
-    width: 200px;
-    height: 210px;
-    margin-right: 18px;
+    width: 250px;
+    height: 260px;
+    margin-right: 28px;
+    padding: 16px;
+    flex-shrink: 0;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    border-radius: 20px;
-    background-color: rgba(70, 70, 70, 1);
-    color: white;
+    justify-content: space-between;
+    border-radius: 44px;
 }
 
 .inv-icon {
-    width: 120px;
-    height: 120px;
+    width: 160px;
+    height: 160px;
+    border-radius: 24px;
     -unity-background-scale-mode: scale-to-fit;
 }
 
 .inv-label {
-    font-size: 32px;
-    color: white;
-    margin-top: 8px;
+    font-size: 34px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    color: var(--brown-dark);
 }
 
+/* slim, on-brand scrollbar */
+#inventory-list .unity-scroller--horizontal {
+    height: 18px;
+}
+#inventory-list .unity-base-slider__dragger {
+    background-color: var(--yellow-dark);
+    border-radius: 9px;
+    border-width: 0;
+}
+#inventory-list .unity-base-slider__tracker {
+    background-color: rgba(0, 0, 0, 0.08);
+    border-radius: 9px;
+    border-width: 0;
+}
+
+/* ---------- selection bar (move / remove a placed piece) ---------- */
+#selection-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 120px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.sel-btn {
+    width: 360px;
+    height: 140px;
+    margin: 0 15px;
+    padding: 0;
+    border-radius: 70px;
+    font-size: 50px;
+}
+
+.sel-round {
+    width: 120px;
+    height: 120px;
+    margin: 0 15px;
+    padding: 0;
+    border-radius: 60px;
+    font-size: 60px;
+}
+
+/* ---------- placement bar (cancel / rotate / confirm) ---------- */
+#placement-bar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 120px;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.place-icon-btn {
+    width: 170px;
+    height: 170px;
+    margin: 0 30px;
+    padding: 0;
+    border-width: 8px;
+    border-radius: 85px;
+    font-size: 96px;
+}
