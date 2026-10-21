@@ -585,7 +585,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6031c88193c8ad345b77006c3a4ab8a1, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -662,10 +662,11 @@ MonoBehaviour:
   width: 10
   height: 10
   cellSize: 1
-  freeColor: {r: 0.2, g: 0.8, b: 0.3, a: 0.25}
-  occupiedColor: {r: 0.9, g: 0.2, b: 0.2, a: 0.45}
-  previewOk: {r: 0.2, g: 1, b: 0.4, a: 0.7}
-  previewBad: {r: 1, g: 0.3, b: 0.2, a: 0.7}
+  gridColor: {r: 0.23, g: 0.14, b: 0.09, a: 0.7}
+  blockedColor: {r: 0.9, g: 0.25, b: 0.2, a: 0.9}
+  previewValid: {r: 0.3, g: 0.85, b: 0.35, a: 1}
+  previewInvalid: {r: 0.95, g: 0.25, b: 0.2, a: 1}
+  selectedColor: {r: 1, g: 0.85, b: 0.25, a: 1}
 --- !u!4 &934639118
 Transform:
   m_ObjectHideFlags: 0
@@ -713,11 +714,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   edit: {fileID: 1201031634}
   placement: {fileID: 690626684}
+  surfaces: {fileID: 0}
   styleSheet: {fileID: 7433441132597879392, guid: 4297ce1142ec6e0458755742141b201f, type: 3}
   bedInventory:
   - {fileID: 11400000, guid: 6ea48d7d39352b342baf874e28fd34f5, type: 2}
   deskInventory: []
   nightstandInventory: []
+  chairInventory: []
+  mirrorInventory: []
+  wallpaperInventory: []
+  floorInventory: []
 --- !u!114 &1090351351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -816,7 +822,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6031c88193c8ad345b77006c3a4ab8a1, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -919,63 +925,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1304193571
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1320039315611802316, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_Name
-      value: BedTest
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495339597951191631, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495339597951191631, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495339597951191631, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 1.14
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495339597951191631, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495339597951191631, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495339597951191631, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495339597951191631, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495339597951191631, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495339597951191631, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8495339597951191631, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
 --- !u!1 &1441646511
 GameObject:
   m_ObjectHideFlags: 0
@@ -1161,7 +1110,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6031c88193c8ad345b77006c3a4ab8a1, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1270,7 +1219,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6031c88193c8ad345b77006c3a4ab8a1, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1331,4 +1280,3 @@ SceneRoots:
   - {fileID: 1090351352}
   - {fileID: 1201031635}
   - {fileID: 690626685}
-  - {fileID: 1304193571}
