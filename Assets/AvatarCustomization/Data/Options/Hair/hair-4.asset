@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db9c2fdf99ca0fb4dab17520ba871793, type: 3}
+  m_Name: hair-4
+  m_EditorClassIdentifier: 
+  id: hair-4
+  displayName: hair1 sidebangs
+  preview: {fileID: 0}
+  prefab: {fileID: 1485093877379063428, guid: edd37197dec6d014bb50633d2e12367f, type: 3}
+  unequip: 0

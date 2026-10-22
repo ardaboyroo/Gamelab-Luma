@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc76804861c9d0f459b3e1243ae5f9f3, type: 3}
+  m_Name: tops-3
+  m_EditorClassIdentifier: 
+  id: tops-3
+  displayName: Long shirt
+  preview: {fileID: 0}
+  prefab: {fileID: 3030636273208264022, guid: 3ebe015636dcf72428c4565a7f8b537f, type: 3}
+  unequip: 0

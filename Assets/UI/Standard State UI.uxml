@@ -4,4 +4,7 @@
             <ui:Button text="Menu" name="menu-btn" style="width: 83%; font-size: 24%; border-bottom-left-radius: 10px; border-bottom-right-radius: 10px; border-top-right-radius: 10px; border-top-left-radius: 10px;" />
         </ui:VisualElement>
     </ui:VisualElement>
+    <ui:VisualElement style="flex-grow: 1; position: absolute; height: 210px; width: 250px; top: 750px; left: 0; background-color: rgb(255, 255, 255); border-top-right-radius: 16px; border-bottom-right-radius: 16px; justify-content: center; align-self: flex-end; align-items: stretch;">
+        <ui:Button text="Skateboard&#10;Toggle" style="height: 174px; border-top-left-radius: 10px; border-top-right-radius: 10px; border-bottom-right-radius: 10px; border-bottom-left-radius: 10px; margin-top: 22px; margin-right: 22px; margin-bottom: 22px; margin-left: 22px; font-size: 24px;" />
+    </ui:VisualElement>
 </ui:UXML>

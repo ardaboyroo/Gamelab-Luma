@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 305d37dc08ab95f4cba3a75054fba71f, type: 3}
+  m_Name: pants-3
+  m_EditorClassIdentifier: 
+  id: pants-3
+  displayName: long pants
+  preview: {fileID: 0}
+  prefab: {fileID: 6709764047065980855, guid: ee51324f3ca3ef346bbd67b1e60d0d1a, type: 3}
+  unequip: 0

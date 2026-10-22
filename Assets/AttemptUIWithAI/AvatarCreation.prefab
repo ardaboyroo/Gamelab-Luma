@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 4808613158917550845}
   - component: {fileID: 3386918534321304931}
   - component: {fileID: 449506728607376243}
-  - component: {fileID: 5524658691678410956}
-  - component: {fileID: 1861443776289931726}
+  - component: {fileID: 4790479380748693249}
+  - component: {fileID: 1803214871109009414}
   m_Layer: 0
   m_Name: AvatarCreation
   m_TagString: Untagged
@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialColor: {r: 1, g: 0.28, b: 0.08, a: 1}
---- !u!114 &5524658691678410956
+--- !u!114 &4790479380748693249
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -76,10 +76,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8040031373587146443}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 001319de4f783b247a0a49158f739071, type: 3}
+  m_Script: {fileID: 11500000, guid: f738d3f5f42693b43bfe39e833a7dd06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1861443776289931726
+  appearance: {fileID: 0}
+--- !u!114 &1803214871109009414
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,11 +89,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 8040031373587146443}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26fefb258dc58b24b9bdf643827f3e69, type: 3}
+  m_Script: {fileID: 11500000, guid: c35e9a6f6ee773f4e908d54b76608cb2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eyesValues: 00000000010000000200000003000000040000000500000006000000
-  eyebrowsValues: 00000000010000000200000003000000
-  noseValues: 00000000010000000200000003000000
-  mouthValues: 00000000010000000200000003000000
-  hairValues: 00000000010000000200000003000000
+  appearance: {fileID: 0}
+  previewLayer: 30

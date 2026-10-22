@@ -4,7 +4,7 @@
         <ui:VisualElement class="header-wave" picking-mode="Ignore" />
         <ui:VisualElement class="decorative-trails" picking-mode="Ignore" />
         <ui:Label text="Avatar Creation" class="title" picking-mode="Ignore" />
-        <ui:VisualElement name="avatarPreview" class="avatar-preview" picking-mode="Ignore" />
+        <ui:Image name="avatarPreview" class="avatar-preview" picking-mode="Ignore" />
         <ui:VisualElement name="mainTabs" class="main-tabs">
             <ui:Button name="bodyTab" text="Body" class="pill main-tab" />
             <ui:Button name="faceTab" text="Face" class="pill main-tab selected-tab" />
@@ -18,6 +18,14 @@
                 <ui:Button name="mouthButton" text="Mouth" class="pill category" />
                 <ui:Button name="hairButton" text="Hair" class="pill category" />
             </ui:VisualElement>
+            <ui:VisualElement name="bodyCategories" class="categories is-hidden">
+                <ui:Button name="skinButton" text="Skin tone" class="pill category" />
+            </ui:VisualElement>
+            <ui:VisualElement name="clothesCategories" class="categories is-hidden">
+                <ui:Button name="topButton" text="Tops" class="pill category" />
+                <ui:Button name="pantsButton" text="Pants" class="pill category" />
+                <ui:Button name="shoesButton" text="Shoes" class="pill category" />
+            </ui:VisualElement>
             <ui:VisualElement name="optionsPanel" class="options-panel">
                 <ui:VisualElement class="mode-tabs">
                     <ui:Button name="styleTab" text="Style" class="pill mode-tab" />
@@ -29,6 +37,9 @@
                     <ui:ScrollView name="noseStylePanel" class="style-options is-hidden" mode="Vertical" />
                     <ui:ScrollView name="mouthStylePanel" class="style-options is-hidden" mode="Vertical" />
                     <ui:ScrollView name="hairStylePanel" class="style-options is-hidden" mode="Vertical" />
+                    <ui:ScrollView name="topStylePanel" class="style-options is-hidden" mode="Vertical" />
+                    <ui:ScrollView name="pantsStylePanel" class="style-options is-hidden" mode="Vertical" />
+                    <ui:ScrollView name="shoesStylePanel" class="style-options is-hidden" mode="Vertical" />
                 </ui:VisualElement>
                 <ui:VisualElement name="colorPanel" class="selection-panel color-controls">
                     <ui:VisualElement name="hueWheel" class="hue-wheel">
@@ -40,6 +51,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:Button name="startButton" text="Start" class="pill start-button" />
+        <ui:Label name="categoryHint" text="Choose a style or adjust its color." class="category-hint" />
+        <ui:Button name="done-btn" text="Save &amp; return" class="pill start-button" />
     </ui:VisualElement>
 </ui:UXML>
