@@ -14,12 +14,12 @@ public class MenuUI : MonoBehaviour
 
     private void OnEnable()
     {
-        playerStateManager.StateChangedEvent += OnStateChanged;
+        playerStateManager.OnStateChanged += OnStateChanged;
     }
 
     private void OnDisable()
     {
-        playerStateManager.StateChangedEvent -= OnStateChanged;
+        playerStateManager.OnStateChanged -= OnStateChanged;
     }
 
     void Update()

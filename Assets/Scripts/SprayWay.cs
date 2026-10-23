@@ -1,9 +1,6 @@
-﻿using NUnit.Framework;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
-using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 public class SprayWay : Activity
@@ -107,7 +104,7 @@ public class SprayWay : Activity
             NormalCamera.SetActive(true);
             PlayerStateMachine.Instance.GetComponent<SpraywayMovement>().Ressurect();
 
-            Debug.Log("SpraywayStart");
+            Debug.Log("SpraywayFarts");
             var movement = PlayerStateMachine.Instance.GetComponent<SpraywayMovement>();
 
             movement.SetSprayWay(this);
