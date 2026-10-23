@@ -1,0 +1,45 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <!-- Everything that only exists in edit mode. The controller shows/hides this whole container. -->
+    <ui:VisualElement name="house-ui-container" picking-mode="Ignore">
+        <ui:VisualElement name="touch-area" picking-mode="Ignore" />
+
+        <ui:Button name="btn-categories" text="Inventaris" class="btn btn-brown" />
+
+        <!-- Categorie keuzemenu -->
+        <ui:VisualElement name="category-panel" picking-mode="Position">
+            <ui:Label text="Kies Categorie" class="category-title" />
+            <ui:Button name="cat-beds" text="Bedden" class="btn cat-btn" />
+            <ui:Button name="cat-desks" text="Bureaus" class="btn cat-btn" />
+            <ui:Button name="cat-nightstands" text="Nachtkastjes" class="btn cat-btn" />
+            <ui:Button name="cat-chairs" text="Stoelen" class="btn cat-btn" />
+            <ui:Button name="cat-mirrors" text="Spiegels" class="btn cat-btn" />
+            <ui:Button name="cat-wallpaper" text="Behang" class="btn cat-btn" />
+            <ui:Button name="cat-floors" text="Vloeren" class="btn cat-btn" />
+            <ui:Button name="cat-back" text="Terug" class="btn btn-cream cat-btn-back" />
+        </ui:VisualElement>
+
+        <!-- Onderste inventarisbalk -->
+        <ui:VisualElement name="inventory" picking-mode="Position">
+            <ui:ScrollView name="inventory-list" mode="Horizontal" vertical-scroller-visibility="Hidden" />
+        </ui:VisualElement>
+
+        <!-- Annuleren / draaien / bevestigen tijdens het plaatsen -->
+        <ui:VisualElement name="placement-bar" picking-mode="Ignore">
+            <ui:Button name="btn-cancel" text="✕" class="btn btn-red place-icon-btn" />
+            <ui:Button name="btn-rotate" text="↻" class="btn place-icon-btn" />
+            <ui:Button name="btn-confirm" text="✓" class="btn btn-green place-icon-btn" />
+        </ui:VisualElement>
+
+        <!-- Verplaatsen / verwijderen als je een geplaatst meubel aantikt -->
+        <ui:VisualElement name="selection-bar" picking-mode="Ignore">
+            <ui:Button name="btn-move" text="Verplaats" class="btn sel-btn" />
+            <ui:Button name="btn-remove" text="Verwijder" class="btn btn-red sel-btn" />
+            <ui:Button name="btn-deselect" text="✕" class="btn btn-cream sel-round" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+
+    <!-- Altijd zichtbare HUD knoppen (na de container, zodat ze bovenop liggen) -->
+    <ui:Button name="btn-toggle-ui" text="🏠" class="btn btn-brown" />
+    <ui:Button name="turn-left" text="&lt;" class="btn btn-brown turn-btn turn-left" />
+    <ui:Button name="turn-right" text="&gt;" class="btn btn-brown turn-btn turn-right" />
+</ui:UXML>
