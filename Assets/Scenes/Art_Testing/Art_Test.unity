@@ -783,6 +783,67 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1001 &967831325
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2561704173091429205, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 128.3807
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561704173091429205, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 19.990368
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561704173091429205, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 157.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561704173091429205, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561704173091429205, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561704173091429205, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561704173091429205, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561704173091429205, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561704173091429205, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2561704173091429205, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3696312012253974582, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_Name
+      value: OakTree_MainHub (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 3696312012253974582, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 885ba06a9f2e65c49bd414dc34f63e45, type: 3}
 --- !u!1001 &985218285
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2877,6 +2938,7 @@ SceneRoots:
   - {fileID: 8927274266427146636}
   - {fileID: 8976449945902907663}
   - {fileID: 2566688646906091890}
+  - {fileID: 967831325}
   - {fileID: 3407319875994578764}
   - {fileID: 6477712362508745701}
   - {fileID: 7524928045570077495}
