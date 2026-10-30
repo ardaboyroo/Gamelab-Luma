@@ -17,6 +17,8 @@ public class PlayerStateManager : MonoBehaviour
 	[SerializeField] private PlayerStates _initialState = PlayerStates.StandardState;
 	private PlayerStates _playerState;
 
+	public PlayerStates CurrentState => _playerState;
+
 	private void Start()
 	{
 		Debug.Log("mngr");
@@ -25,10 +27,15 @@ public class PlayerStateManager : MonoBehaviour
 			if (isLocalPlayer)
 			{
 				_playerState = _initialState;
-				OnStateChanged?.Invoke(_playerState);
-				Debug.Log("Invoking OnStateChanged");
+				Invoke("DeferredCall", .1f);
+				Debug.Log($"Invoking OnStateChanged: {_playerState}");
 			}
 		};
+	}
+
+	private void DeferredCall()
+	{
+		OnStateChanged?.Invoke(_playerState);
 	}
 
 	void Update()
