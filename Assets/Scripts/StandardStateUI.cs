@@ -25,7 +25,7 @@ public class StandardStateUI : MonoBehaviour
     private void Start()
     {
         _isShown = false;
-        _uiDocument.rootVisualElement.style.display = DisplayStyle.None;
+        //_uiDocument.rootVisualElement.style.display = DisplayStyle.None;
         _menu.rootVisualElement.style.display = DisplayStyle.None;
         _chrEdit.rootVisualElement.style.display = DisplayStyle.None;
 

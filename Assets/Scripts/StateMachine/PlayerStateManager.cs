@@ -5,6 +5,7 @@ public enum PlayerStates
 {
 	StandardState,
 	MenuState,
+	CharacterEditState,
 	DialogueState,
 	CutsceneState,
 	SpraywayState

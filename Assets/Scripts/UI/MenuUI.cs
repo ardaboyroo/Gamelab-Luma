@@ -1,25 +1,87 @@
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
+using FMODUnity;
 
 public class MenuUI : MonoBehaviour
 {
-    //temporary
-    [SerializeField]
-    private PlayerStateManager playerStateManager;
+    [SerializeField] private UIDocument _standardUI;
+    [SerializeField] private UIDocument _menuUI;
+    [SerializeField] private UIDocument _chrEditUI;
+
+    [SerializeField] private GuideDogBehaviour _dog;
+
+    Player _localPlr;
+
+    [SerializeField] private EventReference _click;
+
+    [SerializeField] private EventReference _confirm;
+
+    //bools for what UIDocument is currently active
+    private bool _standardActive;
+    private bool _menuActive;
+    private bool _charEditActive;
 
     void Start()
     {
-        
+        _standardUI.rootVisualElement.style.display = DisplayStyle.None;
+        _menuUI.rootVisualElement.style.display = DisplayStyle.None;
+        _chrEditUI.rootVisualElement.style.display = DisplayStyle.None;
+
+        PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+        {
+            if (isLocalPlayer)
+            {
+                _localPlr = plr;
+                plr.StateManager.OnStateChanged += HandleStateChanged;
+            }
+        };
+
+        ShowUI();
     }
 
-    private void OnEnable()
+    private void HandleStateChanged(PlayerStates states)
     {
-        playerStateManager.OnStateChanged += OnStateChanged;
-    }
+        var standardRoot = _standardUI.rootVisualElement;
+        var menuRoot = _menuUI.rootVisualElement;
+        var chrEditRoot = _chrEditUI.rootVisualElement;
 
-    private void OnDisable()
-    {
-        playerStateManager.OnStateChanged -= OnStateChanged;
+        switch (states)
+        {
+            case PlayerStates.StandardState:
+                if (!_standardActive) ShowUI();
+                if (_menuActive) MenuHideUI();
+                if (_charEditActive) CharacterEditHideUI();
+                break;
+            case PlayerStates.MenuState:
+                if (_standardActive) HideUI();
+                if (!_menuActive) MenuShowUI();
+                if (_charEditActive) CharacterEditHideUI();
+                break;
+            case PlayerStates.CharacterEditState:
+                if (_standardActive) HideUI();
+                if (_menuActive) MenuHideUI();
+                if (!_charEditActive) CharacterEditShowUI();
+                break;
+            case PlayerStates.DialogueState:
+
+                break;
+            case PlayerStates.CutsceneState:
+
+                break;
+            default:
+                break;
+
+        }
+
+        if (states == PlayerStates.MenuState)
+        {
+            
+        }
+        else
+        {
+            
+        }
     }
 
     void Update()
@@ -27,20 +89,109 @@ public class MenuUI : MonoBehaviour
         
     }
 
-    //temporary
-    public void ShowMenuUI()
+    private void ShowUI()
     {
-        playerStateManager.ChangePlayerState(PlayerStates.MenuState);
+        _standardActive = true;
+        if (_standardUI == null) return;
+        var root = _standardUI.rootVisualElement;
+        root.style.display = DisplayStyle.Flex;
+
+        var menuBTN = root.Q<Button>("menu-btn");
+
+        menuBTN.clicked += () => ChangePlayerState(PlayerStates.MenuState);
     }
 
-    //temporary
-    public void HideMenuUI()
+    private void HideUI()
     {
-        playerStateManager.ChangePlayerState(PlayerStates.StandardState);
+        _standardActive = false;
+        if (_standardUI == null) return;
+        var root = _standardUI.rootVisualElement;
+
+        root.Q<Button>("menu-btn").clicked -= () => ChangePlayerState(PlayerStates.MenuState);
+
+        root.style.display = DisplayStyle.None;
     }
 
-    private void OnStateChanged(PlayerStates state)
+    private void MenuShowUI()
     {
+        _menuActive = true;
+        if (_menuUI == null) return;
+        var root = _menuUI.rootVisualElement;
+        root.style.display = DisplayStyle.Flex;
 
+        var back = root.Q<Button>("back-btn");
+        var prof = root.Q<Button>("profile-btn");
+        var audio = root.Q<Button>("audio-btn");
+        var charedit = root.Q<Button>("chr-btn");
+
+        charedit.clicked += () => ChangePlayerState(PlayerStates.CharacterEditState);
+        back.clicked += () => ChangePlayerState(PlayerStates.StandardState);
+
+        //PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<MenuPlayerState>());
+
+        //PlayClick();
     }
+
+    private void MenuHideUI()
+    {
+        _menuActive = false;
+        if (_menuUI == null) return;
+        var root = _menuUI.rootVisualElement;
+
+        root.Q<Button>("back-btn").clicked -= () => ChangePlayerState(PlayerStates.StandardState);
+        //root.Q<Button>("profile-btn").clicked -= ;
+        //root.Q<Button>("audio-btn").clicked -= ;
+        root.Q<Button>("chr-btn").clicked -= () => ChangePlayerState(PlayerStates.CharacterEditState);
+
+        root.style.display = DisplayStyle.None;
+
+        //PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<StandardPlayerState>());
+
+        //PlayClick();
+    }
+
+    private void CharacterEditShowUI()
+    {
+        if (_charEditActive)
+            return;
+
+        //MenuHideUI();
+        _charEditActive = true;
+
+        var root = _chrEditUI.rootVisualElement;
+        root.style.display = DisplayStyle.Flex;
+
+        var done = root.Q<Button>("done-btn");
+
+        done.clicked += () => ChangePlayerState(PlayerStates.MenuState);
+
+        //PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<MenuPlayerState>());
+
+        //PlayClick();
+
+        _dog.enabled = false;
+    }
+
+    private void CharacterEditHideUI()
+    {
+        _charEditActive = false;
+
+        var root = _chrEditUI.rootVisualElement;
+
+        root.Q<Button>("done-btn").clicked -= () => ChangePlayerState(PlayerStates.MenuState);
+
+        root.style.display = DisplayStyle.None;
+
+        //PlayConfirm();
+
+        _dog.enabled = true;
+    }
+
+    private void ChangePlayerState(PlayerStates newState)
+    {
+        PlayerService.Instance.LocalPlayer.StateManager.ChangePlayerState(newState);
+    }
+
+    private void PlayClick() => RuntimeManager.PlayOneShot(_click);
+    private void PlayConfirm() => RuntimeManager.PlayOneShot(_confirm);
 }
