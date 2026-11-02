@@ -32,7 +32,7 @@ public class WorldMovement : MonoBehaviour
 
 	private bool _isActive = false;
 
-	private void OnEnable()
+	private void Start()
 	{
 		PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
 		{
@@ -42,6 +42,14 @@ public class WorldMovement : MonoBehaviour
 				Debug.Log("Player registered and it's the localplayer, subscribing");
 			}
 		};
+
+		_rigidbody = GetComponent<Rigidbody>();
+		_rigidbody.freezeRotation = true;
+
+		// Abysmal dogshit way of finding components, rework this entirely!
+		//_animator = transform.Find("Model Container").GetComponent<Animator>();
+
+		StartCoroutine(IdleActiveAnimation());
 	}
 
 	private void OnDisable()
@@ -61,22 +69,12 @@ public class WorldMovement : MonoBehaviour
 		if (states == PlayerStates.StandardState)
 		{
 			_isActive = true;
+			Debug.Log("ACTIVEEEEEEEEE");
 		}
 		else
 		{
 			_isActive = false;
 		}
-	}
-
-	private void Start()
-	{
-		_rigidbody = GetComponent<Rigidbody>();
-		_rigidbody.freezeRotation = true;
-
-		// Abysmal dogshit way of finding components, rework this entirely!
-		//_animator = transform.Find("Model Container").GetComponent<Animator>();
-
-		StartCoroutine(IdleActiveAnimation());
 	}
 
 	private void Update()
@@ -118,7 +116,6 @@ public class WorldMovement : MonoBehaviour
 		if (_isActive)
 		{
 			movementDirection.Normalize();
-
 			HandleMovement(movementDirection);
 		}
 	}
@@ -126,7 +123,6 @@ public class WorldMovement : MonoBehaviour
 	private void HandleMovement(Vector3 movementDirection)
 	{
 		_animator.SetFloat("speed", 1f);
-
 		// Rotate toward joystick direction
 		Quaternion desiredRotation = Quaternion.LookRotation(
 			movementDirection,

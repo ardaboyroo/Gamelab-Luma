@@ -29,12 +29,18 @@ public class StandardStateUI : MonoBehaviour
         _menu.rootVisualElement.style.display = DisplayStyle.None;
         _chrEdit.rootVisualElement.style.display = DisplayStyle.None;
 
-        PlayerStateMachine.Instance.OnStateChanged += OnStateChanged;
+        PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+		{
+			if (isLocalPlayer)
+			{
+				plr.StateManager.OnStateChanged += OnStateChanged;
+			}
+		};
     }
 
-    private void OnStateChanged(PlayerState obj)
+    private void OnStateChanged(PlayerStates state)
     {
-        if (obj is not StandardPlayerState)
+        if (state != PlayerStates.StandardState)
         {
             HideUI();
         }

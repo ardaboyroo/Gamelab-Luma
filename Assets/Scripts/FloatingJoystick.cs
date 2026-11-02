@@ -22,6 +22,8 @@ public class FloatingJoystick : MonoBehaviour
 
     private void Awake()
     {
+        EnhancedTouchSupport.Enable();
+
         _rectTransform = GetComponent<RectTransform>();
         _canvas = GetComponentInParent<Canvas>();
 
