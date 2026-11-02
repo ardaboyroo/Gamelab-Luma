@@ -5604,7 +5604,7 @@ MonoBehaviour:
       Data4: 1289844759
     Path: event:/Player/Footsteps
   _stepDistance: 2.7
-  _animator: {fileID: 1199946294307326389}
+  _animator: {fileID: 2121036729714335782}
 --- !u!54 &6069350031338503152
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5663,7 +5663,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1975680518801536162}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: b62882e3028319c4c9b98cac81fdf6cc, type: 2}
   m_CullingMode: 0
