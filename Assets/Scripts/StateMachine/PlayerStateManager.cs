@@ -29,7 +29,7 @@ public class PlayerStateManager : MonoBehaviour
 			{
 				_playerState = _initialState;
 				Invoke("DeferredCall", .1f);
-				Debug.Log($"Invoking OnStateChanged: {_playerState}");
+				Debug.Log($"[PlayerStateManager] Invoking OnStateChanged: {_playerState}");
 			}
 		};
 	}

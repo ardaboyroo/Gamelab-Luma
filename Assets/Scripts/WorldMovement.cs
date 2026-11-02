@@ -34,12 +34,20 @@ public class WorldMovement : MonoBehaviour
 
 	private void Start()
 	{
-		PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+        Debug.Log("[WorldMovement] executing start");
+
+        // Don't do this, playerservice flow should work without scripts having to rely on checking it twice
+        if (PlayerService.Instance.LocalPlayer)
+        {
+            PlayerService.Instance.LocalPlayer.StateManager.OnStateChanged += HandleStateChanged;
+        }
+
+        PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
 		{
 			if (isLocalPlayer)
 			{
 				plr.StateManager.OnStateChanged += HandleStateChanged;
-				Debug.Log("Player registered and it's the localplayer, subscribing");
+				Debug.Log("[WorldMovement] Player registered and it's the localplayer, subscribing");
 			}
 		};
 
@@ -58,9 +66,9 @@ public class WorldMovement : MonoBehaviour
 		Debug.Log("unsubbing from statechanged");
 	}
 
-	public void EnableSkateBoard(bool enable = true)
+	public void ToggleSkateBoard()
 	{
-		_isSkating = enable;
+		_isSkating = !_isSkating;
 	}
 
 	private void HandleStateChanged(PlayerStates states)
@@ -139,7 +147,7 @@ public class WorldMovement : MonoBehaviour
 
 		// Move in the desired direction
 		Vector3 move = movementDirection *
-					   _moveSpeed *
+					   (_isSkating ? _skateSpeed : _moveSpeed)*
 					   Time.fixedDeltaTime;
 
 		_rigidbody.MovePosition(

@@ -28,8 +28,17 @@ public class MenuUI : MonoBehaviour
         _menuUI.rootVisualElement.style.display = DisplayStyle.None;
         _chrEditUI.rootVisualElement.style.display = DisplayStyle.None;
 
+        // Don't do this, playerservice flow should work without scripts having to rely on checking it twice
+        if (PlayerService.Instance.LocalPlayer)
+        {
+            _localPlr = PlayerService.Instance.LocalPlayer;
+            PlayerService.Instance.LocalPlayer.StateManager.OnStateChanged += HandleStateChanged;
+        }
+
+        Debug.Log("[MenuUI] executing start");
         PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
         {
+            Debug.Log("[MenuUI] subscribing to player registered");
             if (isLocalPlayer)
             {
                 _localPlr = plr;
@@ -45,7 +54,6 @@ public class MenuUI : MonoBehaviour
         var standardRoot = _standardUI.rootVisualElement;
         var menuRoot = _menuUI.rootVisualElement;
         var chrEditRoot = _chrEditUI.rootVisualElement;
-
         switch (states)
         {
             case PlayerStates.StandardState:
@@ -97,8 +105,10 @@ public class MenuUI : MonoBehaviour
         root.style.display = DisplayStyle.Flex;
 
         var menuBTN = root.Q<Button>("menu-btn");
+        var skateboardBTN = root.Q<Button>("SkateboardButton");
 
-        menuBTN.clicked += () => ChangePlayerState(PlayerStates.MenuState);
+        menuBTN.clicked += ChangeToMenuState;
+        skateboardBTN.clicked += _localPlr.GetComponent<WorldMovement>().ToggleSkateBoard;
     }
 
     private void HideUI()
@@ -106,8 +116,10 @@ public class MenuUI : MonoBehaviour
         _standardActive = false;
         if (_standardUI == null) return;
         var root = _standardUI.rootVisualElement;
+        var skateboardBTN = root.Q<Button>("SkateboardButton");
 
-        root.Q<Button>("menu-btn").clicked -= () => ChangePlayerState(PlayerStates.MenuState);
+        root.Q<Button>("menu-btn").clicked -= ChangeToMenuState;
+        skateboardBTN.clicked -= _localPlr.GetComponent<WorldMovement>().ToggleSkateBoard;
 
         root.style.display = DisplayStyle.None;
     }
@@ -124,8 +136,8 @@ public class MenuUI : MonoBehaviour
         var audio = root.Q<Button>("audio-btn");
         var charedit = root.Q<Button>("chr-btn");
 
-        charedit.clicked += () => ChangePlayerState(PlayerStates.CharacterEditState);
-        back.clicked += () => ChangePlayerState(PlayerStates.StandardState);
+        charedit.clicked += ChangeToCharacterEditState;
+        back.clicked += ChangeToStandardState;
 
         //PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<MenuPlayerState>());
 
@@ -138,10 +150,10 @@ public class MenuUI : MonoBehaviour
         if (_menuUI == null) return;
         var root = _menuUI.rootVisualElement;
 
-        root.Q<Button>("back-btn").clicked -= () => ChangePlayerState(PlayerStates.StandardState);
+        root.Q<Button>("back-btn").clicked -= ChangeToStandardState;
         //root.Q<Button>("profile-btn").clicked -= ;
         //root.Q<Button>("audio-btn").clicked -= ;
-        root.Q<Button>("chr-btn").clicked -= () => ChangePlayerState(PlayerStates.CharacterEditState);
+        root.Q<Button>("chr-btn").clicked -= ChangeToCharacterEditState;
 
         root.style.display = DisplayStyle.None;
 
@@ -163,7 +175,7 @@ public class MenuUI : MonoBehaviour
 
         var done = root.Q<Button>("done-btn");
 
-        done.clicked += () => ChangePlayerState(PlayerStates.MenuState);
+        done.clicked += ChangeToMenuState;
 
         //PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<MenuPlayerState>());
 
@@ -178,13 +190,28 @@ public class MenuUI : MonoBehaviour
 
         var root = _chrEditUI.rootVisualElement;
 
-        root.Q<Button>("done-btn").clicked -= () => ChangePlayerState(PlayerStates.MenuState);
+        root.Q<Button>("done-btn").clicked -= ChangeToMenuState;
 
         root.style.display = DisplayStyle.None;
 
         //PlayConfirm();
 
         _dog.enabled = true;
+    }
+
+    private void ChangeToStandardState()
+    {
+        ChangePlayerState(PlayerStates.StandardState);
+    }
+
+    private void ChangeToMenuState()
+    {
+        ChangePlayerState(PlayerStates.MenuState);
+    }
+
+    private void ChangeToCharacterEditState()
+    {
+        ChangePlayerState(PlayerStates.CharacterEditState);
     }
 
     private void ChangePlayerState(PlayerStates newState)

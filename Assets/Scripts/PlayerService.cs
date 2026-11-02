@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.CullingGroup;
 
 public class PlayerService : MonoBehaviour
 {
@@ -32,14 +33,14 @@ public class PlayerService : MonoBehaviour
 
 		OnPlayerRegistered?.Invoke(plr, LocalPlayer == null);
 
-		Debug.Log("Player added, invoking event");
+		Debug.Log("[PlayerService] Player added, invoking OnPlayerRegistered event");
 
 		// We assume that the first registered player is the localplayer		
 		if (!LocalPlayer)
 			LocalPlayer = plr;
 	}
 
-	public void UnregisterPlayer()
+    public void UnregisterPlayer()
 	{
 
 	}

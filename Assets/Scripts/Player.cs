@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
 	void Start()
 	{
 		PlayerService.Instance.RegisterPlayer(this);
+		Debug.Log("[Player] registering player in start");
 	}
 
 	// Update is called once per frame
