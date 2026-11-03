@@ -26,7 +26,7 @@ public class ActivityPortal : MonoBehaviour
 
     private void Start()
     {
-        PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+        PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
 		{
 			if (isLocalPlayer)
 			{

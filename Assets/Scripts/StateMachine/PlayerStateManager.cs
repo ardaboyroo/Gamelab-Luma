@@ -23,7 +23,7 @@ public class PlayerStateManager : MonoBehaviour
 	private void Start()
 	{
 		Debug.Log("mngr");
-		PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+		PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
 		{
 			if (isLocalPlayer)
 			{

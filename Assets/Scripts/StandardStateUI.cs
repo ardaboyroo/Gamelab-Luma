@@ -29,7 +29,7 @@ public class StandardStateUI : MonoBehaviour
         _menu.rootVisualElement.style.display = DisplayStyle.None;
         _chrEdit.rootVisualElement.style.display = DisplayStyle.None;
 
-        PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+        PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
 		{
 			if (isLocalPlayer)
 			{

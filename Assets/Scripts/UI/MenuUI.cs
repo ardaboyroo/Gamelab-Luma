@@ -28,15 +28,8 @@ public class MenuUI : MonoBehaviour
         _menuUI.rootVisualElement.style.display = DisplayStyle.None;
         _chrEditUI.rootVisualElement.style.display = DisplayStyle.None;
 
-        // Don't do this, playerservice flow should work without scripts having to rely on checking it twice
-        if (PlayerService.Instance.LocalPlayer)
-        {
-            _localPlr = PlayerService.Instance.LocalPlayer;
-            PlayerService.Instance.LocalPlayer.StateManager.OnStateChanged += HandleStateChanged;
-        }
-
         Debug.Log("[MenuUI] executing start");
-        PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+        PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
         {
             Debug.Log("[MenuUI] subscribing to player registered");
             if (isLocalPlayer)
@@ -45,8 +38,6 @@ public class MenuUI : MonoBehaviour
                 plr.StateManager.OnStateChanged += HandleStateChanged;
             }
         };
-
-        ShowUI();
     }
 
     private void HandleStateChanged(PlayerStates states)

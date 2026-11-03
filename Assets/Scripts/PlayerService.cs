@@ -9,11 +9,11 @@ public class PlayerService : MonoBehaviour
 
 	public Player LocalPlayer { get; private set; }
 
-	public Action<Player, bool> OnPlayerRegistered;
+	public static Action<Player, bool> OnPlayerRegistered;
 
-	public IReadOnlyList<Player> Players => players;
+	public IReadOnlyList<Player> Players => _players;
 
-	private readonly List<Player> players = new();
+	private readonly List<Player> _players = new();
 
 	private void Awake()
 	{
@@ -29,7 +29,7 @@ public class PlayerService : MonoBehaviour
 
 	public void RegisterPlayer(Player plr)
 	{
-		players.Add(plr);
+		_players.Add(plr);
 
 		OnPlayerRegistered?.Invoke(plr, LocalPlayer == null);
 

@@ -32,17 +32,9 @@ public class WorldMovement : MonoBehaviour
 
 	private bool _isActive = false;
 
-	private void Start()
-	{
-        Debug.Log("[WorldMovement] executing start");
-
-        // Don't do this, playerservice flow should work without scripts having to rely on checking it twice
-        if (PlayerService.Instance.LocalPlayer)
-        {
-            PlayerService.Instance.LocalPlayer.StateManager.OnStateChanged += HandleStateChanged;
-        }
-
-        PlayerService.Instance.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+	private void Awake()
+	{		
+        PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
 		{
 			if (isLocalPlayer)
 			{
@@ -50,12 +42,14 @@ public class WorldMovement : MonoBehaviour
 				Debug.Log("[WorldMovement] Player registered and it's the localplayer, subscribing");
 			}
 		};
+	}
+
+	private void Start()
+	{
+        Debug.Log("[WorldMovement] executing start");
 
 		_rigidbody = GetComponent<Rigidbody>();
 		_rigidbody.freezeRotation = true;
-
-		// Abysmal dogshit way of finding components, rework this entirely!
-		//_animator = transform.Find("Model Container").GetComponent<Animator>();
 
 		StartCoroutine(IdleActiveAnimation());
 	}
