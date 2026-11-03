@@ -12,6 +12,9 @@ public class WorldMovement : MonoBehaviour
 	[SerializeField] private float _moveSpeed = 5f;
 	[SerializeField] private float _skateSpeed = 10f;
 	[SerializeField] private float _rotationSpeed = 360f;
+	[SerializeField] private GameObject _skateboard;
+	[SerializeField] private Transform _modelTransform;
+	[SerializeField] private Vector3 _skateboardModelOffset;
 	private bool _isSkating = false;
 
 	[Header("Touch Joystick")]
@@ -63,6 +66,21 @@ public class WorldMovement : MonoBehaviour
 	public void ToggleSkateBoard()
 	{
 		_isSkating = !_isSkating;
+
+		if (_isSkating) ActivateSkateboard();
+		else DeactivateSkateboard();
+	}
+
+	private void ActivateSkateboard()
+	{
+		_skateboard.SetActive(true);
+		_modelTransform.localPosition = _skateboardModelOffset;
+	}
+
+	private void DeactivateSkateboard()
+	{
+		_skateboard.SetActive(false);
+		_modelTransform.localPosition = Vector3.zero;
 	}
 
 	private void HandleStateChanged(PlayerStates states)
