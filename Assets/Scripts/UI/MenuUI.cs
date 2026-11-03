@@ -22,13 +22,8 @@ public class MenuUI : MonoBehaviour
     private bool _menuActive;
     private bool _charEditActive;
 
-    void Start()
+    private void Awake()
     {
-        _standardUI.rootVisualElement.style.display = DisplayStyle.None;
-        _menuUI.rootVisualElement.style.display = DisplayStyle.None;
-        _chrEditUI.rootVisualElement.style.display = DisplayStyle.None;
-
-        Debug.Log("[MenuUI] executing start");
         PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
         {
             Debug.Log("[MenuUI] subscribing to player registered");
@@ -38,6 +33,16 @@ public class MenuUI : MonoBehaviour
                 plr.StateManager.OnStateChanged += HandleStateChanged;
             }
         };
+        
+    }
+
+    void Start()
+    {
+        _standardUI.rootVisualElement.style.display = DisplayStyle.None;
+        _menuUI.rootVisualElement.style.display = DisplayStyle.None;
+        _chrEditUI.rootVisualElement.style.display = DisplayStyle.None;
+
+        Debug.Log("[MenuUI] executing start");
     }
 
     private void HandleStateChanged(PlayerStates states)
