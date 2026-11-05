@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: shoes-1
   displayName: shoes
-  preview: {fileID: 0}
+  preview: {fileID: 2800000, guid: e666c0ab85619ed488e271c4306a5260, type: 3}
   prefab: {fileID: 9042911933146972176, guid: e455261dafc6f0644b4c987e8383d8fe, type: 3}
   unequip: 0

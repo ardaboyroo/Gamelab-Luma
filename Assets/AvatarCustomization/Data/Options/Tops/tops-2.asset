@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: tops-2
   displayName: Short shirt
-  preview: {fileID: 0}
+  preview: {fileID: 2800000, guid: 5f6cd84685ccbc74396cef71b31481a7, type: 3}
   prefab: {fileID: 4210512392550817122, guid: 9e3e601f51b3e0a419f30afb828b69f8, type: 3}
   unequip: 0
