@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: adafdb3a39060484a81732c028711a0f
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 60072b568d64c40a485e0fc55012dc9f, type: 3}
+AssetOrigin:
+  serializedVersion: 1
+  productId: 70354
+  packageName: Fantasy Adventure Environment
+  packageVersion: 1.5.7
+  assetPath: Assets/Fantasy Adventure Environment/Shaders/URP/CrossfadeLOD.shadersubgraph
+  uploadId: 905430
