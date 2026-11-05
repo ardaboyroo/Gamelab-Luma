@@ -65,11 +65,16 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6aab035a2f6327d469dbd1af97b1a9a5, type: 2}
   - {fileID: 11400000, guid: ccd8e8830e3efe94ab5f57419337416d, type: 2}
   - {fileID: 11400000, guid: 5e94141a8203ee74d96c6e873dc49ca2, type: 2}
+  - {fileID: 11400000, guid: fd45cd156ead0ae42b3cbf16b1ece343, type: 2}
+  - {fileID: 11400000, guid: dfd66aae2949dbe408152451d6b79f7f, type: 2}
+  - {fileID: 11400000, guid: 7a9b6a1da60ced34c8afc224993a97c4, type: 2}
   pants:
   - {fileID: 11400000, guid: e373bd9db7271db4eb5cae9980e78f9a, type: 2}
   - {fileID: 11400000, guid: 00763ab6a0ac5e548a0e0343fd8ac0fe, type: 2}
   - {fileID: 11400000, guid: 3e89515788f1f78409103fffad284bf0, type: 2}
   - {fileID: 11400000, guid: 2714097b6d1ab334b897305f4a1b3553, type: 2}
+  - {fileID: 11400000, guid: fd34ef241b88e8441a0fe8cd9173fd1a, type: 2}
+  - {fileID: 11400000, guid: 6ce0edd731b47e248b72af78e56d6668, type: 2}
   shoes:
   - {fileID: 11400000, guid: 44b4fe01676c47046881211b6e0b1aac, type: 2}
   - {fileID: 11400000, guid: 6b27d106cc945034ea1bb6c7894b6816, type: 2}
