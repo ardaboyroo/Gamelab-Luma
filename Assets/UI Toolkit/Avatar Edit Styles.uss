@@ -1,0 +1,37 @@
+.OptionsContainer {
+    background-color: rgb(208, 238, 255);
+    border-left-color: rgb(141, 203, 255);
+    border-right-color: rgb(141, 203, 255);
+    border-top-color: rgb(141, 203, 255);
+    border-bottom-color: rgb(141, 203, 255);
+    border-top-width: 10px;
+    border-right-width: 10px;
+    border-bottom-width: 10px;
+    border-left-width: 10px;
+    border-top-left-radius: 42px;
+    border-top-right-radius: 42px;
+    border-bottom-right-radius: 42px;
+    border-bottom-left-radius: 42px;
+}
+
+.CategoryButton {
+    width: 199px;
+    background-color: rgb(255, 218, 91);
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    color: rgb(179, 91, 43);
+    font-size: 23px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    -unity-font-style: bold;
+    margin-top: 25px;
+    margin-right: 25px;
+    margin-bottom: 25px;
+    margin-left: 25px;
+}

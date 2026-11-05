@@ -4,11 +4,18 @@ using System.Collections;
 
 public class WorldMovement : MonoBehaviour
 {
-	[SerializeField] private Rigidbody _rigidbody;
+	[Tooltip("The state this script is active on")]
+	[SerializeField] private PlayerStates _workingState = PlayerStates.StandardState;
 
 	[Header("Movement")]
+	[SerializeField] private Rigidbody _rigidbody;
 	[SerializeField] private float _moveSpeed = 5f;
+	[SerializeField] private float _skateSpeed = 10f;
 	[SerializeField] private float _rotationSpeed = 360f;
+	[SerializeField] private GameObject _skateboard;
+	[SerializeField] private Transform _modelTransform;
+	[SerializeField] private Vector3 _skateboardModelOffset;
+	private bool _isSkating = false;
 
 	[Header("Touch Joystick")]
 	[SerializeField] private FloatingJoystick _joystick;
@@ -21,24 +28,80 @@ public class WorldMovement : MonoBehaviour
 	[SerializeField] private EventReference _footstepEvent;
 	[SerializeField] private float _stepDistance = 1.8f;
 
-	private Animator _animator;
+	[Space(10)]
+	[SerializeField] private Animator _animator;
 
 	private float _currentStepTracker = 0f;
 
+	private bool _isActive = false;
+
+	private void Awake()
+	{		
+        PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+		{
+			if (isLocalPlayer)
+			{
+				plr.StateManager.OnStateChanged += HandleStateChanged;
+				Debug.Log("[WorldMovement] Player registered and it's the localplayer, subscribing");
+			}
+		};
+	}
+
 	private void Start()
 	{
+        Debug.Log("[WorldMovement] executing start");
+
 		_rigidbody = GetComponent<Rigidbody>();
 		_rigidbody.freezeRotation = true;
-
-		// Abysmal dogshit way of finding components, rework this entirely!
-		_animator = transform.Find("Model Container").GetComponent<Animator>();
-		_joystick = GameObject.Find("JoystickContainer").GetComponent<FloatingJoystick>();
 
 		StartCoroutine(IdleActiveAnimation());
 	}
 
+	private void OnDisable()
+	{
+		PlayerService.Instance.LocalPlayer.StateManager.OnStateChanged -= HandleStateChanged;
+		Debug.Log("unsubbing from statechanged");
+	}
+
+	public void ToggleSkateBoard()
+	{
+		_isSkating = !_isSkating;
+
+		if (_isSkating) ActivateSkateboard();
+		else DeactivateSkateboard();
+	}
+
+	private void ActivateSkateboard()
+	{
+		_skateboard.SetActive(true);
+		_modelTransform.localPosition = _skateboardModelOffset;
+	}
+
+	private void DeactivateSkateboard()
+	{
+		_skateboard.SetActive(false);
+		_modelTransform.localPosition = Vector3.zero;
+	}
+
+	private void HandleStateChanged(PlayerStates states)
+	{
+		Debug.Log("Handling state changed from wrldmovement");
+		if (states == PlayerStates.StandardState)
+		{
+			_isActive = true;
+			Debug.Log("ACTIVEEEEEEEEE");
+		}
+		else
+		{
+			_isActive = false;
+		}
+	}
+
 	private void Update()
 	{
+		if (!_isActive)
+			return;
+
 		if (Input.GetKeyDown(KeyCode.F1))
 		{
 			_animator.SetTrigger("dance_1");
@@ -70,15 +133,16 @@ public class WorldMovement : MonoBehaviour
 			return;
 		}
 
-		movementDirection.Normalize();
-
-		HandleMovement(movementDirection);
+		if (_isActive)
+		{
+			movementDirection.Normalize();
+			HandleMovement(movementDirection);
+		}
 	}
 
 	private void HandleMovement(Vector3 movementDirection)
 	{
 		_animator.SetFloat("speed", 1f);
-
 		// Rotate toward joystick direction
 		Quaternion desiredRotation = Quaternion.LookRotation(
 			movementDirection,
@@ -95,7 +159,7 @@ public class WorldMovement : MonoBehaviour
 
 		// Move in the desired direction
 		Vector3 move = movementDirection *
-					   _moveSpeed *
+					   (_isSkating ? _skateSpeed : _moveSpeed)*
 					   Time.fixedDeltaTime;
 
 		_rigidbody.MovePosition(

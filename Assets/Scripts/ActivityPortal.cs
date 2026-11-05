@@ -26,17 +26,23 @@ public class ActivityPortal : MonoBehaviour
 
     private void Start()
     {
-        PlayerStateMachine.Instance.OnStateChanged += OnStateChanged;
+        PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+		{
+			if (isLocalPlayer)
+			{
+				plr.StateManager.OnStateChanged += OnStateChanged;
+			}
+		};
     }
 
     private void OnDestroy()
     {
-        PlayerStateMachine.Instance.OnStateChanged -= OnStateChanged;
+        PlayerService.Instance.LocalPlayer.StateManager.OnStateChanged -= OnStateChanged;
     }
 
-    private void OnStateChanged(PlayerState state)
+    private void OnStateChanged(PlayerStates state)
     {
-        if(state is not StandardPlayerState)
+        if(state != PlayerStates.StandardState)
             GetComponent<Renderer>().enabled = false;
         else 
             GetComponent<Renderer>().enabled = true;

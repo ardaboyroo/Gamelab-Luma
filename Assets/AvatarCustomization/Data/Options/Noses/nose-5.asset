@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cd4c99e03fb9f56478f5756d54bb7c91, type: 3}
+  m_Name: nose-5
+  m_EditorClassIdentifier: 
+  id: nose-5
+  displayName: Nose 5
+  preview: {fileID: 2800000, guid: fe03bd3ad348e684aa1013a0d69b43e3, type: 3}

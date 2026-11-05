@@ -1,0 +1,13 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/Avatar%20Edit%20Styles.uss?fileID=7433441132597879392&amp;guid=ceb681d7b1dad1a4382256320f1cb2b7&amp;type=3#Avatar Edit Styles" />
+    <ui:VisualElement name="OptionsContainer" class="OptionsContainer" style="flex-grow: 1; position: absolute; height: 681px; width: 921px; top: auto; left: 80px; right: 80px; bottom: 100px;">
+        <ui:VisualElement name="CustomizationOptions" style="flex-grow: 1; position: absolute; height: 554px; width: 515px; top: 51px; left: 368px; background-color: rgb(145, 176, 200); border-top-left-radius: 23px; border-top-right-radius: 23px; border-bottom-right-radius: 23px; border-bottom-left-radius: 23px;" />
+        <ui:VisualElement name="CategoryButtonContainer" style="flex-grow: 1; position: absolute; height: 516px; width: 330px; top: 72px; left: 20px; flex-direction: column; align-items: center; align-self: flex-end; justify-content: center;">
+            <ui:Button text="Button" name="CategoryButton" class="CategoryButton" />
+            <ui:Button text="Button" name="CategoryButton" class="CategoryButton" />
+            <ui:Button text="Button" name="CategoryButton" class="CategoryButton" />
+            <ui:Button text="Button" name="CategoryButton" class="CategoryButton" />
+            <ui:Button text="Button" name="CategoryButton" class="CategoryButton" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
