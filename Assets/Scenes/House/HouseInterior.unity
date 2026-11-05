@@ -476,7 +476,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c97f12185d010f44a981f2ac2515be04, type: 2}
+  - {fileID: 2100000, guid: f57897de956671147ad38b928d2ae3a4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -718,10 +718,15 @@ MonoBehaviour:
   styleSheet: {fileID: 7433441132597879392, guid: 4297ce1142ec6e0458755742141b201f, type: 3}
   bedInventory:
   - {fileID: 11400000, guid: 6ea48d7d39352b342baf874e28fd34f5, type: 2}
-  deskInventory: []
+  deskInventory:
+  - {fileID: 11400000, guid: 725d9053b52e55f40a727af95b72a14e, type: 2}
+  - {fileID: 11400000, guid: b4d11fd0d9c4cc042ab9989a59a6f205, type: 2}
+  - {fileID: 11400000, guid: 3d0ac387ed0c2ad4b9b5e2b889268045, type: 2}
   nightstandInventory: []
-  chairInventory: []
-  mirrorInventory: []
+  chairInventory:
+  - {fileID: 11400000, guid: 231cc0bc75495bf4a8dac9db81380d11, type: 2}
+  mirrorInventory:
+  - {fileID: 11400000, guid: 45e71f62dc16b4942a1eb7954e6bc7ee, type: 2}
   wallpaperInventory: []
   floorInventory: []
 --- !u!114 &1090351351

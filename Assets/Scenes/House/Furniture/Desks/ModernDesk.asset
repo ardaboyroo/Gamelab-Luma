@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
-  m_Name: Bed
+  m_Name: ModernDesk
   m_EditorClassIdentifier: 
-  displayName: Bed
+  displayName: Modern Desk
   icon: {fileID: 0}
-  prefab: {fileID: 1320039315611802316, guid: 79d66d3dbd2051640aeb326b2f42220b, type: 3}
-  size: {x: 3, y: 2}
+  prefab: {fileID: 4944064443010379363, guid: da03e6d17c5cf2744ba8d4395983f667, type: 3}
+  size: {x: 3, y: 1}
