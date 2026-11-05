@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3812701249476494333}
   - component: {fileID: 7608285487096953801}
   - component: {fileID: 8018144148328316512}
+  - component: {fileID: 2064413587175789285}
   m_Layer: 0
   m_Name: PF_Environment_Folliage_BoulderSmall
   m_TagString: Untagged
@@ -109,3 +110,28 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 1552554874153939883, guid: 30a30936403e3da4fad5b10a412a32a1, type: 3}
+--- !u!205 &2064413587175789285
+LODGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305085270343342743}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 0
+  m_AnimateCrossFading: 0
+  m_LastLODIsBillboard: 0
+  m_LODs:
+  - screenRelativeHeight: 0
+    fadeTransitionWidth: 0
+    renderers:
+    - renderer: {fileID: 7608285487096953801}
+  - screenRelativeHeight: 0
+    fadeTransitionWidth: 0
+    renderers: []
+  - screenRelativeHeight: 0
+    fadeTransitionWidth: 0
+    renderers: []
+  m_Enabled: 1
