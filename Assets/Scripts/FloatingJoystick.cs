@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using ETouch = UnityEngine.InputSystem.EnhancedTouch;
@@ -5,6 +6,8 @@ using ETouch = UnityEngine.InputSystem.EnhancedTouch;
 [RequireComponent(typeof(RectTransform))]
 public class FloatingJoystick : MonoBehaviour
 {
+    [SerializeField] private PlayerStates _workingState = PlayerStates.StandardState;
+
     [Header("References")]
     [SerializeField] private RectTransform _background;
     [SerializeField] private RectTransform _knob;
@@ -22,6 +25,16 @@ public class FloatingJoystick : MonoBehaviour
 
     private void Awake()
     {
+        PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+        {
+            if (isLocalPlayer)
+            {
+                plr.StateManager.OnStateChanged += HandleStateChanged;
+            }
+        };
+
+        EnhancedTouchSupport.Enable();
+
         _rectTransform = GetComponent<RectTransform>();
         _canvas = GetComponentInParent<Canvas>();
 
@@ -33,25 +46,45 @@ public class FloatingJoystick : MonoBehaviour
         SetVisuals(false);
     }
 
-    private void OnEnable()
-    {
-        EnhancedTouchSupport.Enable();
+	private void HandleStateChanged(PlayerStates states)
+	{
+		if (states == _workingState)
+        {
+            EnableJoystick();
+        }
+        else
+        {
+            DisableJoystick();
+        }
+	}
 
+	private void EnableJoystick()
+	{
         ETouch.Touch.onFingerDown += HandleFingerDown;
         ETouch.Touch.onFingerMove += HandleFingerMove;
         ETouch.Touch.onFingerUp += HandleFingerUp;
-    }
+	}
 
-    private void OnDisable()
+    private void DisableJoystick()
     {
         ETouch.Touch.onFingerDown -= HandleFingerDown;
         ETouch.Touch.onFingerMove -= HandleFingerMove;
         ETouch.Touch.onFingerUp -= HandleFingerUp;
 
-        EnhancedTouchSupport.Disable();
-
         _movementFinger = null;
         Direction = Vector2.zero;
+
+        SetVisuals(false);
+    }
+
+	private void OnEnable()
+    {
+        EnhancedTouchSupport.Enable();
+    }
+
+    private void OnDisable()
+    {
+        EnhancedTouchSupport.Disable();
     }
 
     private void HandleFingerDown(Finger finger)

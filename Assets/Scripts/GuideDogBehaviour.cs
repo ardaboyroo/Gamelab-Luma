@@ -111,7 +111,7 @@ public class GuideDogBehaviour : MonoBehaviour
 
     void Update()
     {
-        if (PlayerStateMachine.Instance.Current is not StandardPlayerState) return;
+        if (PlayerService.Instance.LocalPlayer.StateManager.CurrentState != PlayerStates.StandardState) return;
         if (player == null) return;
         if (_pathXZ == null || _pathXZ.Length < 2) return;
 
