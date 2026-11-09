@@ -120,11 +120,22 @@ public class WorldMovement : MonoBehaviour
 
 		Vector2 joystickInput = _joystick.Direction;
 
-		Vector3 movementDirection = new Vector3(
-			joystickInput.x,
-			0f,
-			joystickInput.y
-		);
+		// Get camera-relative directions
+		Transform cameraTransform = Camera.main.transform;
+
+		Vector3 cameraForward = cameraTransform.forward;
+		Vector3 cameraRight = cameraTransform.right;
+
+		// Flatten directions onto the ground
+		cameraForward.y = 0f;
+		cameraRight.y = 0f;
+
+		cameraForward.Normalize();
+		cameraRight.Normalize();
+
+		Vector3 movementDirection =
+			cameraRight * joystickInput.x +
+			cameraForward * joystickInput.y;
 
 		// No joystick input
 		if (movementDirection.sqrMagnitude < 0.01f)
@@ -143,9 +154,12 @@ public class WorldMovement : MonoBehaviour
 	private void HandleMovement(Vector3 movementDirection)
 	{
 		_animator.SetFloat("speed", 1f);
-		// Rotate toward joystick direction
+
+		// Normalize only for rotation
+		Vector3 direction = movementDirection.normalized;
+
 		Quaternion desiredRotation = Quaternion.LookRotation(
-			movementDirection,
+			direction,
 			Vector3.up
 		);
 
@@ -157,14 +171,12 @@ public class WorldMovement : MonoBehaviour
 
 		_rigidbody.MoveRotation(newRotation);
 
-		// Move in the desired direction
+		// Preserve joystick magnitude for variable movement speed
 		Vector3 move = movementDirection *
-					   (_isSkating ? _skateSpeed : _moveSpeed)*
+					   (_isSkating ? _skateSpeed : _moveSpeed) *
 					   Time.fixedDeltaTime;
 
-		_rigidbody.MovePosition(
-			_rigidbody.position + move
-		);
+		_rigidbody.MovePosition(_rigidbody.position + move);
 
 		PlayFootstepIfMoved(move.magnitude);
 	}
