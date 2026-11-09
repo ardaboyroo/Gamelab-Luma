@@ -85,6 +85,7 @@ public class FloatingJoystick : MonoBehaviour
     private void OnDisable()
     {
         EnhancedTouchSupport.Disable();
+        DisableJoystick();
     }
 
     private void HandleFingerDown(Finger finger)

@@ -177,7 +177,7 @@ public class MenuUI : MonoBehaviour
 
         //PlayClick();
 
-        _dog.enabled = false;
+        //_dog.enabled = false;
     }
 
     private void CharacterEditHideUI()
@@ -192,7 +192,7 @@ public class MenuUI : MonoBehaviour
 
         //PlayConfirm();
 
-        _dog.enabled = true;
+        //_dog.enabled = true;
     }
 
     private void ChangeToStandardState()
