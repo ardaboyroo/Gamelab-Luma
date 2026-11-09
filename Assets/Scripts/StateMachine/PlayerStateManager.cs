@@ -8,7 +8,7 @@ public enum PlayerStates
 	CharacterEditState,
 	DialogueState,
 	CutsceneState,
-	SpraywayState
+	HouseEditState
 }
 
 public class PlayerStateManager : MonoBehaviour

@@ -26,7 +26,7 @@ namespace Luma.AvatarCustomization
         {
             if (Instance != null && Instance != this) { Destroy(gameObject); return; }
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            
             foreach (AvatarCategory category in Enum.GetValues(typeof(AvatarCategory)))
                 foreach (var option in catalog.GetOptions(category))
                     if (option != null && !string.IsNullOrWhiteSpace(option.Id)) lookup.TryAdd(option.Id, option);

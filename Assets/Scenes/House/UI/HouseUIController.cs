@@ -5,6 +5,9 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(UIDocument))]
 public class HouseUIController : MonoBehaviour
 {
+    [Tooltip("The state this script is active on")]
+	[SerializeField] private PlayerStates _workingState = PlayerStates.HouseEditState;
+
     public EditModeController edit;
     public PlacementController placement;
     public RoomSurfaces surfaces;
@@ -103,7 +106,18 @@ public class HouseUIController : MonoBehaviour
         placement.SelectionChanged -= OnSelectionChanged;
     }
 
-    void ToggleMainUI() => SetUIOpen(!isOpen);
+    void ToggleMainUI()
+    {
+        if (isOpen)
+        {
+            PlayerService.Instance.LocalPlayer.StateManager.ChangePlayerState(PlayerStates.StandardState);
+        }
+        else
+        {
+            PlayerService.Instance.LocalPlayer.StateManager.ChangePlayerState(PlayerStates.HouseEditState);
+        }
+        SetUIOpen(!isOpen);
+    }
 
     void SetUIOpen(bool open)
     {
