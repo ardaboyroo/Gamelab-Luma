@@ -12,6 +12,7 @@
     "com.unity.multiplayer.playmode": "1.6.3",
     "com.unity.netcode.gameobjects": "2.13.3",
     "com.unity.pipeline": "0.8.0-exp.1",
+    "com.unity.probuilder": "6.0.9",
     "com.unity.render-pipelines.universal": "17.0.4",
     "com.unity.shadergraph": "17.3.0",
     "com.unity.test-framework": "1.6.0",
