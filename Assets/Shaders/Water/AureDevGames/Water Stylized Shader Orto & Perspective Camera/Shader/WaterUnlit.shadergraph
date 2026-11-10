@@ -2594,7 +2594,7 @@
     "m_Group": {
         "m_Id": "b1557fbda61d4a8fb1abe459ac967bc7"
     },
-    "m_Name": "IntersectionFoam",
+    "m_Name": "Intersection Foam",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -3087,8 +3087,8 @@
     "m_ObjectId": "1b55603d66da4fc49e65dc9ad98b0ac8",
     "m_Title": "BLEND OBJECT COLOR",
     "m_Position": {
-        "x": -43.99951171875,
-        "y": -291.9999694824219
+        "x": -43.0,
+        "y": -293.0
     }
 }
 
@@ -3626,8 +3626,8 @@
     "m_ObjectId": "28d03412e682475ab7ca76b6b496742c",
     "m_Title": "CAVES SET UP",
     "m_Position": {
-        "x": -427.99951171875,
-        "y": 1133.3333740234375
+        "x": -427.0,
+        "y": 1133.0
     }
 }
 
@@ -4426,8 +4426,8 @@
     "m_ObjectId": "396d13a284fe4101928818ac42318f01",
     "m_Title": "REFLECTIONS",
     "m_Position": {
-        "x": 289.33349609375,
-        "y": 1119.3333740234375
+        "x": 289.0,
+        "y": 1119.0
     }
 }
 
@@ -4717,7 +4717,7 @@
     "m_Group": {
         "m_Id": "1b55603d66da4fc49e65dc9ad98b0ac8"
     },
-    "m_Name": "BlendObjectColor",
+    "m_Name": "Blend Object Color",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -4985,7 +4985,7 @@
     "m_Title": "COLOR ADJUSTMENTS",
     "m_Position": {
         "x": 6678.0,
-        "y": 435.9999084472656
+        "y": 436.0
     }
 }
 
@@ -5252,7 +5252,7 @@
     "m_Group": {
         "m_Id": "658af11bd853495a95a31486625b0779"
     },
-    "m_Name": "PrimaryFoam",
+    "m_Name": "Primary Foam",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -5521,7 +5521,7 @@
     "m_Group": {
         "m_Id": "abb3c36d69fe4bd8a6258eff4839ca9a"
     },
-    "m_Name": "GetDepth",
+    "m_Name": "Get Depth",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -5978,7 +5978,7 @@
     "m_Group": {
         "m_Id": "dd90a22460ad4b1cade700471366fbc8"
     },
-    "m_Name": "SecondaryFoam",
+    "m_Name": "Secondary Foam",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -6237,8 +6237,8 @@
     "m_ObjectId": "658af11bd853495a95a31486625b0779",
     "m_Title": "PRIMARY FOAM",
     "m_Position": {
-        "x": 2185.3330078125,
-        "y": 1636.66650390625
+        "x": 2185.0,
+        "y": 1636.0
     }
 }
 
@@ -8887,8 +8887,8 @@
     "m_ObjectId": "a688971f8bd04af2a219705e0d9a1f33",
     "m_Title": "FOG",
     "m_Position": {
-        "x": 5603.33349609375,
-        "y": 1633.3333740234375
+        "x": 5604.0,
+        "y": 1633.0
     }
 }
 
@@ -9071,8 +9071,8 @@
     "m_ObjectId": "abb3c36d69fe4bd8a6258eff4839ca9a",
     "m_Title": "DEPTH",
     "m_Position": {
-        "x": -1224.66650390625,
-        "y": -325.9999694824219
+        "x": -1224.0,
+        "y": -326.0
     }
 }
 
@@ -9237,7 +9237,7 @@
     "m_ObjectId": "b1557fbda61d4a8fb1abe459ac967bc7",
     "m_Title": "INTERSECTION FOAM",
     "m_Position": {
-        "x": 2790.666748046875,
+        "x": 2791.0,
         "y": 1606.0
     }
 }
@@ -10390,7 +10390,7 @@
     "m_Group": {
         "m_Id": "f27f0a3128164d98beb30cd773b63098"
     },
-    "m_Name": "CalculateUVs",
+    "m_Name": "Calculate U Vs",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -10837,8 +10837,8 @@
     "m_ObjectId": "d8da0964d9b546d09534c80d84befee7",
     "m_Title": "SPECULAR",
     "m_Position": {
-        "x": 3747.3330078125,
-        "y": 1725.333251953125
+        "x": 3748.0,
+        "y": 1725.0
     }
 }
 
@@ -11040,8 +11040,8 @@
     "m_ObjectId": "dd90a22460ad4b1cade700471366fbc8",
     "m_Title": "SECONDARY FOAM(ADDING LAYERS FROM DOWN TO UP)",
     "m_Position": {
-        "x": 1354.66650390625,
-        "y": 1656.0
+        "x": 1355.0,
+        "y": 1655.0
     }
 }
 
@@ -12109,7 +12109,7 @@
     "m_ObjectId": "f27f0a3128164d98beb30cd773b63098",
     "m_Title": "CALCULATE WORLD OR LOCAL UVS",
     "m_Position": {
-        "x": -1843.99951171875,
+        "x": -1843.0,
         "y": 1766.0
     }
 }
@@ -12340,8 +12340,8 @@
     "m_ObjectId": "f77ae05689b84c08b5dc11eb4ef5f940",
     "m_Title": "THE MAIN PIPELINE",
     "m_Position": {
-        "x": -1068.66650390625,
-        "y": 478.66668701171877
+        "x": -1068.0,
+        "y": 479.0
     }
 }
 
@@ -12486,7 +12486,7 @@
     "m_Group": {
         "m_Id": "f77ae05689b84c08b5dc11eb4ef5f940"
     },
-    "m_Name": "FresnelCalculation",
+    "m_Name": "Fresnel Calculation",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
