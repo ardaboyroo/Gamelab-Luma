@@ -20,18 +20,27 @@ public class PlayerStateManager : MonoBehaviour
 
 	public PlayerStates CurrentState => _playerState;
 
-	private void Start()
+	// Subscribe in Awake (not Start): Player.Start registers the player, and Unity doesn't guarantee
+	// which Start runs first. Every Awake runs before any Start, so the first state is never missed.
+	private void Awake()
 	{
 		Debug.Log("mngr");
-		PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
+		PlayerService.OnPlayerRegistered += HandlePlayerRegistered;
+	}
+
+	private void OnDestroy()
+	{
+		PlayerService.OnPlayerRegistered -= HandlePlayerRegistered;
+	}
+
+	private void HandlePlayerRegistered(Player plr, bool isLocalPlayer)
+	{
+		if (isLocalPlayer && plr.StateManager == this)
 		{
-			if (isLocalPlayer)
-			{
-				_playerState = _initialState;
-				Invoke("DeferredCall", .1f);
-				Debug.Log($"[PlayerStateManager] Invoking OnStateChanged: {_playerState}");
-			}
-		};
+			_playerState = _initialState;
+			Invoke("DeferredCall", .1f);
+			Debug.Log($"[PlayerStateManager] Invoking OnStateChanged: {_playerState}");
+		}
 	}
 
 	private void DeferredCall()

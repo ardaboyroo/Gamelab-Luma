@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
+  m_Name: CottageBed
+  m_EditorClassIdentifier: 
+  displayName: Cottage Bed
+  icon: {fileID: 0}
+  prefab: {fileID: 5117809206340277463, guid: 183214e0129176a4cad0bb14bf858130, type: 3}
+  size: {x: 5, y: 4}

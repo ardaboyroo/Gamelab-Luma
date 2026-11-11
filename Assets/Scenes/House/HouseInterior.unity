@@ -1348,13 +1348,19 @@ MonoBehaviour:
   styleSheet: {fileID: 7433441132597879392, guid: 4297ce1142ec6e0458755742141b201f, type: 3}
   bedInventory:
   - {fileID: 11400000, guid: 6ea48d7d39352b342baf874e28fd34f5, type: 2}
+  - {fileID: 11400000, guid: 83ef9867aa4191b4faa9e53c5a8f3504, type: 2}
+  - {fileID: 11400000, guid: e476acfe08a34a44b8715c21a011f566, type: 2}
   deskInventory:
   - {fileID: 11400000, guid: 725d9053b52e55f40a727af95b72a14e, type: 2}
   - {fileID: 11400000, guid: b4d11fd0d9c4cc042ab9989a59a6f205, type: 2}
   - {fileID: 11400000, guid: 3d0ac387ed0c2ad4b9b5e2b889268045, type: 2}
-  nightstandInventory: []
+  nightstandInventory:
+  - {fileID: 11400000, guid: ae0c24bd321679e49b692f6225eb1c01, type: 2}
+  - {fileID: 11400000, guid: f1fd2d6a7bbfd9b48a34e39b00c09c95, type: 2}
+  - {fileID: 11400000, guid: 1a06417ede799be4ab49c9b01838976a, type: 2}
   chairInventory:
   - {fileID: 11400000, guid: 231cc0bc75495bf4a8dac9db81380d11, type: 2}
+  - {fileID: 11400000, guid: 4c39b387e361f83438c1345cc95ee4ac, type: 2}
   mirrorInventory:
   - {fileID: 11400000, guid: 45e71f62dc16b4942a1eb7954e6bc7ee, type: 2}
   wallpaperInventory: []

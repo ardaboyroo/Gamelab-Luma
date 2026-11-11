@@ -32,6 +32,10 @@ public class MirrorInteractor : MonoBehaviour
     public float maxTapMove = 25f;
     public float maxTapTime = 0.4f;
 
+    [Header("Debug")]
+    [Tooltip("Logs to the Console why a tap on the mirror did or didn't work.")]
+    public bool debugLogs = true;
+
     public event Action MirrorUsed;                 // the player was switched to the customization state
     public event Action TooFar;                     // mirror tapped but the player is too far away
 
@@ -61,7 +65,7 @@ public class MirrorInteractor : MonoBehaviour
             switch (t.phase)
             {
                 case TouchPhase.Began:
-                    if (trackedFinger == -1 && !IsOverUI(t.position))
+                    if (trackedFinger == -1 && !IsOverUIWithLog(t.position))
                     {
                         trackedFinger = t.fingerId;
                         downPos = t.position;
@@ -87,7 +91,7 @@ public class MirrorInteractor : MonoBehaviour
     // Editor / PC testing.
     void HandleMouse()
     {
-        if (Input.GetMouseButtonDown(0) && !IsOverUI(Input.mousePosition))
+        if (Input.GetMouseButtonDown(0) && !IsOverUIWithLog(Input.mousePosition))
         {
             trackedFinger = 0;
             downPos = Input.mousePosition;
@@ -103,6 +107,13 @@ public class MirrorInteractor : MonoBehaviour
     bool IsTap(Vector2 upPos) =>
         Vector2.Distance(upPos, downPos) <= maxTapMove && Time.unscaledTime - downTime <= maxTapTime;
 
+    bool IsOverUIWithLog(Vector2 screen)
+    {
+        bool over = IsOverUI(screen);
+        if (over && debugLogs && PickRaw(screen) != null) Debug.Log("[MirrorInteractor] Tap ignored: there is UI on top of the mirror at that spot.", this);
+        return over;
+    }
+
     // True when the finger is on a real piece of UI (a button, a panel...), for both uGUI and UI Toolkit.
     // Empty full-screen UI Toolkit document roots are ignored, otherwise every tap would count as 'on UI'.
     static bool IsOverUI(Vector2 screen)
@@ -113,7 +124,12 @@ public class MirrorInteractor : MonoBehaviour
             uiHits.Clear();
             es.RaycastAll(new PointerEventData(es) { position = screen }, uiHits);
             foreach (var h in uiHits)
-                if (h.module is UnityEngine.UI.GraphicRaycaster) return true;
+            {
+                if (!(h.module is UnityEngine.UI.GraphicRaycaster)) continue;
+                // The floating joystick pops up under every finger, so it would block every tap. Ignore it.
+                if (h.gameObject.GetComponentInParent<FloatingJoystick>(true) != null) continue;
+                return true;
+            }
         }
 
         var docs = FindObjectsByType<UIDocument>(FindObjectsSortMode.None);
@@ -158,8 +174,14 @@ public class MirrorInteractor : MonoBehaviour
         if (playerT && maxDistance > 0f)
         {
             Vector3 d = mirror.transform.position - playerT.position; d.y = 0;
-            if (d.magnitude > maxDistance) { TooFar?.Invoke(); return; }
+            if (d.magnitude > maxDistance)
+            {
+                if (debugLogs) Debug.Log($"[MirrorInteractor] Mirror tapped but the player is too far away ({d.magnitude:F1} > {maxDistance}). Walk closer.", this);
+                TooFar?.Invoke();
+                return;
+            }
         }
+        if (debugLogs) Debug.Log("[MirrorInteractor] Mirror used -> " + customizationState, this);
 
         trackedFinger = -1;
         local.StateManager.ChangePlayerState(customizationState);
@@ -186,7 +208,26 @@ public class MirrorInteractor : MonoBehaviour
         foreach (var h in hits)
         {
             if (playerT && h.transform.IsChildOf(playerT)) continue;
-            return h.collider.GetComponentInParent<Mirror>();
+            // Walls the house camera has hidden (renderer off) still have colliders; look through them.
+            var r = h.collider.GetComponent<Renderer>();
+            if (r && !r.enabled) continue;
+            var mirror = h.collider.GetComponentInParent<Mirror>();
+            if (mirror == null && debugLogs && PickRaw(screen) != null)
+                Debug.Log("[MirrorInteractor] Tap ignored: '" + h.collider.name + "' is in front of the mirror.", this);
+            return mirror;
+        }
+        return null;
+    }
+
+    // Any mirror along the ray, ignoring what's in front of it. Only used for the debug messages.
+    Mirror PickRaw(Vector2 screen)
+    {
+        Camera c = cam && cam.isActiveAndEnabled ? cam : Camera.main;
+        if (c == null) return null;
+        foreach (var h in Physics.RaycastAll(c.ScreenPointToRay(screen), 200f, ~0, QueryTriggerInteraction.Ignore))
+        {
+            var m = h.collider.GetComponentInParent<Mirror>();
+            if (m) return m;
         }
         return null;
     }
