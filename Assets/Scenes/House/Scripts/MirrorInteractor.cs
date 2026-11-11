@@ -1,22 +1,29 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 /// Switches the local player into the avatar customization state when they tap a Mirror in walk mode.
 /// Put ONE of these on any GameObject in the scene (not on the mirror prefab), because the mirror
 /// is spawned by the furniture system and prefabs can't hold references to scene objects.
+///
+/// The player, PlayerService and MenuUI (which shows the Avatar Creation UI for CharacterEditState)
+/// live in the Main scene, so test this with Main loaded together with the house.
 public class MirrorInteractor : MonoBehaviour
 {
-    [Tooltip("The state the player goes into when they tap the mirror. Pick it in the Inspector.")]
-    public PlayerStates customizationState;
-    [Tooltip("The state ReturnFromMirror() goes back to. Only needed if something calls ReturnFromMirror().")]
-    public PlayerStates returnState;
+    [Tooltip("The state the player goes into when they tap the mirror.")]
+    public PlayerStates customizationState = PlayerStates.CharacterEditState;
+    [Tooltip("The state ReturnFromMirror() goes back to.")]
+    public PlayerStates returnState = PlayerStates.StandardState;
 
     public EditModeController editMode;             // taps are ignored while editing the room
-    public Camera cam;                              // leave empty to use Camera.main (only used to aim the tap)
+    [Tooltip("Leave empty to use Camera.main (looked up on each tap, so it also works when the camera comes from another scene).")]
+    public Camera cam;
 
     [Header("Player")]
-    public Transform player;                        // used for the distance check
+    [Tooltip("Leave empty to use the local player from PlayerService automatically.")]
+    public Transform player;
     [Tooltip("How close the player must be to use the mirror. 0 = any distance.")]
     public float maxDistance = 3f;
 
@@ -32,12 +39,14 @@ public class MirrorInteractor : MonoBehaviour
     Vector2 downPos;
     float downTime;
 
-    void Awake() { if (!cam) cam = Camera.main; }
+    static readonly List<RaycastResult> uiHits = new();
+    static readonly HashSet<VisualElement> docRoots = new();
+    static readonly HashSet<IPanel> checkedPanels = new();
 
     // ---------- input ----------
     void Update()
     {
-        if (editMode && editMode.IsEditing) return;
+        if (editMode && editMode.IsEditing) { trackedFinger = -1; return; }
 
         if (Application.isMobilePlatform) HandleTouches();
         else HandleMouse();
@@ -52,7 +61,7 @@ public class MirrorInteractor : MonoBehaviour
             switch (t.phase)
             {
                 case TouchPhase.Began:
-                    if (trackedFinger == -1 && !IsOverUI(t.fingerId))
+                    if (trackedFinger == -1 && !IsOverUI(t.position))
                     {
                         trackedFinger = t.fingerId;
                         downPos = t.position;
@@ -78,7 +87,7 @@ public class MirrorInteractor : MonoBehaviour
     // Editor / PC testing.
     void HandleMouse()
     {
-        if (Input.GetMouseButtonDown(0) && !IsOverUI(-1))
+        if (Input.GetMouseButtonDown(0) && !IsOverUI(Input.mousePosition))
         {
             trackedFinger = 0;
             downPos = Input.mousePosition;
@@ -94,46 +103,89 @@ public class MirrorInteractor : MonoBehaviour
     bool IsTap(Vector2 upPos) =>
         Vector2.Distance(upPos, downPos) <= maxTapMove && Time.unscaledTime - downTime <= maxTapTime;
 
-    static bool IsOverUI(int pointerId) =>
-        EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(pointerId);
+    // True when the finger is on a real piece of UI (a button, a panel...), for both uGUI and UI Toolkit.
+    // Empty full-screen UI Toolkit document roots are ignored, otherwise every tap would count as 'on UI'.
+    static bool IsOverUI(Vector2 screen)
+    {
+        var es = EventSystem.current;
+        if (es != null)
+        {
+            uiHits.Clear();
+            es.RaycastAll(new PointerEventData(es) { position = screen }, uiHits);
+            foreach (var h in uiHits)
+                if (h.module is UnityEngine.UI.GraphicRaycaster) return true;
+        }
+
+        var docs = FindObjectsByType<UIDocument>(FindObjectsSortMode.None);
+        docRoots.Clear();
+        checkedPanels.Clear();
+        foreach (var doc in docs)
+            if (doc.isActiveAndEnabled && doc.rootVisualElement != null) docRoots.Add(doc.rootVisualElement);
+
+        foreach (var root in docRoots)
+        {
+            var panel = root.panel;
+            if (panel == null || !checkedPanels.Add(panel)) continue;
+
+            Vector2 p = RuntimePanelUtils.ScreenToPanel(panel, new Vector2(screen.x, Screen.height - screen.y));
+            VisualElement picked = panel.Pick(p);
+            if (picked == null || picked == panel.visualTree || docRoots.Contains(picked)) continue;
+            return true;
+        }
+        return false;
+    }
 
     // ---------- using the mirror ----------
+    static Player LocalPlayer() => PlayerService.Instance != null ? PlayerService.Instance.LocalPlayer : null;
+
     void TryUseAt(Vector2 screen)
     {
-        Mirror mirror = Pick(screen);
+        Player local = LocalPlayer();
+        Transform playerT = player ? player : (local ? local.transform : null);
+
+        Mirror mirror = Pick(screen, playerT);
         if (mirror == null) return;
 
-        if (player && maxDistance > 0f)
+        if (local == null)
         {
-            Vector3 d = mirror.transform.position - player.position; d.y = 0;
+            Debug.LogWarning("[MirrorInteractor] Mirror tapped, but there is no local player. " +
+                             "Play with the Main scene loaded (it has the PLAYER, PlayerService and MenuUI).", this);
+            return;
+        }
+
+        if (local.StateManager.CurrentState == customizationState) return;   // already customizing
+
+        if (playerT && maxDistance > 0f)
+        {
+            Vector3 d = mirror.transform.position - playerT.position; d.y = 0;
             if (d.magnitude > maxDistance) { TooFar?.Invoke(); return; }
         }
 
         trackedFinger = -1;
-        ChangePlayerState(customizationState);
+        local.StateManager.ChangePlayerState(customizationState);
         MirrorUsed?.Invoke();
     }
 
     /// Optional: wire a button to this if nothing else takes the player out of the customization state.
-    public void ReturnFromMirror() => ChangePlayerState(returnState);
-
-    private void ChangePlayerState(PlayerStates newState)
+    public void ReturnFromMirror()
     {
-        var local = PlayerService.Instance != null ? PlayerService.Instance.LocalPlayer : null;
-        if (local == null) return;   // player not spawned yet
-        local.StateManager.ChangePlayerState(newState);
+        Player local = LocalPlayer();
+        if (local != null) local.StateManager.ChangePlayerState(returnState);
     }
 
     // First thing along the ray that isn't the player. If that's a mirror, return it;
     // if it's a wall or other object, the mirror is blocked and nothing happens.
-    Mirror Pick(Vector2 screen)
+    Mirror Pick(Vector2 screen, Transform playerT)
     {
-        Ray ray = cam.ScreenPointToRay(screen);
+        Camera c = cam && cam.isActiveAndEnabled ? cam : Camera.main;
+        if (c == null) return null;
+
+        Ray ray = c.ScreenPointToRay(screen);
         var hits = Physics.RaycastAll(ray, 200f, ~0, QueryTriggerInteraction.Ignore);
         Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
         foreach (var h in hits)
         {
-            if (player && h.transform.IsChildOf(player)) continue;
+            if (playerT && h.transform.IsChildOf(playerT)) continue;
             return h.collider.GetComponentInParent<Mirror>();
         }
         return null;
