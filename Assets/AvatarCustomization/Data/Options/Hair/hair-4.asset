@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: hair-4
   m_EditorClassIdentifier: 
   id: hair-4
-  displayName: hair1 sidebangs
+  displayName: Kapsel met schuine pony
   preview: {fileID: 0}
   prefab: {fileID: 1485093877379063428, guid: edd37197dec6d014bb50633d2e12367f, type: 3}
   unequip: 0

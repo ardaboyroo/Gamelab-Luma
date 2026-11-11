@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: nose-2
   m_EditorClassIdentifier: 
   id: nose-2
-  displayName: Nose 2
+  displayName: Neus 2
   preview: {fileID: 2800000, guid: 0cd26c50364865c42b15de4b11ea41ba, type: 3}

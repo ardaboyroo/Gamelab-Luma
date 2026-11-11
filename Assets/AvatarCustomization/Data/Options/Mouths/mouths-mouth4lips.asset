@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: mouths-mouth4lips
   m_EditorClassIdentifier: 
   id: mouths-mouth4lips
-  displayName: MOUTH4lips
+  displayName: Mond 4 met lippen
   preview: {fileID: 2800000, guid: 2a93e51d4f1079e4e9ca03d5c23f9f37, type: 3}
   texture: {fileID: 2800000, guid: 2a93e51d4f1079e4e9ca03d5c23f9f37, type: 3}

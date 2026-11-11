@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: pants-4
   m_EditorClassIdentifier: 
   id: pants-4
-  displayName: Basic pants
+  displayName: Basisbroek
   preview: {fileID: 2800000, guid: 168fb5882a1a7624284ca17b3a8f00f9, type: 3}
   prefab: {fileID: 6709764047065980855, guid: f18d0858f0dd51d4b979d4aef4a394d0, type: 3}
   unequip: 0

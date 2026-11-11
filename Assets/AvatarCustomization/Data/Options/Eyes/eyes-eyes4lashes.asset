@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: eyes-eyes4lashes
   m_EditorClassIdentifier: 
   id: eyes-eyes4lashes
-  displayName: EYES4lashes
+  displayName: Ogen 4 met wimpers
   preview: {fileID: 2800000, guid: 5477b654efcfa3d4fa0f8860bd3fe823, type: 3}
   texture: {fileID: 2800000, guid: 5477b654efcfa3d4fa0f8860bd3fe823, type: 3}

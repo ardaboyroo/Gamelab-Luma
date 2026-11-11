@@ -3,33 +3,33 @@
     <ui:VisualElement name="avatarCreation" class="avatar-creation">
         <ui:VisualElement class="header-wave" picking-mode="Ignore" />
         <ui:VisualElement class="decorative-trails" picking-mode="Ignore" />
-        <ui:Label text="Avatar Creation" class="title" picking-mode="Ignore" />
+        <ui:Label text="Avatar aanpassen" class="title" picking-mode="Ignore" />
         <ui:Image name="avatarPreview" class="avatar-preview" picking-mode="Ignore" />
         <ui:VisualElement name="mainTabs" class="main-tabs">
-            <ui:Button name="bodyTab" text="Body" class="pill main-tab" />
-            <ui:Button name="faceTab" text="Face" class="pill main-tab selected-tab" />
-            <ui:Button name="clothesTab" text="Clothes" class="pill main-tab clothes-tab" />
+            <ui:Button name="bodyTab" text="Lichaam" class="pill main-tab" />
+            <ui:Button name="faceTab" text="Gezicht" class="pill main-tab selected-tab" />
+            <ui:Button name="clothesTab" text="Kleding" class="pill main-tab clothes-tab" />
         </ui:VisualElement>
         <ui:VisualElement name="customizationPanel" class="customization-panel">
             <ui:VisualElement name="faceCategories" class="categories">
-                <ui:Button name="eyesButton" text="Eyes" class="pill category selected-option" />
-                <ui:Button name="eyebrowsButton" text="Eyebrows" class="pill category" />
-                <ui:Button name="noseButton" text="Nose" class="pill category" />
-                <ui:Button name="mouthButton" text="Mouth" class="pill category" />
-                <ui:Button name="hairButton" text="Hair" class="pill category" />
+                <ui:Button name="eyesButton" text="Ogen" class="pill category selected-option" />
+                <ui:Button name="eyebrowsButton" text="Wenkbrauwen" class="pill category" />
+                <ui:Button name="noseButton" text="Neus" class="pill category" />
+                <ui:Button name="mouthButton" text="Mond" class="pill category" />
+                <ui:Button name="hairButton" text="Haar" class="pill category" />
             </ui:VisualElement>
             <ui:VisualElement name="bodyCategories" class="categories is-hidden">
-                <ui:Button name="skinButton" text="Skin tone" class="pill category" />
+                <ui:Button name="skinButton" text="Huidskleur" class="pill category" />
             </ui:VisualElement>
             <ui:VisualElement name="clothesCategories" class="categories is-hidden">
-                <ui:Button name="topButton" text="Tops" class="pill category" />
-                <ui:Button name="pantsButton" text="Pants" class="pill category" />
-                <ui:Button name="shoesButton" text="Shoes" class="pill category" />
+                <ui:Button name="topButton" text="Bovenkleding" class="pill category" />
+                <ui:Button name="pantsButton" text="Broeken" class="pill category" />
+                <ui:Button name="shoesButton" text="Schoenen" class="pill category" />
             </ui:VisualElement>
             <ui:VisualElement name="optionsPanel" class="options-panel">
                 <ui:VisualElement class="mode-tabs">
-                    <ui:Button name="styleTab" text="Style" class="pill mode-tab" />
-                    <ui:Button name="colorTab" text="Color" class="pill mode-tab selected-option" />
+                    <ui:Button name="styleTab" text="Stijl" class="pill mode-tab" />
+                    <ui:Button name="colorTab" text="Kleur" class="pill mode-tab selected-option" />
                 </ui:VisualElement>
                 <ui:VisualElement name="stylePanel" class="selection-panel is-hidden">
                     <ui:ScrollView name="eyesStylePanel" class="style-options" mode="Vertical" />
@@ -46,12 +46,12 @@
                         <ui:VisualElement name="colorSwatch" class="color-swatch" />
                         <ui:VisualElement name="hueHandle" class="handle hue-handle" />
                     </ui:VisualElement>
-                    <ui:VisualElement name="saturationSlider" class="gradient saturation" tooltip="Saturation"><ui:VisualElement name="saturationHandle" class="handle slider-handle" picking-mode="Ignore" /></ui:VisualElement>
-                    <ui:VisualElement name="brightnessSlider" class="gradient value" tooltip="Brightness"><ui:VisualElement name="valueHandle" class="handle slider-handle" picking-mode="Ignore" /></ui:VisualElement>
+                    <ui:VisualElement name="saturationSlider" class="gradient saturation" tooltip="Verzadiging"><ui:VisualElement name="saturationHandle" class="handle slider-handle" picking-mode="Ignore" /></ui:VisualElement>
+                    <ui:VisualElement name="brightnessSlider" class="gradient value" tooltip="Helderheid"><ui:VisualElement name="valueHandle" class="handle slider-handle" picking-mode="Ignore" /></ui:VisualElement>
                 </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
-        <ui:Label name="categoryHint" text="Choose a style or adjust its color." class="category-hint" />
-        <ui:Button name="done-btn" text="Save &amp; return" class="pill start-button" />
+        <ui:Label name="categoryHint" text="Kies een stijl of pas de kleur aan." class="category-hint" />
+        <ui:Button name="done-btn" text="Opslaan en terug" class="pill start-button" />
     </ui:VisualElement>
 </ui:UXML>

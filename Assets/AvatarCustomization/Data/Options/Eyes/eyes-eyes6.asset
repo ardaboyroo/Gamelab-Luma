@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: eyes-eyes6
   m_EditorClassIdentifier: 
   id: eyes-eyes6
-  displayName: EYES6
+  displayName: Ogen 6
   preview: {fileID: 2800000, guid: beea04d4cb06af246b4de1f661f8b5fe, type: 3}
   texture: {fileID: 2800000, guid: beea04d4cb06af246b4de1f661f8b5fe, type: 3}

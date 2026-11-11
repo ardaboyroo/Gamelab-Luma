@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: hair-3
   m_EditorClassIdentifier: 
   id: hair-3
-  displayName: hair1 no bangs
+  displayName: Kapsel zonder pony
   preview: {fileID: 0}
   prefab: {fileID: 7178818994749179811, guid: 13fb1b60333f47c49a1fd85663fc6542, type: 3}
   unequip: 0

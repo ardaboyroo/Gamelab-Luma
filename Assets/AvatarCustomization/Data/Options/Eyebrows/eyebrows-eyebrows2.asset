@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: eyebrows-eyebrows2
   m_EditorClassIdentifier: 
   id: eyebrows-eyebrows2
-  displayName: EYEBROWS2
+  displayName: Wenkbrauwen 2
   preview: {fileID: 2800000, guid: 1b2b7a56f7437ed489969f6714e7bab7, type: 3}
   texture: {fileID: 2800000, guid: 1b2b7a56f7437ed489969f6714e7bab7, type: 3}

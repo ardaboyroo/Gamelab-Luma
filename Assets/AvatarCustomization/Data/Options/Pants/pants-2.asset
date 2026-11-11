@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: pants-2
   m_EditorClassIdentifier: 
   id: pants-2
-  displayName: medium pants
+  displayName: Halflange broek
   preview: {fileID: 2800000, guid: 168fb5882a1a7624284ca17b3a8f00f9, type: 3}
   prefab: {fileID: 9081351259030545493, guid: db54ad993a1e7cb418cfa078e4e3a64c, type: 3}
   unequip: 0
