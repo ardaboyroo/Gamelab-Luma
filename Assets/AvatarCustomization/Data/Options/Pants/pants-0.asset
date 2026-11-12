@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: pants-0
   m_EditorClassIdentifier: 
   id: pants-0
-  displayName: None
+  displayName: Geen
   preview: {fileID: 0}
   prefab: {fileID: 0}
   unequip: 1

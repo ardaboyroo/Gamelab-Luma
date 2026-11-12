@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: hair-1
   m_EditorClassIdentifier: 
   id: hair-1
-  displayName: hair1 highpoly
+  displayName: Kapsel 1
   preview: {fileID: 0}
   prefab: {fileID: 2623469451042050483, guid: 0d14dc87efee2694aa4ba280412a4a10, type: 3}
   unequip: 0

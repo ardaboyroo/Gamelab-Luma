@@ -128,4 +128,6 @@
 .avatar-option-grid { flex-direction: row; flex-wrap: wrap; width: 100%; }
 .avatar-option-card { width: 30%; height: 126px; margin: 1.5%; padding: 5px; align-items: center; justify-content: center; border-radius: 18px; flex-shrink: 0; }
 .option-preview { flex-grow: 1; width: 100%; min-height: 0; }
+.face-option-preview { rotate: 90deg; width: 64px; height: 64px; flex-grow: 0; flex-shrink: 0; }
+.face-option-preview.mouth-option-preview { rotate: -90deg; }
 .option-label { font-size: 20px; white-space: normal; -unity-text-align: middle-center; }

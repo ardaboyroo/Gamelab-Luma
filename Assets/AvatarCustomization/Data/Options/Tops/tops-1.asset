@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: tops-1
   m_EditorClassIdentifier: 
   id: tops-1
-  displayName: tank_top
+  displayName: Mouwloos shirt
   preview: {fileID: 2800000, guid: 5f6cd84685ccbc74396cef71b31481a7, type: 3}
   prefab: {fileID: 5019526148760271810, guid: e4a06e2d66edb1c4a8e12b116710d6dd, type: 3}
   unequip: 0

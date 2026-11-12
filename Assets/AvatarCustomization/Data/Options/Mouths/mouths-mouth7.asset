@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: mouths-mouth7
   m_EditorClassIdentifier: 
   id: mouths-mouth7
-  displayName: MOUTH7
+  displayName: Mond 7
   preview: {fileID: 2800000, guid: 61045f546c0cd2c4096ee7993cd8de8a, type: 3}
   texture: {fileID: 2800000, guid: 61045f546c0cd2c4096ee7993cd8de8a, type: 3}

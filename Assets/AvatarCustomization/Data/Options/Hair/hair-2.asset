@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: hair-2
   m_EditorClassIdentifier: 
   id: hair-2
-  displayName: hair 2 low
+  displayName: Kapsel 2
   preview: {fileID: 0}
   prefab: {fileID: 5953022954589270738, guid: 9ec4b96d7800e7f42820f826e2b3ca5d, type: 3}
   unequip: 0

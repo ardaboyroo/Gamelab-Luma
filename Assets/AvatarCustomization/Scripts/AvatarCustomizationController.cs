@@ -96,7 +96,7 @@ namespace Luma.AvatarCustomization
             root.Q<VisualElement>("colorPanel").EnableInClassList("is-hidden", showingStyles);
             root.Q<Button>("styleTab").EnableInClassList("selected-option", showingStyles);
             root.Q<Button>("colorTab").EnableInClassList("selected-option", !showingStyles);
-            root.Q<Label>("categoryHint").text = nose ? "Nose selection is saved. Avatar preview coming later." : skin ? "Choose your skin tone." : "Choose a style or adjust its color.";
+            root.Q<Label>("categoryHint").text = nose ? "Je neuskeuze is opgeslagen. Deze wordt later zichtbaar op je avatar." : skin ? "Kies je huidskleur." : "Kies een stijl of pas de kleur aan.";
             foreach (AvatarCategory value in Enum.GetValues(typeof(AvatarCategory)))
             {
                 root.Q<Button>(Key(value) + "Button")?.EnableInClassList("selected-option", value == category);
@@ -116,7 +116,12 @@ namespace Luma.AvatarCustomization
                     if (option.Preview != null)
                     {
                         var image = new Image { image = option.Preview, scaleMode = ScaleMode.ScaleToFit, pickingMode = PickingMode.Ignore };
-                        image.AddToClassList("option-preview"); button.Add(image);
+                        image.AddToClassList("option-preview");
+                        if (category == AvatarCategory.Eyes || category == AvatarCategory.Eyebrows || category == AvatarCategory.Mouth)
+                            image.AddToClassList("face-option-preview");
+                        if (category == AvatarCategory.Mouth)
+                            image.AddToClassList("mouth-option-preview");
+                        button.Add(image);
                     }
                     var label = new Label(option.DisplayName) { pickingMode = PickingMode.Ignore };
                     label.AddToClassList("option-label"); button.Add(label); grid.Add(button);
