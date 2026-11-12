@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
   m_Name: ModernBed
   m_EditorClassIdentifier: 
-  displayName: Modern Bed
-  icon: {fileID: 0}
+  displayName: Modern bed
+  icon: {fileID: 21300000, guid: 9439e4abccb3f5f41b16e400ec436cbc, type: 3}
   prefab: {fileID: 5695949926121970690, guid: ae4836842d362b84f8f8a2f8f89621a2, type: 3}
   size: {x: 3, y: 5}

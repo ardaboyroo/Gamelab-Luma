@@ -13,6 +13,7 @@ public class PlacementController : MonoBehaviour
     public event Action<bool> PlacementChanged;   // true = a ghost is active
     public event Action<bool> ValidityChanged;    // true = ghost is on free cells
     public event Action<bool> SelectionChanged;   // true = a placed piece is selected
+    public event Action<FurnitureData> Placed;    // a NEW piece was placed (not fired when moving an existing one)
 
     public bool IsPlacing => current != null;
     public bool HasSelection => selected != null;
@@ -84,8 +85,11 @@ public class PlacementController : MonoBehaviour
     {
         if (!IsPlacing || !valid) return false;
         grid.Place(current, origin, rotation);
+        bool wasMove = moving;
+        FurnitureData placedData = current;
         moving = false;
         End();
+        if (!wasMove) Placed?.Invoke(placedData);
         return true;
     }
 

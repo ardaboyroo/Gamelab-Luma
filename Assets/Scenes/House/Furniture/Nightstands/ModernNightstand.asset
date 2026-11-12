@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
   m_Name: ModernNightstand
   m_EditorClassIdentifier: 
-  displayName: Modern Nightstand
-  icon: {fileID: 0}
+  displayName: Modern nachtkastje
+  icon: {fileID: 21300000, guid: 2811f2daa82cb644e9e3c18ac69f743a, type: 3}
   prefab: {fileID: 6940578471824933065, guid: aa2f29595187a1847840630bd607a13d, type: 3}
   size: {x: 1, y: 1}

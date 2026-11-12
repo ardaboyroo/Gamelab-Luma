@@ -231,14 +231,18 @@
 }
 
 .inv-icon {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
     border-radius: 24px;
     -unity-background-scale-mode: scale-to-fit;
 }
 
 .inv-label {
-    font-size: 34px;
+    font-size: 30px;
+    white-space: normal;
+    margin: 0;
+    padding: 0;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
     color: var(--brown-dark);

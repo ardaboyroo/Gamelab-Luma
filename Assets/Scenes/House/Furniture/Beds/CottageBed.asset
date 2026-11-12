@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
   m_Name: CottageBed
   m_EditorClassIdentifier: 
-  displayName: Cottage Bed
-  icon: {fileID: 0}
+  displayName: Landelijk bed
+  icon: {fileID: 21300000, guid: ce82b1be983aed446956f51cd6cf43e0, type: 3}
   prefab: {fileID: 5117809206340277463, guid: 183214e0129176a4cad0bb14bf858130, type: 3}
   size: {x: 5, y: 4}
