@@ -22,6 +22,11 @@ public class MenuUI : MonoBehaviour
     private bool _menuActive;
     private bool _charEditActive;
 
+    // Where the Done button in the avatar editor sends you: back to walking if you came from the
+    // world (e.g. the mirror in your room), back to the menu if you came from the menu.
+    private PlayerStates _lastState = PlayerStates.StandardState;
+    private PlayerStates _charEditReturnState = PlayerStates.MenuState;
+
     private void Awake()
     {
         PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
@@ -65,7 +70,13 @@ public class MenuUI : MonoBehaviour
             case PlayerStates.CharacterEditState:
                 if (_standardActive) HideUI();
                 if (_menuActive) MenuHideUI();
-                if (!_charEditActive) CharacterEditShowUI();
+                if (!_charEditActive)
+                {
+                    _charEditReturnState = _lastState == PlayerStates.StandardState
+                        ? PlayerStates.StandardState
+                        : PlayerStates.MenuState;
+                    CharacterEditShowUI();
+                }
                 break;
             case PlayerStates.DialogueState:
 
@@ -77,6 +88,8 @@ public class MenuUI : MonoBehaviour
                 break;
 
         }
+
+        _lastState = states;
 
         if (states == PlayerStates.MenuState)
         {
@@ -171,13 +184,13 @@ public class MenuUI : MonoBehaviour
 
         var done = root.Q<Button>("done-btn");
 
-        done.clicked += ChangeToMenuState;
+        done.clicked += LeaveCharacterEdit;
 
         //PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<MenuPlayerState>());
 
         //PlayClick();
 
-        //_dog.enabled = false;
+        if (_dog) _dog.enabled = false;
     }
 
     private void CharacterEditHideUI()
@@ -186,13 +199,13 @@ public class MenuUI : MonoBehaviour
 
         var root = _chrEditUI.rootVisualElement;
 
-        root.Q<Button>("done-btn").clicked -= ChangeToMenuState;
+        root.Q<Button>("done-btn").clicked -= LeaveCharacterEdit;
 
         root.style.display = DisplayStyle.None;
 
         //PlayConfirm();
 
-        //_dog.enabled = true;
+        if (_dog) _dog.enabled = true;
     }
 
     private void ChangeToStandardState()
@@ -203,6 +216,11 @@ public class MenuUI : MonoBehaviour
     private void ChangeToMenuState()
     {
         ChangePlayerState(PlayerStates.MenuState);
+    }
+
+    private void LeaveCharacterEdit()
+    {
+        ChangePlayerState(_charEditReturnState);
     }
 
     private void ChangeToCharacterEditState()
