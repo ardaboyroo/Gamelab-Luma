@@ -1,0 +1,130 @@
+/* ============================================================
+   Tutorial pop-up. Colours match HouseUI.uss - change them here.
+   Sizes are for the 1080 x 1920 reference resolution.
+   ============================================================ */
+:root {
+    --cream: rgb(255, 246, 214);
+    --cream-dark: rgb(240, 222, 170);
+    --yellow: rgb(255, 218, 92);
+    --brown: rgb(112, 74, 52);
+    --brown-dark: rgb(70, 44, 30);
+}
+
+.tutorial-root,
+.marker-layer,
+.dialogue,
+.dim {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+/* ---------- '!' marker above the buddy ---------- */
+.tutorial-marker,
+.tutorial-marker:hover,
+.tutorial-marker:focus {
+    position: absolute;
+    width: 120px;
+    height: 120px;
+    margin: 0;
+    padding: 0;
+    border-width: 8px;
+    border-radius: 60px;
+    border-color: var(--brown);
+    background-color: var(--yellow);
+    color: var(--brown-dark);
+    font-size: 80px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    transition-property: scale;
+    transition-duration: 0.08s;
+}
+.tutorial-marker:active {
+    scale: 0.9 0.9;
+}
+
+/* ---------- dialogue ---------- */
+.dialogue {
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 0.2s;
+}
+.dialogue--open {
+    opacity: 1;
+}
+
+.dim {
+    background-color: rgba(0, 0, 0, 0.35);
+}
+
+.portrait {
+    position: absolute;
+    right: 20px;
+    bottom: 400px;
+    width: 820px;
+    height: 820px;
+    -unity-background-scale-mode: scale-to-fit;
+    translate: 0 80px;
+    transition-property: translate;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-out-back;
+}
+.dialogue--open .portrait {
+    translate: 0 0;
+}
+
+.box {
+    position: absolute;
+    left: 40px;
+    right: 40px;
+    bottom: 90px;
+    min-height: 340px;
+    padding: 56px 64px 70px 64px;
+    background-color: var(--cream);
+    border-width: 8px;
+    border-color: var(--brown-dark);
+    border-radius: 28px;
+}
+
+.text {
+    margin: 0;
+    padding: 0;
+    font-size: 46px;
+    color: var(--brown-dark);
+    white-space: normal;
+    -unity-text-align: upper-left;
+}
+
+/* blinking chevron in the bottom-right corner */
+.next {
+    position: absolute;
+    right: 46px;
+    bottom: 34px;
+    width: 30px;
+    height: 30px;
+    border-right-width: 8px;
+    border-bottom-width: 8px;
+    border-color: var(--brown);
+    rotate: 45deg;
+}
+
+.nameplate {
+    position: absolute;
+    left: 50px;
+    top: -58px;
+    padding: 6px 44px;
+    background-color: var(--brown);
+    border-width: 6px;
+    border-color: var(--cream-dark);
+    border-radius: 18px;
+}
+
+.name {
+    margin: 0;
+    padding: 0;
+    font-size: 48px;
+    -unity-font-style: bold;
+    color: var(--cream);
+}

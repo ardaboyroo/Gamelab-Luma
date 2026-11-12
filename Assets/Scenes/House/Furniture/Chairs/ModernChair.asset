@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
   m_Name: ModernChair
   m_EditorClassIdentifier: 
-  displayName: Modern Chair
-  icon: {fileID: 0}
+  displayName: Moderne stoel
+  icon: {fileID: 21300000, guid: e2ea869f909765f459497732a80e8f14, type: 3}
   prefab: {fileID: 765368394354389111, guid: 04f444f30c8bc2948b65f9273494e64d, type: 3}
   size: {x: 1, y: 1}

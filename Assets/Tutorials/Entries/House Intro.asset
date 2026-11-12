@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 424ba8d0a39d0f7468bdbde1f93ba436, type: 3}
+  m_Name: House Intro
+  m_EditorClassIdentifier: 
+  speakerName: Buddy
+  portrait: {fileID: 21300000, guid: ec2342a3e81a56a4985602c96eabdf69, type: 3}
+  pages:
+  - Woef! Welkom thuis! Dit is je eigen kamer, en je mag hem helemaal inrichten zoals
+    jij wilt.
+  - Tik op het huisje om te beginnen met inrichten. Open de Inventaris, kies een
+    categorie en sleep een meubel naar de plek waar je het wilt hebben.
+  - "Draai het meubel met \u21BB en tik op \u2713 als het goed staat. Tik op een
+    meubel dat al staat om het te verplaatsen of te verwijderen."

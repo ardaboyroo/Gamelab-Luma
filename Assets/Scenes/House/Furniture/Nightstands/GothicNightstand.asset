@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
   m_Name: GothicNightstand
   m_EditorClassIdentifier: 
-  displayName: Gothic Nightstand
-  icon: {fileID: 0}
+  displayName: Gotisch nachtkastje
+  icon: {fileID: 21300000, guid: 024e3733aa5901648b67f94d5ea00bb2, type: 3}
   prefab: {fileID: 2726526308564351083, guid: 36c235d586e9cf34c925d9eea264bcf9, type: 3}
   size: {x: 1, y: 1}

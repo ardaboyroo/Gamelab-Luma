@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
   m_Name: CottageChair
   m_EditorClassIdentifier: 
-  displayName: Cottage Chair
-  icon: {fileID: 0}
+  displayName: Landelijke stoel
+  icon: {fileID: 21300000, guid: 4faa9d7147d490147a4b5468e7e19dbe, type: 3}
   prefab: {fileID: 346438133625064361, guid: 4d1eb20c7ca50bf43969db083671d878, type: 3}
   size: {x: 1, y: 1}

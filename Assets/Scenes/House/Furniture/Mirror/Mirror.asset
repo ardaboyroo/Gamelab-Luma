@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
   m_Name: Mirror
   m_EditorClassIdentifier: 
-  displayName: 
-  icon: {fileID: 0}
+  displayName: Spiegel
+  icon: {fileID: 21300000, guid: 4cd3263454aa63c4c944b8d858cb6d33, type: 3}
   prefab: {fileID: 2768135646646632836, guid: eb718bc50032fdc438565ee64fdaee02, type: 3}
   size: {x: 1, y: 1}

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
   m_Name: ModernDesk
   m_EditorClassIdentifier: 
-  displayName: Modern Desk
-  icon: {fileID: 0}
+  displayName: Modern bureau
+  icon: {fileID: 21300000, guid: 2e30ce2d736fa054abb40dc632fea6a8, type: 3}
   prefab: {fileID: 4944064443010379363, guid: da03e6d17c5cf2744ba8d4395983f667, type: 3}
   size: {x: 3, y: 1}

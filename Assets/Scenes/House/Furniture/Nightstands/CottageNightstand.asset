@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b44fa3e50d313a54ba2caf7c381e3a32, type: 3}
   m_Name: CottageNightstand
   m_EditorClassIdentifier: 
-  displayName: Cottage Nightstand
-  icon: {fileID: 0}
+  displayName: Landelijk nachtkastje
+  icon: {fileID: 21300000, guid: a3fa11b392b3ea842acd5a3e7bc4e6eb, type: 3}
   prefab: {fileID: 8438597353783690429, guid: 0e81403263089cf499f25a3bfd96baea, type: 3}
   size: {x: 1, y: 1}
