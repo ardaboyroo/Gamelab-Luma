@@ -45,7 +45,28 @@ public class PlayerStateManager : MonoBehaviour
 
 	private void DeferredCall()
 	{
-		OnStateChanged?.Invoke(_playerState);
+		NotifyStateChanged();
+	}
+
+	// Calls every listener separately, so one broken listener (e.g. a leftover from an unloaded scene)
+	// logs its error but can't stop the others from hearing about the state change.
+	private void NotifyStateChanged()
+	{
+		var handlers = OnStateChanged;
+		if (handlers == null)
+			return;
+
+		foreach (Action<PlayerStates> handler in handlers.GetInvocationList())
+		{
+			try
+			{
+				handler(_playerState);
+			}
+			catch (Exception e)
+			{
+				Debug.LogException(e, this);
+			}
+		}
 	}
 
 	void Update()
@@ -56,7 +77,7 @@ public class PlayerStateManager : MonoBehaviour
 	public void ChangePlayerState(PlayerStates state)
 	{
 		_playerState = state;
-		OnStateChanged?.Invoke(_playerState);
+		NotifyStateChanged();
 	}
 
 	public PlayerStates GetPlayerState()

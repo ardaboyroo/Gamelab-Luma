@@ -30,18 +30,39 @@ public class MenuUI : MonoBehaviour
     private PlayerStates _lastState = PlayerStates.StandardState;
     private PlayerStates _charEditReturnState = PlayerStates.MenuState;
 
+    // The state manager we subscribed to, so we can unsubscribe when this scene unloads.
+    private PlayerStateManager _stateManager;
+
     private void Awake()
     {
-        PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
-        {
-            Debug.Log("[MenuUI] subscribing to player registered");
-            if (isLocalPlayer)
-            {
-                _localPlr = plr;
-                plr.StateManager.OnStateChanged += HandleStateChanged;
-            }
-        };
-        
+        // Named method instead of a lambda: PlayerService.OnPlayerRegistered is static and outlives
+        // this scene, so we must remove ourselves from it in OnDestroy.
+        PlayerService.OnPlayerRegistered += HandlePlayerRegistered;
+    }
+
+    private void OnDestroy()
+    {
+        PlayerService.OnPlayerRegistered -= HandlePlayerRegistered;
+
+        if (!ReferenceEquals(_stateManager, null))
+            _stateManager.OnStateChanged -= HandleStateChanged;
+
+        _stateManager = null;
+        _localPlr = null;
+    }
+
+    private void HandlePlayerRegistered(Player plr, bool isLocalPlayer)
+    {
+        Debug.Log("[MenuUI] subscribing to player registered");
+        if (!isLocalPlayer || plr == null)
+            return;
+
+        if (!ReferenceEquals(_stateManager, null))
+            _stateManager.OnStateChanged -= HandleStateChanged;
+
+        _localPlr = plr;
+        _stateManager = plr.StateManager;
+        _stateManager.OnStateChanged += HandleStateChanged;
     }
 
     void Start()
@@ -96,17 +117,17 @@ public class MenuUI : MonoBehaviour
 
         if (states == PlayerStates.MenuState)
         {
-            
+
         }
         else
         {
-            
+
         }
     }
 
     void Update()
     {
-        
+
     }
 
     private void ShowUI()
@@ -159,7 +180,7 @@ public class MenuUI : MonoBehaviour
         //PlayClick();
     }
 
-	private void MenuHideUI()
+    private void MenuHideUI()
     {
         _menuActive = false;
         if (_menuUI == null) return;
@@ -235,9 +256,14 @@ public class MenuUI : MonoBehaviour
     }
 
     private void SwitchToHouseScene()
-	{
-		switchScene.DoSwitchScene();
-	}
+    {
+        if (switchScene)
+            switchScene.DoSwitchScene();
+        else
+        {
+            GameObject.Find("SwitchScene").GetComponent<SwitchScene>().DoSwitchScene();
+        }
+    }
 
     private void ChangePlayerState(PlayerStates newState)
     {

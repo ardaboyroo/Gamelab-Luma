@@ -35,15 +35,32 @@ public class WorldMovement : MonoBehaviour
 
 	private bool _isActive = false;
 
+	// The state manager we subscribed to, so we can unsubscribe when this scene unloads.
+	private PlayerStateManager _stateManager;
+
 	private void Awake()
-	{		
-        PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
-		{
-			if (isLocalPlayer)
-			{
-				plr.StateManager.OnStateChanged += HandleStateChanged;
-			}
-		};
+	{
+		// Named method instead of a lambda: PlayerService.OnPlayerRegistered is static and outlives
+		// this scene, so we must remove ourselves from it in OnDestroy.
+		PlayerService.OnPlayerRegistered += HandlePlayerRegistered;
+	}
+
+	private void HandlePlayerRegistered(Player plr, bool isLocalPlayer)
+	{
+		if (!isLocalPlayer || plr == null)
+			return;
+
+		UnbindStateManager();
+		_stateManager = plr.StateManager;
+		_stateManager.OnStateChanged += HandleStateChanged;
+	}
+
+	private void UnbindStateManager()
+	{
+		if (!ReferenceEquals(_stateManager, null))
+			_stateManager.OnStateChanged -= HandleStateChanged;
+
+		_stateManager = null;
 	}
 
 	private void Start()
@@ -56,7 +73,15 @@ public class WorldMovement : MonoBehaviour
 
 	private void OnDisable()
 	{
-		PlayerService.Instance.LocalPlayer.StateManager.OnStateChanged -= HandleStateChanged;
+		// Same as before (stop listening when disabled), but without assuming PlayerService still
+		// has a LocalPlayer - during a scene unload it may already be gone.
+		UnbindStateManager();
+	}
+
+	private void OnDestroy()
+	{
+		PlayerService.OnPlayerRegistered -= HandlePlayerRegistered;
+		UnbindStateManager();
 	}
 
 	public void ToggleSkateBoard()

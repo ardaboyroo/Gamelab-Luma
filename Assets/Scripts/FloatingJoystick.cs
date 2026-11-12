@@ -21,19 +21,18 @@ public class FloatingJoystick : MonoBehaviour
     private Canvas _canvas;
     private Finger _movementFinger;
 
+    // The state manager we are subscribed to. Kept so we can unsubscribe from exactly that one
+    // when this joystick is destroyed (e.g. when its scene is unloaded).
+    private PlayerStateManager _stateManager;
+    private bool _touchSubscribed;
+
     private float Radius => _joystickSize.x * 0.5f;
 
     private void Awake()
     {
-        PlayerService.OnPlayerRegistered += (Player plr, bool isLocalPlayer) =>
-        {
-            if (isLocalPlayer)
-            {
-                plr.StateManager.OnStateChanged += HandleStateChanged;
-            }
-        };
-
-        EnhancedTouchSupport.Enable();
+        // Named method instead of a lambda: PlayerService.OnPlayerRegistered is static and outlives
+        // this scene, so we must be able to remove ourselves from it in OnDestroy.
+        PlayerService.OnPlayerRegistered += HandlePlayerRegistered;
 
         _rectTransform = GetComponent<RectTransform>();
         _canvas = GetComponentInParent<Canvas>();
@@ -46,9 +45,50 @@ public class FloatingJoystick : MonoBehaviour
         SetVisuals(false);
     }
 
-	private void HandleStateChanged(PlayerStates states)
-	{
-		if (states == _workingState)
+    private void OnEnable()
+    {
+        // EnhancedTouchSupport is reference counted: exactly one Enable here, one Disable in OnDisable.
+        EnhancedTouchSupport.Enable();
+
+        // If we were re-enabled while the player is in our state, start listening to touches again.
+        if (_stateManager != null && _stateManager.CurrentState == _workingState)
+            EnableJoystick();
+    }
+
+    private void OnDisable()
+    {
+        DisableJoystick();
+        EnhancedTouchSupport.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        PlayerService.OnPlayerRegistered -= HandlePlayerRegistered;
+        UnbindStateManager();
+    }
+
+    private void HandlePlayerRegistered(Player plr, bool isLocalPlayer)
+    {
+        if (!isLocalPlayer || plr == null)
+            return;
+
+        UnbindStateManager();
+        _stateManager = plr.StateManager;
+        _stateManager.OnStateChanged += HandleStateChanged;
+    }
+
+    private void UnbindStateManager()
+    {
+        // ReferenceEquals: still unsubscribe even if the state manager's GameObject was destroyed first.
+        if (!ReferenceEquals(_stateManager, null))
+            _stateManager.OnStateChanged -= HandleStateChanged;
+
+        _stateManager = null;
+    }
+
+    private void HandleStateChanged(PlayerStates states)
+    {
+        if (states == _workingState)
         {
             EnableJoystick();
         }
@@ -56,43 +96,34 @@ public class FloatingJoystick : MonoBehaviour
         {
             DisableJoystick();
         }
-	}
+    }
 
-	private void OnDestroy()
-	{
-        Debug.Log("ON DESTROY CALLED");
-		DisableJoystick();
-	}
+    private void EnableJoystick()
+    {
+        // Don't listen to touches while this component is off, and never subscribe twice.
+        if (_touchSubscribed || !isActiveAndEnabled)
+            return;
 
-	private void EnableJoystick()
-	{
         ETouch.Touch.onFingerDown += HandleFingerDown;
         ETouch.Touch.onFingerMove += HandleFingerMove;
         ETouch.Touch.onFingerUp += HandleFingerUp;
-	}
+        _touchSubscribed = true;
+    }
 
     private void DisableJoystick()
     {
         ETouch.Touch.onFingerDown -= HandleFingerDown;
         ETouch.Touch.onFingerMove -= HandleFingerMove;
         ETouch.Touch.onFingerUp -= HandleFingerUp;
+        _touchSubscribed = false;
 
         _movementFinger = null;
         Direction = Vector2.zero;
 
+        if (_knob != null)
+            _knob.anchoredPosition = Vector2.zero;
+
         SetVisuals(false);
-    }
-
-	private void OnEnable()
-    {
-        EnhancedTouchSupport.Enable();
-    }
-
-    private void OnDisable()
-    {
-        Debug.Log("ON DISABLE CALLED");
-        EnhancedTouchSupport.Disable();
-        DisableJoystick();
     }
 
     private void HandleFingerDown(Finger finger)
@@ -178,9 +209,6 @@ public class FloatingJoystick : MonoBehaviour
     {
         RectTransform canvasRect = _canvas.transform as RectTransform;
 
-        float halfWidth = canvasRect.rect.width * 0.5f;
-        float halfHeight = canvasRect.rect.height * 0.5f;
-
         position.x = Mathf.Clamp(
             position.x,
             canvasRect.rect.xMin + Radius,
@@ -198,7 +226,11 @@ public class FloatingJoystick : MonoBehaviour
 
     private void SetVisuals(bool visible)
     {
-        _background.gameObject.SetActive(visible);
-        _knob.gameObject.SetActive(visible);
+        // During scene unload the child objects can already be gone.
+        if (_background != null)
+            _background.gameObject.SetActive(visible);
+
+        if (_knob != null)
+            _knob.gameObject.SetActive(visible);
     }
 }
