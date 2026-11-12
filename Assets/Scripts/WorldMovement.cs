@@ -42,15 +42,12 @@ public class WorldMovement : MonoBehaviour
 			if (isLocalPlayer)
 			{
 				plr.StateManager.OnStateChanged += HandleStateChanged;
-				Debug.Log("[WorldMovement] Player registered and it's the localplayer, subscribing");
 			}
 		};
 	}
 
 	private void Start()
 	{
-        Debug.Log("[WorldMovement] executing start");
-
 		_rigidbody = GetComponent<Rigidbody>();
 		_rigidbody.freezeRotation = true;
 
@@ -60,7 +57,6 @@ public class WorldMovement : MonoBehaviour
 	private void OnDisable()
 	{
 		PlayerService.Instance.LocalPlayer.StateManager.OnStateChanged -= HandleStateChanged;
-		Debug.Log("unsubbing from statechanged");
 	}
 
 	public void ToggleSkateBoard()
@@ -85,11 +81,9 @@ public class WorldMovement : MonoBehaviour
 
 	private void HandleStateChanged(PlayerStates states)
 	{
-		Debug.Log("Handling state changed from wrldmovement");
-		if (states == PlayerStates.StandardState)
+		if (states == _workingState)
 		{
 			_isActive = true;
-			Debug.Log("ACTIVEEEEEEEEE");
 		}
 		else
 		{

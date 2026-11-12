@@ -18,6 +18,11 @@ public class Player : MonoBehaviour
 		Debug.Log("[Player] registering player in start");
 	}
 
+	private void OnDestroy()
+	{
+		PlayerService.Instance.UnregisterPlayer(this);
+	}
+
 	// Update is called once per frame
 	void Update()
 	{

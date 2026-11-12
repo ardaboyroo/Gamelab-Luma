@@ -40,9 +40,15 @@ public class PlayerService : MonoBehaviour
 			LocalPlayer = plr;
 	}
 
-    public void UnregisterPlayer()
+	// Create overloads so it works with ID or other references
+    public void UnregisterPlayer(Player plr)
 	{
+		_players.Remove(plr);
 
+		if (_players.Count == 0)
+		{
+			LocalPlayer = null;
+		}
 	}
 
 	public Player GetPlayer(ulong id)

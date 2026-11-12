@@ -58,6 +58,12 @@ public class FloatingJoystick : MonoBehaviour
         }
 	}
 
+	private void OnDestroy()
+	{
+        Debug.Log("ON DESTROY CALLED");
+		DisableJoystick();
+	}
+
 	private void EnableJoystick()
 	{
         ETouch.Touch.onFingerDown += HandleFingerDown;
@@ -84,6 +90,7 @@ public class FloatingJoystick : MonoBehaviour
 
     private void OnDisable()
     {
+        Debug.Log("ON DISABLE CALLED");
         EnhancedTouchSupport.Disable();
         DisableJoystick();
     }

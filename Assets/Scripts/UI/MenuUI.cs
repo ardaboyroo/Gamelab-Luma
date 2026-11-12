@@ -5,6 +5,9 @@ using FMODUnity;
 
 public class MenuUI : MonoBehaviour
 {
+    // DONT DO IT THIS WAY
+    [SerializeField] private SwitchScene switchScene;
+
     [SerializeField] private UIDocument _standardUI;
     [SerializeField] private UIDocument _menuUI;
     [SerializeField] private UIDocument _chrEditUI;
@@ -148,12 +151,15 @@ public class MenuUI : MonoBehaviour
         charedit.clicked += ChangeToCharacterEditState;
         back.clicked += ChangeToStandardState;
 
+        // currently hijacking audio button for testing, change this!
+        audio.clicked += SwitchToHouseScene;
+
         //PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<MenuPlayerState>());
 
         //PlayClick();
     }
 
-    private void MenuHideUI()
+	private void MenuHideUI()
     {
         _menuActive = false;
         if (_menuUI == null) return;
@@ -227,6 +233,11 @@ public class MenuUI : MonoBehaviour
     {
         ChangePlayerState(PlayerStates.CharacterEditState);
     }
+
+    private void SwitchToHouseScene()
+	{
+		switchScene.DoSwitchScene();
+	}
 
     private void ChangePlayerState(PlayerStates newState)
     {
