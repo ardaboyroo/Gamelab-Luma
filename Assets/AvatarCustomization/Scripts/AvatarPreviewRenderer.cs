@@ -49,6 +49,9 @@ namespace Luma.AvatarCustomization
         private void LateUpdate()
         {
             if (previewCamera == null || appearance == null || appearance.Rig == null) return;
+            if (root == null) root = GetComponent<UIDocument>().rootVisualElement;
+            if (controller == null) controller = GetComponent<AvatarCustomizationController>();
+            if (root == null) return;
             previewCamera.enabled = root.resolvedStyle.display != DisplayStyle.None;
             if (!previewCamera.enabled) return;
             foreach (var renderer in appearance.GetComponentsInChildren<Renderer>(true))

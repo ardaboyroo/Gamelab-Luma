@@ -23,7 +23,7 @@ namespace Luma.AvatarCustomization
 
         [Tooltip("Colours shown for each category. A category without a palette shows the colour wheel straight away.")]
         public List<CategoryPalette> palettes = DefaultPalettes();
-        public string wheelBackText = "Kleuren";
+        public string wheelBackText = "Terug";
 
         UIDocument _doc;
         AvatarCreationColorPicker _picker;
@@ -76,7 +76,13 @@ namespace Luma.AvatarCustomization
             _grid.AddToClassList("color-presets");
             _colorPanel.Add(_grid);
 
-            _backButton = new Button(ShowPresets) { name = "colorPresetsBack", text = wheelBackText };
+            _backButton = new Button(ShowPresets) { name = "colorPresetsBack", text = string.Empty, tooltip = wheelBackText };
+            var backIcon = new VisualElement { pickingMode = PickingMode.Ignore };
+            backIcon.AddToClassList("presets-back-icon");
+            _backButton.Add(backIcon);
+            var backLabel = new Label(wheelBackText) { pickingMode = PickingMode.Ignore };
+            backLabel.AddToClassList("presets-back-label");
+            _backButton.Add(backLabel);
             _backButton.AddToClassList("pill");
             _backButton.AddToClassList("presets-back-btn");
             _colorPanel.Add(_backButton);

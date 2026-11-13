@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Tests/Danica's Dog Testing.unity
+    guid: f25ed5c2dbe563444834c8df7a1d9c37
+  - enabled: 1
     path: Assets/Scenes/Builds/V1 Build.unity
     guid: 58da2f13e2407864c9ad19209c7588a0
   - enabled: 1

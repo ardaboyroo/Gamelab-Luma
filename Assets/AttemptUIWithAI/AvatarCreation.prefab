@@ -95,6 +95,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appearance: {fileID: 0}
   previewLayer: 30
+  faceFocus: {x: 0.24, y: 0.2}
+  hairFocus: {x: 0.22, y: 0.25}
+  topFocus: {x: 0.5, y: 0.24}
+  pantsFocus: {x: 0.72, y: 0.22}
+  shoesFocus: {x: 0.88, y: 0.16}
+  zoomSpeed: 8
 --- !u!114 &6574999401576306455
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,4 +223,4 @@ MonoBehaviour:
     - {r: 0.1764706, g: 0.1764706, b: 0.1764706, a: 1}
     - {r: 0.54509807, g: 0.3529412, b: 0.16862746, a: 1}
     - {r: 0.2901961, g: 0.43529412, b: 0.64705884, a: 1}
-  wheelBackText: Kleuren
+  wheelBackText: Terug
