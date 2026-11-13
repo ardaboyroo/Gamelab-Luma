@@ -1,0 +1,104 @@
+/* ============================================================
+   Main menu - same palette as HouseUI.uss and the tutorial box.
+   Sizes are for this panel's 720 x 1512 reference resolution.
+   ============================================================ */
+:root {
+    --cream: rgb(255, 246, 214);
+    --cream-dark: rgb(240, 222, 170);
+    --yellow: rgb(255, 218, 92);
+    --yellow-dark: rgb(251, 187, 75);
+    --brown: rgb(112, 74, 52);
+    --brown-dark: rgb(70, 44, 30);
+    --green: rgb(112, 190, 96);
+    --green-dark: rgb(84, 160, 72);
+}
+
+.menu-dim {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.35);
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-card {
+    width: 80%;
+    max-width: 640px;
+    padding: 64px 36px 36px 36px;
+    background-color: var(--cream);
+    border-width: 6px;
+    border-color: var(--brown-dark);
+    border-radius: 36px;
+}
+
+/* the brown name plate sitting on the card's top edge */
+.menu-plate {
+    position: absolute;
+    top: -40px;
+    align-self: center;
+    padding: 6px 48px;
+    background-color: var(--brown);
+    border-width: 5px;
+    border-color: var(--cream-dark);
+    border-radius: 18px;
+}
+.menu-plate-label {
+    margin: 0;
+    padding: 0;
+    font-size: 40px;
+    -unity-font-style: bold;
+    color: var(--cream);
+}
+
+/* buttons */
+.menu-btn,
+.menu-btn:hover,
+.menu-btn:focus {
+    height: 92px;
+    margin: 0 0 22px 0;
+    padding: 0 24px;
+    border-width: 5px;
+    border-radius: 46px;
+    border-color: var(--brown);
+    background-color: var(--yellow);
+    color: var(--brown-dark);
+    font-size: 34px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    transition-property: scale;
+    transition-duration: 0.08s;
+}
+.menu-btn:active {
+    background-color: var(--yellow-dark);
+    scale: 0.95 0.95;
+}
+
+.menu-btn--green,
+.menu-btn--green:hover,
+.menu-btn--green:focus {
+    background-color: var(--green);
+    border-color: var(--green-dark);
+    color: rgb(255, 255, 255);
+}
+.menu-btn--green:active {
+    background-color: var(--green-dark);
+}
+
+.menu-btn--back,
+.menu-btn--back:hover,
+.menu-btn--back:focus {
+    margin-bottom: 0;
+    background-color: var(--brown);
+    border-color: var(--cream-dark);
+    color: var(--cream);
+}
+.menu-btn--back:active {
+    background-color: var(--brown-dark);
+}
+
+.menu-spacer {
+    height: 26px;
+}

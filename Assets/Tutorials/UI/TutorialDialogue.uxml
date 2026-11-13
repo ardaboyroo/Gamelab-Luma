@@ -4,13 +4,13 @@
         <ui:VisualElement name="marker-layer" class="marker-layer" picking-mode="Ignore" />
         <ui:VisualElement name="dialogue" class="dialogue">
             <ui:VisualElement name="dim" class="dim" picking-mode="Ignore" />
-            <ui:VisualElement name="portrait" class="portrait" picking-mode="Ignore" />
             <ui:VisualElement name="box" class="box" picking-mode="Ignore">
                 <ui:Label name="text" text="Tutorial text" class="text" picking-mode="Ignore" />
                 <ui:VisualElement name="next" class="next" picking-mode="Ignore" />
                 <ui:VisualElement name="nameplate" class="nameplate" picking-mode="Ignore">
                     <ui:Label name="name" text="Buddy" class="name" picking-mode="Ignore" />
                 </ui:VisualElement>
+                <ui:VisualElement name="portrait" class="portrait" picking-mode="Ignore" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

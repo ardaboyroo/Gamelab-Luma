@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0284f38b8abe32140848c3fc363d4f38, type: 3}
+  m_Name: Wallpaper_wallpaper4
+  m_EditorClassIdentifier: 
+  displayName: Hout met klimop
+  icon: {fileID: 21300000, guid: b836ac692f62eaf42aa34e7535d86c89, type: 3}
+  kind: 0
+  material: {fileID: 2100000, guid: ca5d7bb236e8ec2438c8e72f962af6a1, type: 2}

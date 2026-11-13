@@ -50,7 +50,7 @@ MonoBehaviour:
   player: {fileID: 0}
   dogAnimator: {fileID: 490120170637397858}
   followDistance: 7
-  resumeMargin: 2
+  slowDownDistance: 5
   walkSpeed: 22
   runSpeed: 40
   runDistance: 25
@@ -58,6 +58,26 @@ MonoBehaviour:
   acceleration: 60
   turnSpeed: 8
   activeState: 0
+  wanderWhenIdle: 0
+  idleBeforeWander: 3
+  wanderSpeed: 3
+  wanderRadius: 3
+  wanderPause: {x: 1.5, y: 4}
+  wanderEdgeMargin: 0.6
+  playerMovingSpeed: 0.5
+  bedChance: 0.35
+  restDuration: {x: 10, y: 25}
+  wakeDistance: 12
+  petDuration: 1.6
+  petMaxDistance: 0
+  heartPrefab: {fileID: 4200874041996869119, guid: 642b3364f5134d74ebb6549fd41070df, type: 3}
+  heartsPerPet: 3
+  petMessages:
+  - '*kwispelt*'
+  - Hihi!
+  - Meer aaien!
+  - '*blij*'
+  - Woef woef!
   groundMask:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -66,8 +86,10 @@ MonoBehaviour:
   groundOffset: 0
   groundSnapSpeed: 20
   speedParam: speed
+  lyingParam: lying
   animationSpeedPerUnit: 0.06
   movingThreshold: 0.5
+  animationSmoothing: 10
   barkPopupPrefab: {fileID: 9105255737523818163, guid: 99e3bfbe20fc10f4ebb2d218482f6016, type: 3}
   barkLocalOffset: {x: 0, y: 7, z: 0}
   barkScale: 4

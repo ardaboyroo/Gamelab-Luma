@@ -60,11 +60,13 @@
 }
 
 .portrait {
+    /* lives inside .box: stands on the box's top edge, paws resting over it */
     position: absolute;
-    right: 20px;
-    bottom: 400px;
-    width: 820px;
-    height: 820px;
+    right: 30px;
+    bottom: 100%;
+    margin-bottom: -62px;
+    width: 680px;
+    height: 744px;
     -unity-background-scale-mode: scale-to-fit;
     translate: 0 80px;
     transition-property: translate;

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Mirror Placed
   m_EditorClassIdentifier: 
   speakerName: Buddy
-  portrait: {fileID: 21300000, guid: ec2342a3e81a56a4985602c96eabdf69, type: 3}
+  portrait: {fileID: 21300000, guid: b88128d969556f041894db0a9123cafb, type: 3}
   pages:
   - Ooh, een spiegel! Je ziet er nu al leuk uit.
   - 'Loop naar de spiegel toe en tik erop om je uiterlijk te veranderen: haar, kleding,
