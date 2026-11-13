@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(UIDocument))]
@@ -13,6 +14,10 @@ public class HouseUIController : MonoBehaviour
     public RoomSurfaces surfaces;
     public StyleSheet styleSheet;
 
+    [Header("Huis verlaten")]
+    [Tooltip("Only used when there is no SwitchScene (e.g. when the house is played on its own).")]
+    public string exitSceneFallback = "V1 Build";
+
     [Header("Meubel Categorieën")]
     public List<FurnitureData> bedInventory = new List<FurnitureData>();
     public List<FurnitureData> deskInventory = new List<FurnitureData>();
@@ -25,7 +30,7 @@ public class HouseUIController : MonoBehaviour
     public List<SurfaceData> floorInventory = new List<SurfaceData>();
 
     VisualElement root, container, touchArea, inventoryPanel, placementBar, selectionBar, categoryPanel;
-    Button toggleBtn, categoriesBtn, turnLeft, turnRight, rotateBtn, confirmBtn, cancelBtn;
+    Button toggleBtn, exitBtn, categoriesBtn, turnLeft, turnRight, rotateBtn, confirmBtn, cancelBtn;
     Button moveBtn, removeBtn, deselectBtn;
     Button catBeds, catDesks, catNightstands, catChairs, catMirrors, catWallpaper, catFloors, catBack;
     ScrollView list;
@@ -40,6 +45,7 @@ public class HouseUIController : MonoBehaviour
 
         container = root.Q<VisualElement>("house-ui-container");
         toggleBtn = root.Q<Button>("btn-toggle-ui");
+        exitBtn = root.Q<Button>("btn-exit-house");
         categoriesBtn = root.Q<Button>("btn-categories");
         categoryPanel = root.Q<VisualElement>("category-panel");
         touchArea = root.Q<VisualElement>("touch-area");
@@ -67,6 +73,7 @@ public class HouseUIController : MonoBehaviour
         catBack = root.Q<Button>("cat-back");
 
         toggleBtn.clicked += ToggleMainUI;
+        if (exitBtn != null) exitBtn.clicked += LeaveHouse;
         categoriesBtn.clicked += ToggleCategoryPanel;
 
         catBeds.clicked += () => LoadCategory(bedInventory);
@@ -104,6 +111,16 @@ public class HouseUIController : MonoBehaviour
         placement.PlacementChanged -= OnPlacementChanged;
         placement.ValidityChanged -= OnValidityChanged;
         placement.SelectionChanged -= OnSelectionChanged;
+    }
+
+    // The door button: leaves the house the same way the menu's 'Huis' button does
+    // (via the SwitchScene that comes along from the world scene).
+    void LeaveHouse()
+    {
+        if (isOpen) return;   // not while decorating
+        var switcher = FindFirstObjectByType<SwitchScene>();
+        if (switcher != null) switcher.DoSwitchScene();
+        else if (!string.IsNullOrEmpty(exitSceneFallback)) SceneManager.LoadScene(exitSceneFallback);
     }
 
     void ToggleMainUI()

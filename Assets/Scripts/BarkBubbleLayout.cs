@@ -46,7 +46,7 @@ public class BarkBubbleLayout : MonoBehaviour
     void Layout()
     {
         _laidOutText = text.text;
-        text.enableWordWrapping = true;
+        text.textWrappingMode = TextWrappingModes.Normal;
         Vector2 pref = text.GetPreferredValues(_laidOutText, maxTextWidth, 0f);
         float w = Mathf.Min(pref.x, maxTextWidth);
         float h = text.GetPreferredValues(_laidOutText, w, 0f).y;

@@ -40,6 +40,10 @@
 
     <!-- Altijd zichtbare HUD knoppen (na de container, zodat ze bovenop liggen) -->
     <ui:Button name="btn-toggle-ui" text="🏠" class="btn btn-brown" />
+    <!-- Deur: het huis verlaten (alleen zichtbaar tijdens het rondlopen) -->
+    <ui:Button name="btn-exit-house" class="btn btn-brown">
+        <ui:VisualElement class="exit-icon" picking-mode="Ignore" />
+    </ui:Button>
     <ui:Button name="turn-left" text="&lt;" class="btn btn-brown turn-btn turn-left" />
     <ui:Button name="turn-right" text="&gt;" class="btn btn-brown turn-btn turn-right" />
 </ui:UXML>

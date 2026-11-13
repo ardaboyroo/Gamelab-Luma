@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 /// Put on the buddy. When a tutorial is queued, a bouncing '!' appears above the buddy's head.
 /// Tapping the '!' (or the buddy itself) opens the tutorial in the TutorialDialogue.
 /// Queue tutorials from code with Queue(entry), e.g. from HouseTutorialTriggers.
+[DefaultExecutionOrder(100)]   // after the camera has moved, so the '!' doesn't trail a frame behind the buddy
 public class BuddyTutorialMarker : MonoBehaviour
 {
     [Tooltip("Leave empty to use the TutorialDialogue in the scene.")]
@@ -23,6 +24,7 @@ public class BuddyTutorialMarker : MonoBehaviour
     public PlayerStates showInState = PlayerStates.StandardState;
 
     [Header("Tapping the buddy itself")]
+    [Tooltip("Tapping the buddy opens a waiting tutorial; with no tutorial waiting it pets the buddy.")]
     public bool tapBuddyToOpen = true;
     [Tooltip("A touch that moves further than this (pixels) is a drag, not a tap.")]
     public float maxTapMove = 25f;
@@ -35,6 +37,7 @@ public class BuddyTutorialMarker : MonoBehaviour
     public event Action<TutorialEntry> TutorialFinished;
 
     readonly List<TutorialEntry> _queue = new();
+    DogBuddyFollow _follow;
     Renderer[] _renderers;
     Button _marker;
     bool _tracking;
@@ -44,6 +47,7 @@ public class BuddyTutorialMarker : MonoBehaviour
     void Awake()
     {
         _renderers = GetComponentsInChildren<Renderer>(true);
+        _follow = GetComponent<DogBuddyFollow>();
         if (startQueued != null)
             foreach (var e in startQueued) Queue(e);
     }
@@ -142,7 +146,8 @@ public class BuddyTutorialMarker : MonoBehaviour
     // ---------- tapping the buddy ----------
     void Update()
     {
-        if (!tapBuddyToOpen || !HasPending || !CanOpen()) { _tracking = false; return; }
+        bool dialogueOpen = Dialogue != null && Dialogue.IsOpen;
+        if (!tapBuddyToOpen || dialogueOpen || !PlayerInShowState()) { _tracking = false; return; }
 
         if (Application.isMobilePlatform)
         {
@@ -171,7 +176,10 @@ public class BuddyTutorialMarker : MonoBehaviour
     {
         _tracking = false;
         if (Vector2.Distance(pos, _downPos) > maxTapMove || Time.unscaledTime - _downTime > maxTapTime) return;
-        if (HitsBuddy(pos)) OpenNext();
+        if (!HitsBuddy(pos)) return;
+
+        if (HasPending && CanOpen()) OpenNext();
+        else if (_follow != null) _follow.Pet();   // no tutorial waiting: tapping = petting
     }
 
     bool HitsBuddy(Vector2 screen)
