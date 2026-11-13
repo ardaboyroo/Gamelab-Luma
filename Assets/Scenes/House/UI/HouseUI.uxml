@@ -20,7 +20,7 @@
 
         <!-- Onderste inventarisbalk -->
         <ui:VisualElement name="inventory" picking-mode="Position">
-            <ui:ScrollView name="inventory-list" mode="Horizontal" vertical-scroller-visibility="Hidden" />
+            <ui:ScrollView name="inventory-list" mode="Horizontal" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" />
         </ui:VisualElement>
 
         <!-- Annuleren / draaien / bevestigen tijdens het plaatsen -->

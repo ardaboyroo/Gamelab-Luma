@@ -143,5 +143,7 @@
 .color-preset { width: 76px; height: 76px; margin: 7px; border-radius: 38px; border-width: 5px; border-color: white; transition-property: scale; transition-duration: 0.1s; }
 .color-preset:active { scale: 0.9 0.9; }
 .color-preset--selected { border-color: rgb(177, 89, 38); scale: 1.12 1.12; }
-.color-preset--wheel { background-image: url("project://database/Assets/AttemptUIWithAI/Textures/HueWheel.png"); -unity-background-scale-mode: scale-to-fit; border-color: rgb(255, 223, 89); background-color: white; }
-.presets-back-btn { position: absolute; left: 0; right: 0; top: 10px; height: 52px; font-size: 26px; }
+.color-preset--wheel { background-image: url("project://database/Assets/AttemptUIWithAI/Textures/ColorWheel_Icon.png"); -unity-background-scale-mode: scale-to-fit; border-width: 0; background-color: rgba(0, 0, 0, 0); }
+.presets-back-btn { position: absolute; left: 0; top: 8px; height: 56px; padding: 0 22px 0 12px; flex-direction: row; align-items: center; font-size: 28px; border-width: 4px; border-color: rgb(177, 89, 38); }
+.presets-back-icon { width: 34px; height: 34px; margin-right: 8px; flex-shrink: 0; background-image: url("project://database/Assets/AttemptUIWithAI/Textures/Back_Arrow_Icon.png"); -unity-background-scale-mode: scale-to-fit; }
+.presets-back-label { margin: 0; padding: 0; font-size: 28px; -unity-font-style: bold; color: rgb(177, 89, 38); }

@@ -29,6 +29,17 @@ public class HouseUIController : MonoBehaviour
     public List<SurfaceData> wallpaperInventory = new List<SurfaceData>();
     public List<SurfaceData> floorInventory = new List<SurfaceData>();
 
+    [Header("Categorie-iconen (onderste balk)")]
+    public Sprite bedIcon;
+    public Sprite deskIcon;
+    public Sprite nightstandIcon;
+    public Sprite chairIcon;
+    public Sprite mirrorIcon;
+    public Sprite wallpaperIcon;
+    public Sprite floorIcon;
+    [Tooltip("Icon of the 'Terug' tile that goes from the furniture back to the categories.")]
+    public Sprite backIcon;
+
     VisualElement root, container, touchArea, inventoryPanel, placementBar, selectionBar, categoryPanel;
     Button toggleBtn, exitBtn, categoriesBtn, turnLeft, turnRight, rotateBtn, confirmBtn, cancelBtn;
     Button moveBtn, removeBtn, deselectBtn;
@@ -84,6 +95,7 @@ public class HouseUIController : MonoBehaviour
         catWallpaper.clicked += () => LoadSurfaces(wallpaperInventory);
         catFloors.clicked += () => LoadSurfaces(floorInventory);
         catBack.clicked += () => Show(categoryPanel, false);
+        Show(categoryPanel, false);
 
         turnLeft.clicked += edit.TurnLeft;
         turnRight.clicked += edit.TurnRight;
@@ -145,7 +157,7 @@ public class HouseUIController : MonoBehaviour
         // so none of it is visible outside edit mode.
         Show(container, isOpen);
         Show(categoryPanel, false);
-        Show(inventoryPanel, false);
+        SetInventoryOpen(false);
         Show(placementBar, false);
         Show(selectionBar, false);
         Show(categoriesBtn, true);   // may have been hidden when closing during placement
@@ -165,27 +177,88 @@ public class HouseUIController : MonoBehaviour
         }
     }
 
+    // The 'Inventaris' button opens/closes the bottom bar, starting with the categories.
     void ToggleCategoryPanel()
     {
-        bool currentlyShow = categoryPanel.style.display == DisplayStyle.Flex;
-        Show(categoryPanel, !currentlyShow);
-        Show(inventoryPanel, false);
+        Show(categoryPanel, false);   // old pop-up, no longer used
+        if (inventoryPanel.style.display == DisplayStyle.Flex) { SetInventoryOpen(false); return; }
+        ShowCategories();
+    }
+
+    void ShowCategories()
+    {
+        SetInventoryOpen(true);
+        list.Clear();
+        AddCategory(bedIcon ? bedIcon : PickIcon(bedInventory), "Bedden", () => LoadCategory(bedInventory));
+        AddCategory(deskIcon ? deskIcon : PickIcon(deskInventory), "Bureaus", () => LoadCategory(deskInventory));
+        AddCategory(nightstandIcon ? nightstandIcon : PickIcon(nightstandInventory), "Nachtkastjes", () => LoadCategory(nightstandInventory));
+        AddCategory(chairIcon ? chairIcon : PickIcon(chairInventory), "Stoelen", () => LoadCategory(chairInventory));
+        AddCategory(mirrorIcon ? mirrorIcon : PickIcon(mirrorInventory), "Spiegels", () => LoadCategory(mirrorInventory));
+        AddCategory(wallpaperIcon ? wallpaperIcon : PickIcon(wallpaperInventory), "Behang", () => LoadSurfaces(wallpaperInventory));
+        AddCategory(floorIcon ? floorIcon : PickIcon(floorInventory), "Vloeren", () => LoadSurfaces(floorInventory));
+        list.scrollOffset = Vector2.zero;
+    }
+
+    // No category icon set: use the modern piece's icon, otherwise the first icon in the list.
+    static Sprite PickIcon(List<FurnitureData> items)
+    {
+        Sprite first = null;
+        foreach (var d in items)
+        {
+            if (d == null || d.icon == null) continue;
+            if (d.icon.name.Contains("Modern")) return d.icon;
+            if (first == null) first = d.icon;
+        }
+        return first;
+    }
+
+    static Sprite PickIcon(List<SurfaceData> items)
+    {
+        foreach (var d in items) if (d != null && d.icon != null) return d.icon;
+        return null;
+    }
+
+    void AddCategory(Sprite icon, string text, System.Action open)
+    {
+        var item = MakeItem(icon, text, null);
+        item.AddToClassList("inv-category");
+        item.clicked += open;
+        list.Add(item);
+    }
+
+    // First tile in a category: back to the categories.
+    void AddBackItem()
+    {
+        var back = MakeItem(backIcon, "Terug", null);
+        back.AddToClassList("inv-back");
+        back.clicked += ShowCategories;
+        list.Add(back);
+    }
+
+    // Opening the bottom bar moves the Inventaris and house buttons up above it.
+    void SetInventoryOpen(bool open)
+    {
+        Show(inventoryPanel, open);
+        bool up = open && isOpen;
+        toggleBtn.EnableInClassList("inv-open", up);
+        categoriesBtn.EnableInClassList("inv-open", up);
     }
 
     // ---------- inventory ----------
     void LoadCategory(List<FurnitureData> dataList)
     {
         Show(categoryPanel, false);
-        Show(inventoryPanel, true);
+        SetInventoryOpen(true);
 
         list.Clear();
+        AddBackItem();
         foreach (var data in dataList)
         {
             if (data == null) continue;
             var item = MakeItem(data.icon, string.IsNullOrEmpty(data.displayName) ? data.name : data.displayName, null);
             var captured = data;
             item.clicked += () => {
-                Show(inventoryPanel, false);
+                SetInventoryOpen(false);
                 placement.Begin(captured);
             };
             list.Add(item);
@@ -196,9 +269,10 @@ public class HouseUIController : MonoBehaviour
     void LoadSurfaces(List<SurfaceData> dataList)
     {
         Show(categoryPanel, false);
-        Show(inventoryPanel, true);
+        SetInventoryOpen(true);
 
         list.Clear();
+        AddBackItem();
         foreach (var data in dataList)
         {
             if (data == null) continue;
@@ -237,7 +311,7 @@ public class HouseUIController : MonoBehaviour
     // ---------- state callbacks ----------
     void OnPlacementChanged(bool placing)
     {
-        Show(inventoryPanel, false);
+        SetInventoryOpen(false);
         Show(categoryPanel, false);
         Show(selectionBar, false);
         Show(placementBar, isOpen && placing);
@@ -249,7 +323,7 @@ public class HouseUIController : MonoBehaviour
         Show(selectionBar, isOpen && hasSelection);
         if (hasSelection)
         {
-            Show(inventoryPanel, false);
+            SetInventoryOpen(false);
             Show(categoryPanel, false);
         }
         Show(categoriesBtn, isOpen && !hasSelection && !placement.IsPlacing);
