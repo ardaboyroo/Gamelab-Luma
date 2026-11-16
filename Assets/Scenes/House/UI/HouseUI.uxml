@@ -25,16 +25,16 @@
 
         <!-- Annuleren / draaien / bevestigen tijdens het plaatsen -->
         <ui:VisualElement name="placement-bar" picking-mode="Ignore">
-            <ui:Button name="btn-cancel" text="✕" class="btn btn-red place-icon-btn" />
-            <ui:Button name="btn-rotate" text="↻" class="btn place-icon-btn" />
-            <ui:Button name="btn-confirm" text="✓" class="btn btn-green place-icon-btn" />
+            <ui:Button name="btn-cancel" class="btn btn-red place-icon-btn"><ui:VisualElement class="btn-icon icon-cross-cream" picking-mode="Ignore" /></ui:Button>
+            <ui:Button name="btn-rotate" class="btn place-icon-btn"><ui:VisualElement class="btn-icon icon-rotate" picking-mode="Ignore" /></ui:Button>
+            <ui:Button name="btn-confirm" class="btn btn-green place-icon-btn"><ui:VisualElement class="btn-icon icon-check" picking-mode="Ignore" /></ui:Button>
         </ui:VisualElement>
 
         <!-- Verplaatsen / verwijderen als je een geplaatst meubel aantikt -->
         <ui:VisualElement name="selection-bar" picking-mode="Ignore">
             <ui:Button name="btn-move" text="Verplaats" class="btn sel-btn" />
             <ui:Button name="btn-remove" text="Verwijder" class="btn btn-red sel-btn" />
-            <ui:Button name="btn-deselect" text="✕" class="btn btn-cream sel-round" />
+            <ui:Button name="btn-deselect" class="btn btn-cream sel-round"><ui:VisualElement class="btn-icon icon-cross-brown" picking-mode="Ignore" /></ui:Button>
         </ui:VisualElement>
     </ui:VisualElement>
 

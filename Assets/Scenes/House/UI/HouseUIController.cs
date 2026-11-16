@@ -240,9 +240,16 @@ public class HouseUIController : MonoBehaviour
     void SetInventoryOpen(bool open)
     {
         Show(inventoryPanel, open);
-        bool up = open && isOpen;
-        toggleBtn.EnableInClassList("inv-open", up);
-        categoriesBtn.EnableInClassList("inv-open", up);
+        UpdateRaisedButtons();
+    }
+
+    // The house button also moves up while the place/move bars are at the bottom of the screen.
+    void UpdateRaisedButtons()
+    {
+        bool inventory = inventoryPanel.style.display == DisplayStyle.Flex;
+        bool bars = placement != null && (placement.IsPlacing || placement.HasSelection);
+        toggleBtn.EnableInClassList("inv-open", isOpen && (inventory || bars));
+        categoriesBtn.EnableInClassList("inv-open", isOpen && inventory);
     }
 
     // ---------- inventory ----------
@@ -435,6 +442,7 @@ public class HouseUIController : MonoBehaviour
         Show(selectionBar, false);
         Show(placementBar, isOpen && placing);
         Show(categoriesBtn, isOpen && !placing && !placement.HasSelection);
+        UpdateRaisedButtons();
     }
 
     void OnSelectionChanged(bool hasSelection)
@@ -446,6 +454,7 @@ public class HouseUIController : MonoBehaviour
             Show(categoryPanel, false);
         }
         Show(categoriesBtn, isOpen && !hasSelection && !placement.IsPlacing);
+        UpdateRaisedButtons();
     }
 
     void OnValidityChanged(bool valid) => confirmBtn.SetEnabled(valid);

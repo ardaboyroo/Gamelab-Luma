@@ -393,3 +393,14 @@
     background-image: url("Icons/House_Edit_Icon.png");
     -unity-background-scale-mode: scale-to-fit;
 }
+
+/* icons inside round buttons (sprites instead of text symbols, so they show on every device) */
+.btn-icon {
+    flex-grow: 1;
+    margin: 22%;
+    -unity-background-scale-mode: scale-to-fit;
+}
+.icon-cross-cream { background-image: url("Icons/Icon_Cross_Cream.png"); }
+.icon-cross-brown { background-image: url("Icons/Icon_Cross_Brown.png"); }
+.icon-check { background-image: url("Icons/Icon_Check_Cream.png"); }
+.icon-rotate { background-image: url("Icons/Icon_Rotate_Brown.png"); }
