@@ -1027,6 +1027,13 @@ MonoBehaviour:
   menuTop: 82
   skateboardButtonName: SkateboardButton
   hideSkateboard: 1
+  houseButtonNames:
+  - btn-toggle-ui
+  - turn-left
+  - turn-right
+  showHouseButtonsIn: 0000000005000000
+  walkOnlyButtonNames:
+  - btn-exit-house
 --- !u!4 &506611834
 Transform:
   m_ObjectHideFlags: 0
@@ -1698,6 +1705,7 @@ MonoBehaviour:
   placement: {fileID: 690626684}
   surfaces: {fileID: 902684584}
   styleSheet: {fileID: 7433441132597879392, guid: 4297ce1142ec6e0458755742141b201f, type: 3}
+  exitSceneFallback: V1 Build
   bedInventory:
   - {fileID: 11400000, guid: 6ea48d7d39352b342baf874e28fd34f5, type: 2}
   - {fileID: 11400000, guid: 83ef9867aa4191b4faa9e53c5a8f3504, type: 2}
@@ -1739,6 +1747,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a3e7bbf937fd48147a6f410636b5f783, type: 2}
   - {fileID: 11400000, guid: 3b1807571d716d741945110bfd67f1a8, type: 2}
   - {fileID: 11400000, guid: 0a6df81edd2326b48bb46d6ab09fc3ad, type: 2}
+  bedIcon: {fileID: 21300000, guid: 9439e4abccb3f5f41b16e400ec436cbc, type: 3}
+  deskIcon: {fileID: 21300000, guid: 2e30ce2d736fa054abb40dc632fea6a8, type: 3}
+  nightstandIcon: {fileID: 21300000, guid: 2811f2daa82cb644e9e3c18ac69f743a, type: 3}
+  chairIcon: {fileID: 21300000, guid: e2ea869f909765f459497732a80e8f14, type: 3}
+  mirrorIcon: {fileID: 21300000, guid: 4cd3263454aa63c4c944b8d858cb6d33, type: 3}
+  wallpaperIcon: {fileID: 21300000, guid: 38d6ce8b5766c344aa4aab4851ab046a, type: 3}
+  floorIcon: {fileID: 21300000, guid: 831d1a69e9eada7418c11c5dbb8ea3cb, type: 3}
+  backIcon: {fileID: 21300000, guid: a2fe0f742d1101e4ca2b3e5d66e2c342, type: 3}
 --- !u!114 &1090351351
 MonoBehaviour:
   m_ObjectHideFlags: 0

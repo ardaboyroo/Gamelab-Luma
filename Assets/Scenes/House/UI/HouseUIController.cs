@@ -64,6 +64,7 @@ public class HouseUIController : MonoBehaviour
         placementBar = root.Q<VisualElement>("placement-bar");
         selectionBar = root.Q<VisualElement>("selection-bar");
         list = root.Q<ScrollView>("inventory-list");
+        SetupDragScroll();
 
         turnLeft = root.Q<Button>("turn-left");
         turnRight = root.Q<Button>("turn-right");
@@ -304,6 +305,124 @@ public class HouseUIController : MonoBehaviour
         item.Add(icon);
         item.Add(label);
         return item;
+    }
+
+    // ---------- swipe to scroll the inventory bar ----------
+    // The tiles are buttons, and a button keeps the finger for itself as soon as it is touched,
+    // so the bar never got the swipe. Now the bar takes every touch itself:
+    // - finger moves sideways  -> the bar scrolls (no tile is pressed)
+    // - finger lifts without moving -> the tile under the finger is pressed.
+    const float DragThreshold = 18f;
+    bool dragTracking, dragScrolling;
+    int dragPointer = -1;
+    float dragStartX, dragStartOffset, dragLastX, dragVelocity;
+    VisualElement pressedItem;
+
+    void SetupDragScroll()
+    {
+        if (list == null) return;
+        list.horizontalScrollerVisibility = ScrollerVisibility.Hidden;
+        list.verticalScrollerVisibility = ScrollerVisibility.Hidden;
+        list.touchScrollBehavior = ScrollView.TouchScrollBehavior.Clamped;
+        list.scrollDecelerationRate = 0f;   // our own glide below
+        list.RegisterCallback<PointerDownEvent>(OnListPointerDown, TrickleDown.TrickleDown);
+        list.RegisterCallback<PointerMoveEvent>(OnListPointerMove, TrickleDown.TrickleDown);
+        list.RegisterCallback<PointerUpEvent>(OnListPointerUp, TrickleDown.TrickleDown);
+        list.RegisterCallback<PointerCancelEvent>(_ => EndDrag(false), TrickleDown.TrickleDown);
+        list.RegisterCallback<PointerCaptureOutEvent>(_ => EndDrag(dragScrolling));
+        list.RegisterCallback<WheelEvent>(OnListWheel, TrickleDown.TrickleDown);
+        list.schedule.Execute(Glide).Every(16);
+    }
+
+    VisualElement ItemAt(Vector2 panelPos)
+    {
+        foreach (var child in list.contentContainer.Children())
+            if (child.worldBound.Contains(panelPos)) return child;
+        return null;
+    }
+
+    void OnListPointerDown(PointerDownEvent e)
+    {
+        if (e.button > 0) return;
+        dragTracking = true;
+        dragScrolling = false;
+        dragPointer = e.pointerId;
+        dragStartX = dragLastX = e.position.x;
+        dragStartOffset = list.scrollOffset.x;
+        dragVelocity = 0f;
+        pressedItem = ItemAt(e.position);
+        pressedItem?.AddToClassList("inv-pressed");
+        list.CapturePointer(e.pointerId);
+        e.StopPropagation();   // the tile must not grab the finger
+    }
+
+    void OnListPointerMove(PointerMoveEvent e)
+    {
+        if (!dragTracking || e.pointerId != dragPointer) return;
+        float dx = e.position.x - dragStartX;
+        if (!dragScrolling && Mathf.Abs(dx) > DragThreshold)
+        {
+            dragScrolling = true;
+            pressedItem?.RemoveFromClassList("inv-pressed");
+            pressedItem = null;
+        }
+        if (!dragScrolling) return;
+        SetScroll(dragStartOffset - dx);
+        float dt = Mathf.Max(Time.unscaledDeltaTime, 0.001f);
+        dragVelocity = Mathf.Lerp(dragVelocity, (dragLastX - e.position.x) / dt, 0.5f);
+        dragLastX = e.position.x;
+        e.StopPropagation();
+    }
+
+    void OnListPointerUp(PointerUpEvent e)
+    {
+        if (!dragTracking || e.pointerId != dragPointer) return;
+        bool tapped = !dragScrolling;
+        var item = pressedItem;
+        EndDrag(!tapped);
+        e.StopPropagation();
+        if (tapped && item != null && item == ItemAt(e.position)) Press(item);
+    }
+
+    // Presses a tile the same way a normal tap on a button would.
+    static void Press(VisualElement item)
+    {
+        if (!(item is Button button)) return;
+        using (var submit = NavigationSubmitEvent.GetPooled())
+        {
+            submit.target = button;
+            button.SendEvent(submit);
+        }
+    }
+
+    void EndDrag(bool keepVelocity)
+    {
+        if (dragPointer >= 0 && list.HasPointerCapture(dragPointer)) list.ReleasePointer(dragPointer);
+        pressedItem?.RemoveFromClassList("inv-pressed");
+        pressedItem = null;
+        dragTracking = false;
+        dragScrolling = false;
+        if (!keepVelocity) dragVelocity = 0f;
+    }
+
+    void Glide()
+    {
+        if (dragScrolling) return;
+        if (Mathf.Abs(dragVelocity) < 20f) { dragVelocity = 0f; return; }
+        SetScroll(list.scrollOffset.x + dragVelocity * 0.016f);
+        dragVelocity *= 0.9f;
+    }
+
+    void OnListWheel(WheelEvent e)
+    {
+        SetScroll(list.scrollOffset.x + (e.delta.y + e.delta.x) * 40f);
+        e.StopPropagation();
+    }
+
+    void SetScroll(float x)
+    {
+        float max = Mathf.Max(0f, list.contentContainer.layout.width - list.contentViewport.layout.width);
+        list.scrollOffset = new Vector2(Mathf.Clamp(x, 0f, max), 0f);
     }
 
     static void Show(VisualElement e, bool on) => e.style.display = on ? DisplayStyle.Flex : DisplayStyle.None;
