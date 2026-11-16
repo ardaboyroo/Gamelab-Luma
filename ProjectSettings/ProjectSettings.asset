@@ -168,7 +168,7 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.UnityTechnologies.com.unity.template.urpblank
     Standalone: com.Unity-Technologies.com.unity.template.urp-blank
-    iPhone: com.gamelaboost.luma
+    iPhone: com.gamelaboost.lumagame
   buildNumber:
     Standalone: 0
     VisionOS: 0
