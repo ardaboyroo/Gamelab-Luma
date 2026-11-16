@@ -371,3 +371,25 @@
     background-color: var(--yellow-dark);
     scale: 0.94 0.94;
 }
+
+/* house edit button: the round edit icon is the whole button */
+#btn-toggle-ui,
+#btn-toggle-ui:hover,
+#btn-toggle-ui:focus,
+#btn-toggle-ui:active {
+    background-color: rgba(0, 0, 0, 0);
+    border-width: 0;
+}
+/* while decorating: brown ring around the icon */
+#btn-toggle-ui.btn-active,
+#btn-toggle-ui.btn-active:hover,
+#btn-toggle-ui.btn-active:focus {
+    border-width: 8px;
+    border-color: var(--brown);
+    background-color: rgba(0, 0, 0, 0);
+}
+.edit-icon {
+    flex-grow: 1;
+    background-image: url("Icons/House_Edit_Icon.png");
+    -unity-background-scale-mode: scale-to-fit;
+}
