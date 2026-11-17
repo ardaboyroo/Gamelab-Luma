@@ -13,6 +13,9 @@ namespace Luma.AvatarCustomization
         [SerializeField, Range(0, 31)] private int previewLayer = 30;
         private readonly Dictionary<GameObject, int> originalLayers = new();
         private Camera previewCamera;
+        [SerializeField] private GameObject lightingPrefab;
+        private GameObject previewLighting;
+        private Light[] previewLights;
         private RenderTexture texture;
         private Image image;
         private VisualElement root;
@@ -44,6 +47,16 @@ namespace Luma.AvatarCustomization
             previewCamera.cullingMask = 1 << previewLayer; previewCamera.targetTexture = texture;
             previewCamera.nearClipPlane = 0.01f; previewCamera.farClipPlane = 200;
             previewCamera.GetUniversalAdditionalCameraData().renderPostProcessing = false;
+            var lighting = lightingPrefab != null ? lightingPrefab : Resources.Load<GameObject>("AvatarPreviewLighting");
+            if (lighting != null)
+            {
+                previewLighting = Instantiate(lighting, cameraObject.transform, false);
+                previewLights = previewLighting.GetComponentsInChildren<Light>(true);
+                foreach (var light in previewLights) light.cullingMask = 1 << previewLayer;
+                SetPreviewLights(false);
+                UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering += BeginPreviewRender;
+                UnityEngine.Rendering.RenderPipelineManager.endCameraRendering += EndPreviewRender;
+            }
         }
 
         private void LateUpdate()
@@ -102,9 +115,33 @@ namespace Luma.AvatarCustomization
 
         private void OnDestroy()
         {
+            UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering -= BeginPreviewRender;
+            UnityEngine.Rendering.RenderPipelineManager.endCameraRendering -= EndPreviewRender;
             foreach (var entry in originalLayers) if (entry.Key != null) entry.Key.layer = entry.Value;
             if (previewCamera != null) Destroy(previewCamera.gameObject);
             if (texture != null) { texture.Release(); Destroy(texture); }
+        }
+
+        private void BeginPreviewRender(UnityEngine.Rendering.ScriptableRenderContext context, Camera camera)
+        {
+            SetPreviewLights(isActiveAndEnabled && camera == previewCamera && previewCamera.enabled);
+        }
+
+        private void EndPreviewRender(UnityEngine.Rendering.ScriptableRenderContext context, Camera camera)
+        {
+            if (camera == previewCamera) SetPreviewLights(false);
+        }
+
+        private void SetPreviewLights(bool enabled)
+        {
+            if (previewLights == null) return;
+            foreach (var light in previewLights) if (light != null) light.enabled = enabled;
+        }
+
+        private void OnDisable()
+        {
+            SetPreviewLights(false);
+            if (previewCamera != null) previewCamera.enabled = false;
         }
     }
 }
