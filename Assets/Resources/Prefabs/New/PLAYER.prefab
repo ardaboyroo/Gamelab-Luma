@@ -415,8 +415,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _workingState: 0
   _rigidbody: {fileID: 6069350031338503152}
-  _moveSpeed: 7
-  _skateSpeed: 10
+  _moveSpeed: 20
+  _skateSpeed: 45
   _rotationSpeed: 720
   _skateboard: {fileID: 5923320575244708391}
   _modelTransform: {fileID: 6552182438235933822}
