@@ -2690,6 +2690,14 @@ PrefabInstance:
       propertyPath: _joystick
       value: 
       objectReference: {fileID: 1801583506}
+    - target: {fileID: 6032524459815735833, guid: fd86a224753000144a7ccd7ecfe5e269, type: 3}
+      propertyPath: _moveSpeed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 6032524459815735833, guid: fd86a224753000144a7ccd7ecfe5e269, type: 3}
+      propertyPath: _skateSpeed
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6440114999779778765, guid: fd86a224753000144a7ccd7ecfe5e269, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -1.7593001
