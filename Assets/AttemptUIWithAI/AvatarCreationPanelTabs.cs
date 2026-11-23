@@ -9,10 +9,10 @@ namespace Luma.AttemptUIWithAI
         private VisualElement stylePanel, colorPanel;
         private Button styleTab, colorTab;
         private bool showingStyles;
-        private static readonly string[] Categories = { "eyes", "eyebrows", "nose", "mouth", "hair" };
-        private readonly Button[] categoryButtons = new Button[5];
-        private readonly ScrollView[] categoryPanels = new ScrollView[5];
-        private readonly System.Action[] categoryCallbacks = new System.Action[5];
+        private static readonly string[] Categories = { "eyes", "eyebrows", "mouth", "hair" };
+        private readonly Button[] categoryButtons = new Button[Categories.Length];
+        private readonly ScrollView[] categoryPanels = new ScrollView[Categories.Length];
+        private readonly System.Action[] categoryCallbacks = new System.Action[Categories.Length];
         private int selectedCategory;
 
         public string SelectedFaceCategory => Categories[selectedCategory];

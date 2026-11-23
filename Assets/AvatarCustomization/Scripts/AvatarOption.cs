@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Luma.AvatarCustomization
 {
-    public enum AvatarCategory { Eyes, Eyebrows, Nose, Mouth, Hair, Top, Pants, Shoes, Skin }
+    public enum AvatarCategory { Eyes = 0, Eyebrows = 1, Mouth = 3, Hair = 4, Top = 5, Pants = 6, Shoes = 7, Skin = 8 }
 
     public abstract class AvatarOption : ScriptableObject
     {

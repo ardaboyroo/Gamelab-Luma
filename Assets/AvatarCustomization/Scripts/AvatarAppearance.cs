@@ -44,7 +44,7 @@ namespace Luma.AvatarCustomization
 
         public void SetColor(AvatarCategory category, Color color)
         {
-            if (State == null || category == AvatarCategory.Nose) return;
+            if (State == null) return;
             State.Get(category).color = new Color(Mathf.Clamp01(color.r), Mathf.Clamp01(color.g), Mathf.Clamp01(color.b), 1f);
             Apply(category);
         }

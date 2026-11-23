@@ -18,7 +18,7 @@ namespace Luma.AvatarCustomization.Editor
             var picker = controller.GetComponent<AvatarCreationColorPicker>();
             var root = controller.GetComponent<UIDocument>().rootVisualElement;
             var original = JsonUtility.FromJson<AvatarCustomizationState>(JsonUtility.ToJson(appearance.State));
-            int options = 0, skins = 0, colors = 0, nosePreviews = 0;
+            int options = 0, skins = 0, colors = 0;
             var checks = new List<string>();
             void Check(bool condition, string message) { if (!condition) throw new InvalidOperationException(message); }
             try
@@ -37,12 +37,6 @@ namespace Luma.AvatarCustomization.Editor
                     {
                         controller.Choose(option); options++;
                         Check(appearance.State.Get(category).optionId == option.Id, "Selection failed: " + option.Id);
-                        if (option is NoseOption)
-                        {
-                            var button = root.Q<Button>(option.Id);
-                            Check(button != null && button.Q<Image>()?.image == option.Preview, "Nose PNG missing: " + option.Id);
-                            nosePreviews++;
-                        }
                         foreach (var renderer in appearance.GetComponentsInChildren<SkinnedMeshRenderer>().Where(r => r.gameObject.activeInHierarchy))
                         {
                             Check(renderer.bones.Length == renderer.sharedMesh.bindposes.Length && renderer.bones.All(b => b != null), "Invalid bones: " + renderer.name);
@@ -59,11 +53,6 @@ namespace Luma.AvatarCustomization.Editor
                                 Check(Vector3.Distance(rigidHair.GetComponentInChildren<Renderer>().bounds.center, appearance.Rig.RigidAnchor.position) < 0.8f, "Rigid hair is outside head area.");
                             }
                         }
-                    }
-                    if (category == AvatarCategory.Nose)
-                    {
-                        Check(!root.Q<Button>("colorTab").enabledSelf, "Nose color picker should be disabled.");
-                        continue;
                     }
                     var color = Color.HSVToRGB(((int)category + 1) / 10f, 0.72f, 0.83f);
                     picker.SetColor(color);
@@ -97,12 +86,12 @@ namespace Luma.AvatarCustomization.Editor
                     Check(Vector4.Distance(loaded.Get(selection.category).color, selection.color) < 0.001f, "Saved color mismatch.");
                 }
                 checks.Add("Typed catalog and unique IDs"); checks.Add("All options selectable"); checks.Add("One active part per slot and none removes part");
-                checks.Add("Skinned mesh bone arrays match bind poses"); checks.Add("Six nose PNG buttons; preview-only selection");
+                checks.Add("Skinned mesh bone arrays match bind poses");
                 checks.Add("Eight category colors route through the real picker"); checks.Add("Color retained after unequip and replacement"); checks.Add("All selected IDs and colors round-trip through PlayerPrefs");
                 checks.Add("Unknown ID falls back within its category");
                 checks.Add("Single UI controller; category switching preserves other colors");
                 Check(service.Resolve(AvatarCategory.Hair, "missing-option") is HairOption, "Invalid ID fallback failed.");
-                return JsonUtility.ToJson(new VerificationResult { options = options, skinBindingChecks = skins, colorCategories = colors, nosePreviews = nosePreviews, checks = checks.ToArray() }, true);
+                return JsonUtility.ToJson(new VerificationResult { options = options, skinBindingChecks = skins, colorCategories = colors, checks = checks.ToArray() }, true);
             }
             finally
             {
@@ -119,7 +108,7 @@ namespace Luma.AvatarCustomization.Editor
         [Serializable]
         private sealed class VerificationResult
         {
-            public int options, skinBindingChecks, colorCategories, nosePreviews;
+            public int options, skinBindingChecks, colorCategories;
             public string[] checks;
         }
     }

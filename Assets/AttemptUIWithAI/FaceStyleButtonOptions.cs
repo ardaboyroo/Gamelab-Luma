@@ -9,13 +9,11 @@ namespace Luma.AttemptUIWithAI
     {
         [SerializeField] private List<AvatarTextureClass> eyesOptions = new List<AvatarTextureClass>();
         [SerializeField] private List<AvatarTextureClass> eyebrowsOptions = new List<AvatarTextureClass>();
-        [SerializeField] private List<AvatarTextureClass> noseOptions = new List<AvatarTextureClass>();
         [SerializeField] private List<AvatarTextureClass> mouthOptions = new List<AvatarTextureClass>();
         [SerializeField] private List<AvatarObjectClass> hairOptions = new List<AvatarObjectClass>();
 
         public List<AvatarTextureClass> EyesOptions => eyesOptions;
         public List<AvatarTextureClass> EyebrowsOptions => eyebrowsOptions;
-        public List<AvatarTextureClass> NoseOptions => noseOptions;
         public List<AvatarTextureClass> MouthOptions => mouthOptions;
         public List<AvatarObjectClass> HairOptions => hairOptions;
 
@@ -28,7 +26,7 @@ namespace Luma.AttemptUIWithAI
         {
             var root = GetComponent<UIDocument>().rootVisualElement;
             if (root == null) return;
-            foreach (var name in new[] { "eyesStylePanel", "eyebrowsStylePanel", "noseStylePanel", "mouthStylePanel", "hairStylePanel" })
+            foreach (var name in new[] { "eyesStylePanel", "eyebrowsStylePanel", "mouthStylePanel", "hairStylePanel" })
             {
                 var panel = root.Q<ScrollView>(name);
                 panel?.Q<VisualElement>("generatedButtonGrid")?.RemoveFromHierarchy();
@@ -41,7 +39,6 @@ namespace Luma.AttemptUIWithAI
             if (root == null) return;
             Populate(root, "eyesStylePanel", eyesOptions);
             Populate(root, "eyebrowsStylePanel", eyebrowsOptions);
-            Populate(root, "noseStylePanel", noseOptions);
             Populate(root, "mouthStylePanel", mouthOptions);
             Populate(root, "hairStylePanel", hairOptions);
         }

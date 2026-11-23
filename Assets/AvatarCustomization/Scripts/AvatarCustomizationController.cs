@@ -68,7 +68,6 @@ namespace Luma.AvatarCustomization
         public void SelectCategory(AvatarCategory value)
         {
             category = value;
-            if (category == AvatarCategory.Nose) showingStyles = true;
             if (category == AvatarCategory.Skin) showingStyles = false;
             Refresh();
         }
@@ -81,22 +80,21 @@ namespace Luma.AvatarCustomization
 
         private void OnColorChanged(Color color)
         {
-            if (syncing || category == AvatarCategory.Nose || appearance.State == null) return;
+            if (syncing || appearance.State == null) return;
             appearance.SetColor(category, color);
             dirty = true; saveAt = Time.unscaledTime + 0.35f;
         }
 
         private void Refresh()
         {
-            var nose = category == AvatarCategory.Nose;
             var skin = category == AvatarCategory.Skin;
-            root.Q<Button>("colorTab").SetEnabled(!nose);
+            root.Q<Button>("colorTab").SetEnabled(true);
             root.Q<Button>("styleTab").SetEnabled(!skin);
             root.Q<VisualElement>("stylePanel").EnableInClassList("is-hidden", !showingStyles);
             root.Q<VisualElement>("colorPanel").EnableInClassList("is-hidden", showingStyles);
             root.Q<Button>("styleTab").EnableInClassList("selected-option", showingStyles);
             root.Q<Button>("colorTab").EnableInClassList("selected-option", !showingStyles);
-            root.Q<Label>("categoryHint").text = nose ? "Je neuskeuze is opgeslagen. Deze wordt later zichtbaar op je avatar." : skin ? "Kies je huidskleur." : "Kies een stijl of pas de kleur aan.";
+            root.Q<Label>("categoryHint").text = skin ? "Kies je huidskleur." : "Kies een stijl of pas de kleur aan.";
             foreach (AvatarCategory value in Enum.GetValues(typeof(AvatarCategory)))
             {
                 root.Q<Button>(Key(value) + "Button")?.EnableInClassList("selected-option", value == category);
