@@ -37,14 +37,6 @@ namespace Luma.AvatarCustomization.Editor
             AddTextures<EyeOption>(serializedCatalog, "eyes", serializedLegacy.FindProperty("_eyes"), "Eyes");
             AddTextures<EyebrowOption>(serializedCatalog, "eyebrows", serializedLegacy.FindProperty("_brows"), "Eyebrows");
             AddTextures<MouthOption>(serializedCatalog, "mouths", serializedLegacy.FindProperty("_mouths"), "Mouths");
-            var noses = AssetDatabase.FindAssets("t:Texture2D", new[] { "Assets/Resources/Models/Noses" }).Select(AssetDatabase.GUIDToAssetPath).OrderBy(p => p).ToArray();
-            var noseList = serializedCatalog.FindProperty("noses"); noseList.arraySize = noses.Length;
-            for (int i = 0; i < noses.Length; i++)
-            {
-                var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(noses[i]);
-                var option = GetOption<NoseOption>("Noses", "nose-" + (i + 1), texture.name, texture);
-                noseList.GetArrayElementAtIndex(i).objectReferenceValue = option;
-            }
             AddParts<HairOption>(serializedCatalog, "hair", serializedLegacy.FindProperty("_hair"), "Hair", body, skeleton, oldParts);
             AddParts<TopOption>(serializedCatalog, "tops", serializedLegacy.FindProperty("_topOutfit"), "Tops", body, skeleton, oldParts);
             AddParts<PantsOption>(serializedCatalog, "pants", serializedLegacy.FindProperty("_pants"), "Pants", body, skeleton, oldParts);

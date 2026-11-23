@@ -10,7 +10,6 @@ namespace Luma.AvatarCustomization
     {
         [SerializeField] private List<EyeOption> eyes = new();
         [SerializeField] private List<EyebrowOption> eyebrows = new();
-        [SerializeField] private List<NoseOption> noses = new();
         [SerializeField] private List<MouthOption> mouths = new();
         [SerializeField] private List<HairOption> hair = new();
         [SerializeField] private List<TopOption> tops = new();
@@ -18,7 +17,6 @@ namespace Luma.AvatarCustomization
         [SerializeField] private List<ShoesOption> shoes = new();
         public IReadOnlyList<EyeOption> Eyes => eyes.AsReadOnly();
         public IReadOnlyList<EyebrowOption> Eyebrows => eyebrows.AsReadOnly();
-        public IReadOnlyList<NoseOption> Noses => noses.AsReadOnly();
         public IReadOnlyList<MouthOption> Mouths => mouths.AsReadOnly();
         public IReadOnlyList<HairOption> Hair => hair.AsReadOnly();
         public IReadOnlyList<TopOption> Tops => tops.AsReadOnly();
@@ -28,7 +26,7 @@ namespace Luma.AvatarCustomization
         public IEnumerable<AvatarOption> GetOptions(AvatarCategory category) => category switch
         {
             AvatarCategory.Eyes => eyes, AvatarCategory.Eyebrows => eyebrows,
-            AvatarCategory.Nose => noses, AvatarCategory.Mouth => mouths,
+            AvatarCategory.Mouth => mouths,
             AvatarCategory.Hair => hair, AvatarCategory.Top => tops,
             AvatarCategory.Pants => pants, AvatarCategory.Shoes => shoes,
             _ => Array.Empty<AvatarOption>()
@@ -46,7 +44,6 @@ namespace Luma.AvatarCustomization
                     if (option.Category != category) yield return $"Wrong category: {option.name}";
                     if (option is AvatarTextureOption texture && texture.Texture == null) yield return $"Missing texture: {option.name}";
                     if (option is AvatarPrefabOption part && !part.Unequip && part.Prefab == null) yield return $"Missing prefab: {option.name}";
-                    if (option is NoseOption && option.Preview == null) yield return $"Missing nose preview: {option.name}";
                 }
             }
         }

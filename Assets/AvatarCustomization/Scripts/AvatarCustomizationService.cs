@@ -14,7 +14,6 @@ namespace Luma.AvatarCustomization
         public AvatarCustomizationCatalog Catalog => catalog;
         public IReadOnlyList<EyeOption> Eyes => catalog.Eyes;
         public IReadOnlyList<EyebrowOption> Eyebrows => catalog.Eyebrows;
-        public IReadOnlyList<NoseOption> Noses => catalog.Noses;
         public IReadOnlyList<MouthOption> Mouths => catalog.Mouths;
         public IReadOnlyList<HairOption> Hair => catalog.Hair;
         public IReadOnlyList<TopOption> Tops => catalog.Tops;
@@ -44,6 +43,8 @@ namespace Luma.AvatarCustomization
             try { state = JsonUtility.FromJson<AvatarCustomizationState>(PlayerPrefs.GetString(SaveKey, "")); }
             catch (ArgumentException) { Debug.LogWarning("Avatar save was unreadable; using defaults."); }
             state ??= new AvatarCustomizationState();
+            state.selections ??= new List<AvatarSelection>();
+            state.selections.RemoveAll(s => s == null || !Enum.IsDefined(typeof(AvatarCategory), s.category));
             foreach (AvatarCategory category in Enum.GetValues(typeof(AvatarCategory)))
             {
                 var selection = state.Get(category);

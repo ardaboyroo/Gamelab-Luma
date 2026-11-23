@@ -103,7 +103,6 @@ namespace Luma.AvatarCustomization
             {
                 case AvatarCategory.Eyes:
                 case AvatarCategory.Eyebrows:
-                case AvatarCategory.Nose:
                 case AvatarCategory.Mouth: fromTop = faceFocus.x; halfHeight = faceFocus.y; break;
                 case AvatarCategory.Hair: fromTop = hairFocus.x; halfHeight = hairFocus.y; break;
                 case AvatarCategory.Top: fromTop = topFocus.x; halfHeight = topFocus.y; break;

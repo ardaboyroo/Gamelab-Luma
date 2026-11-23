@@ -36,13 +36,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 66ec0bf6436973842a7a3c7cafb9acbb, type: 2}
   - {fileID: 11400000, guid: 00eb544d74a40f440ac29d9bf34c73a4, type: 2}
   - {fileID: 11400000, guid: c3305e1eb7867d247961e777a590d5f6, type: 2}
-  noses:
-  - {fileID: 11400000, guid: 483871c2cd33cfa489d1d0486c5a76ff, type: 2}
-  - {fileID: 11400000, guid: 2776aa10e9eb6eb489a20a02eeac168a, type: 2}
-  - {fileID: 11400000, guid: 24ee7b2bf42cb844c9fb97fc4b2a1b68, type: 2}
-  - {fileID: 11400000, guid: 7119b5111cb4e5246af97a53accc1f35, type: 2}
-  - {fileID: 11400000, guid: 99d6099082932584792eb747ea4becd8, type: 2}
-  - {fileID: 11400000, guid: da94796095df48342b7487d79762e7cd, type: 2}
   mouths:
   - {fileID: 11400000, guid: 971cd6f56bc26054c8eceba40f9b9f96, type: 2}
   - {fileID: 11400000, guid: e374569d62f115243912735566ee544e, type: 2}
