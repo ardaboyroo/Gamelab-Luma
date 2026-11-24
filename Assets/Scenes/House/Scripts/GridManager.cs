@@ -26,11 +26,18 @@ public class GridManager : MonoBehaviour
     public Color selectedColor = new Color(1f, 0.85f, 0.25f, 1f);
 
     PlacedFurniture[,] cells;
-    Renderer[,] quads;
-    Material freeMat, occMat, okMat, badMat, selMat;
-    Texture2D lineTex, fillTex;
-    GameObject visualsRoot;
     readonly List<Vector2Int> previewCells = new List<Vector2Int>();
+
+    // All cells are drawn as ONE mesh (one draw call instead of one per cell).
+    // Each cell is a quad with its own vertex colour; the UVs pick the 'outline only' or the
+    // 'outline + light fill' half of a small generated texture.
+    GameObject visualsRoot;
+    Mesh gridMesh;
+    Material gridMat;
+    Texture2D cellTex;
+    Color[] vColors;
+    Vector2[] vUVs;
+    bool meshDirty;
 
     public Vector3 GridCenter => transform.position + new Vector3(width, 0, height) * cellSize * 0.5f;
 
@@ -44,8 +51,9 @@ public class GridManager : MonoBehaviour
     void OnDestroy()
     {
         if (visualsRoot) Destroy(visualsRoot);
-        if (lineTex) Destroy(lineTex);
-        if (fillTex) Destroy(fillTex);
+        if (gridMesh) Destroy(gridMesh);
+        if (gridMat) Destroy(gridMat);
+        if (cellTex) Destroy(cellTex);
     }
 
     // ---------- coordinates ----------
@@ -124,7 +132,7 @@ public class GridManager : MonoBehaviour
             {
                 var c = origin + new Vector2Int(x, y);
                 if (!InBounds(c)) continue;
-                quads[c.x, c.y].sharedMaterial = ok ? okMat : badMat;
+                SetCell(c, ok ? previewValid : previewInvalid, true);
                 previewCells.Add(c);
             }
     }
@@ -139,7 +147,7 @@ public class GridManager : MonoBehaviour
             {
                 var c = p.origin + new Vector2Int(x, y);
                 if (!InBounds(c)) continue;
-                quads[c.x, c.y].sharedMaterial = selMat;
+                SetCell(c, selectedColor, true);
                 previewCells.Add(c);
             }
     }
@@ -152,65 +160,96 @@ public class GridManager : MonoBehaviour
 
     void Refresh(Vector2Int c)
     {
-        if (quads == null || !InBounds(c)) return;
-        quads[c.x, c.y].sharedMaterial = cells[c.x, c.y] != null ? occMat : freeMat;
+        if (vColors == null || !InBounds(c)) return;
+        bool occupied = cells[c.x, c.y] != null;
+        SetCell(c, occupied ? blockedColor : gridColor, occupied);
     }
 
-    /// White square outline; the inside is see-through (fillAlpha 0) or lightly filled.
-    /// The material colour tints it, so one texture serves every cell colour.
-    Texture2D MakeCellTexture(float fillAlpha)
+    // Colours one cell's quad. filled = outline + light fill, otherwise only the outline.
+    void SetCell(Vector2Int c, Color color, bool filled)
+    {
+        int i = (c.x * height + c.y) * 4;
+        // the texture is two 64x64 halves side by side; stay half a texel inside each half
+        const float t = 0.5f / 128f;
+        float u0 = filled ? 0.5f + t : t, u1 = filled ? 1f - t : 0.5f - t;
+        vUVs[i] = new Vector2(u0, 0f); vUVs[i + 1] = new Vector2(u1, 0f);
+        vUVs[i + 2] = new Vector2(u0, 1f); vUVs[i + 3] = new Vector2(u1, 1f);
+        vColors[i] = vColors[i + 1] = vColors[i + 2] = vColors[i + 3] = color;
+        meshDirty = true;
+    }
+
+    void LateUpdate()
+    {
+        if (!meshDirty || gridMesh == null) return;
+        gridMesh.SetColors(vColors);
+        gridMesh.SetUVs(0, vUVs);
+        meshDirty = false;
+    }
+
+    /// 128x64 texture: left half = white square outline (see-through inside),
+    /// right half = the same outline with a light fill. Vertex colours tint it.
+    Texture2D MakeCellTexture()
     {
         const int n = 64, border = 2;
-        var t = new Texture2D(n, n, TextureFormat.RGBA32, false);
-        var px = new Color[n * n];
-        for (int y = 0; y < n; y++)
-            for (int x = 0; x < n; x++)
-            {
-                bool edge = x < border || y < border || x >= n - border || y >= n - border;
-                px[y * n + x] = new Color(1, 1, 1, edge ? 1f : fillAlpha);
-            }
+        var t = new Texture2D(n * 2, n, TextureFormat.RGBA32, false);
+        var px = new Color[n * 2 * n];
+        for (int half = 0; half < 2; half++)
+            for (int y = 0; y < n; y++)
+                for (int x = 0; x < n; x++)
+                {
+                    bool edge = x < border || y < border || x >= n - border || y >= n - border;
+                    px[y * n * 2 + half * n + x] = new Color(1, 1, 1, edge ? 1f : (half == 0 ? 0f : 0.4f));
+                }
         t.SetPixels(px);
         t.wrapMode = TextureWrapMode.Clamp;
         t.filterMode = FilterMode.Bilinear;
-        t.Apply();
+        t.Apply(false, true);   // no CPU copy needed after upload
         return t;
-    }
-
-    Material MakeMat(Color c, Texture2D tex)
-    {
-        var m = new Material(Shader.Find("Sprites/Default"));
-        m.mainTexture = tex;
-        m.color = c;
-        return m;
     }
 
     void BuildVisuals()
     {
-        lineTex = MakeCellTexture(0f);      // free cells: only the dark outline
-        fillTex = MakeCellTexture(0.4f);    // occupied / preview cells: outline + tinted fill
+        cellTex = MakeCellTexture();
+        gridMat = new Material(Shader.Find("Sprites/Default")) { mainTexture = cellTex, color = Color.white };
 
-        freeMat = MakeMat(gridColor, lineTex);
-        occMat = MakeMat(blockedColor, fillTex);
-        okMat = MakeMat(previewValid, fillTex);
-        badMat = MakeMat(previewInvalid, fillTex);
-        selMat = MakeMat(selectedColor, fillTex);
-
-        quads = new Renderer[width, height];
-        visualsRoot = new GameObject("GridCells");   // not parented, so this object's scale can't distort it
-
+        int count = width * height;
+        var verts = new Vector3[count * 4];
+        var tris = new int[count * 6];
+        vColors = new Color[count * 4];
+        vUVs = new Vector2[count * 4];
+        Vector3 lift = Vector3.up * 0.02f;
         for (int x = 0; x < width; x++)
             for (int y = 0; y < height; y++)
             {
-                var q = GameObject.CreatePrimitive(PrimitiveType.Quad);
-                Destroy(q.GetComponent<Collider>());
-                q.name = $"Cell {x},{y}";
-                q.transform.SetParent(visualsRoot.transform, true);
-                q.transform.position = CellCenter(new Vector2Int(x, y)) + Vector3.up * 0.02f;
-                q.transform.rotation = Quaternion.Euler(90, 0, 0);
-                q.transform.localScale = Vector3.one * cellSize;   // outline is part of the texture
-                quads[x, y] = q.GetComponent<Renderer>();
-                Refresh(new Vector2Int(x, y));
+                int i = (x * height + y) * 4, k = (x * height + y) * 6;
+                Vector3 o = CellToWorld(new Vector2Int(x, y)) + lift;
+                verts[i] = o;
+                verts[i + 1] = o + new Vector3(cellSize, 0, 0);
+                verts[i + 2] = o + new Vector3(0, 0, cellSize);
+                verts[i + 3] = o + new Vector3(cellSize, 0, cellSize);
+                tris[k] = i; tris[k + 1] = i + 2; tris[k + 2] = i + 1;
+                tris[k + 3] = i + 1; tris[k + 4] = i + 2; tris[k + 5] = i + 3;
             }
+
+        gridMesh = new Mesh { name = "Grid cells" };
+        gridMesh.MarkDynamic();
+        gridMesh.SetVertices(verts);
+        gridMesh.SetTriangles(tris, 0);
+        for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
+                Refresh(new Vector2Int(x, y));
+        gridMesh.SetColors(vColors);
+        gridMesh.SetUVs(0, vUVs);
+        gridMesh.RecalculateBounds();
+        meshDirty = false;
+
+        // world-space mesh on an unparented object, so this object's scale can't distort it
+        visualsRoot = new GameObject("GridCells");
+        visualsRoot.AddComponent<MeshFilter>().sharedMesh = gridMesh;
+        var mr = visualsRoot.AddComponent<MeshRenderer>();
+        mr.sharedMaterial = gridMat;
+        mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        mr.receiveShadows = false;
     }
 
     void OnDrawGizmos()

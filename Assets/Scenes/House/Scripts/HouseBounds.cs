@@ -18,6 +18,7 @@ public class HouseBounds : MonoBehaviour
 
     Rigidbody _player;
     Transform _dog;
+    float _nextDogSearch;
     Vector3 _min, _max;
     float _floorY;
 
@@ -33,8 +34,9 @@ public class HouseBounds : MonoBehaviour
     {
         if (_player == null && PlayerService.Instance != null && PlayerService.Instance.LocalPlayer != null)
             _player = ((Component)PlayerService.Instance.LocalPlayer).GetComponentInChildren<Rigidbody>();
-        if (_dog == null)
+        if (_dog == null && Time.unscaledTime >= _nextDogSearch)
         {
+            _nextDogSearch = Time.unscaledTime + 1f;   // no dog in this scene: don't search every physics step
             var dog = FindFirstObjectByType<DogBuddyFollow>();
             if (dog != null) _dog = dog.transform;
         }

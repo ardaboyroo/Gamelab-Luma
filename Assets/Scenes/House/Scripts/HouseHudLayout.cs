@@ -6,8 +6,12 @@ using UnityEngine.UIElements;
 /// so its UXML stays untouched):
 /// - moves the Menu button to the top-left corner (the house button sits bottom-right in HouseUI.uss)
 /// - hides the skateboard button, because you can't skate inside
-/// - hides the house button and the turn arrows while another screen is open (menu, avatar editor, tutorial).
+/// - hides the house button and the turn arrows while another screen is open (menu, avatar editor, tutorial)
+/// - while the full-screen avatar editor is open, the house camera draws nothing (saves a whole frame of rendering).
 /// Put ONE of these in the house scene. Everything is undone when it is disabled.
+///
+/// Performance: the UI is searched only when something changes (state change, a UI document rebuilt,
+/// or at most twice per second to catch new documents), not every frame.
 public class HouseHudLayout : MonoBehaviour
 {
     [Header("Menu button")]
@@ -28,16 +32,66 @@ public class HouseHudLayout : MonoBehaviour
     [Tooltip("Only shown while walking (not while decorating), e.g. the door to leave the house.")]
     public string[] walkOnlyButtonNames = { "btn-exit-house" };
 
+    [Header("Avatar editor")]
+    [Tooltip("While the avatar editor (full screen) is open, the house camera renders nothing. The avatar preview has its own camera.")]
+    public bool pauseHouseCameraInAvatarEditor = true;
+
+    [Header("Performance")]
+    [Tooltip("How often (seconds) to look for UI documents that appeared later. A state change always triggers a search.")]
+    public float rescanInterval = 0.5f;
+
     readonly List<VisualElement> _menus = new();
     readonly List<VisualElement> _houseButtons = new();
     readonly List<VisualElement> _walkOnlyButtons = new();
     readonly List<VisualElement> _skatePanels = new();
 
+    struct CameraState { public int mask; public CameraClearFlags clear; }
+    readonly Dictionary<Camera, CameraState> _pausedCameras = new();
+
+    bool _hasState;
+    PlayerStates _lastState;
+    float _nextRescan;
+    int _reapplyFrames;
+
+    void OnEnable()
+    {
+        _hasState = false;
+        _nextRescan = 0f;
+    }
+
     void LateUpdate()
     {
-        // Re-applied every frame: other scripts show/hide parts of this HUD when the player state changes.
-        Collect();
+        bool hasPlayer = PlayerService.Instance != null && PlayerService.Instance.LocalPlayer != null
+                         && PlayerService.Instance.LocalPlayer.StateManager != null;
+        PlayerStates state = hasPlayer ? PlayerService.Instance.LocalPlayer.StateManager.CurrentState : PlayerStates.StandardState;
 
+        bool stateChanged = !_hasState || state != _lastState;
+        _hasState = true;
+        _lastState = state;
+
+        // Other scripts show/hide parts of this HUD in the frames right after a state change,
+        // so re-apply for a few frames after each change instead of every frame forever.
+        if (stateChanged) _reapplyFrames = 3;
+
+        bool rescan = stateChanged || Time.unscaledTime >= _nextRescan || AnyDetached();
+        bool found = false;
+        if (rescan)
+        {
+            _nextRescan = Time.unscaledTime + rescanInterval;
+            found = Collect();
+        }
+
+        if (_reapplyFrames > 0 || found)
+        {
+            Apply(state, hasPlayer);
+            if (_reapplyFrames > 0) _reapplyFrames--;
+        }
+
+        UpdateCameras(hasPlayer && state == PlayerStates.CharacterEditState);
+    }
+
+    void Apply(PlayerStates state, bool hasPlayer)
+    {
         if (moveMenuToTopLeft)
             foreach (var m in _menus)
             {
@@ -48,35 +102,55 @@ public class HouseHudLayout : MonoBehaviour
             }
 
         if (hideSkateboard)
-            foreach (var p in _skatePanels)
-                if (p.style.display != DisplayStyle.None) p.style.display = DisplayStyle.None;
+            foreach (var p in _skatePanels) SetShown(p, false);
 
-        bool walking = PlayerService.Instance == null || PlayerService.Instance.LocalPlayer == null
-                       || PlayerService.Instance.LocalPlayer.StateManager.CurrentState == PlayerStates.StandardState;
-        foreach (var b in _walkOnlyButtons)
+        bool walking = !hasPlayer || state == PlayerStates.StandardState;
+        foreach (var b in _walkOnlyButtons) SetShown(b, walking);
+
+        bool showHouse = !hasPlayer || showHouseButtonsIn == null || System.Array.IndexOf(showHouseButtonsIn, state) >= 0;
+        foreach (var b in _houseButtons) SetShown(b, showHouse);
+    }
+
+    static void SetShown(VisualElement e, bool shown)
+    {
+        if (shown && e.style.display == DisplayStyle.None) e.style.display = StyleKeyword.Null;
+        else if (!shown && e.style.display != DisplayStyle.None) e.style.display = DisplayStyle.None;
+    }
+
+    // ---------- avatar editor: pause the house camera ----------
+    void UpdateCameras(bool pause)
+    {
+        if (pause && pauseHouseCameraInAvatarEditor)
         {
-            if (walking && b.style.display == DisplayStyle.None) b.style.display = StyleKeyword.Null;
-            else if (!walking && b.style.display != DisplayStyle.None) b.style.display = DisplayStyle.None;
+            foreach (var cam in Camera.allCameras)
+            {
+                // cameras that draw into a texture (the avatar preview) keep working
+                if (cam == null || cam.targetTexture != null || _pausedCameras.ContainsKey(cam)) continue;
+                _pausedCameras[cam] = new CameraState { mask = cam.cullingMask, clear = cam.clearFlags };
+                cam.cullingMask = 0;                         // draw nothing, only clear the screen
+                cam.clearFlags = CameraClearFlags.SolidColor;
+            }
         }
-
-        bool showHouse = HouseButtonsAllowed();
-        foreach (var b in _houseButtons)
+        else if (_pausedCameras.Count > 0)
         {
-            if (showHouse && b.style.display == DisplayStyle.None) b.style.display = StyleKeyword.Null;
-            else if (!showHouse && b.style.display != DisplayStyle.None) b.style.display = DisplayStyle.None;
+            RestoreCameras();
         }
     }
 
-    bool HouseButtonsAllowed()
+    void RestoreCameras()
     {
-        if (PlayerService.Instance == null || PlayerService.Instance.LocalPlayer == null) return true;
-        var states = PlayerService.Instance.LocalPlayer.StateManager;
-        if (states == null || showHouseButtonsIn == null) return true;
-        return System.Array.IndexOf(showHouseButtonsIn, states.CurrentState) >= 0;
+        foreach (var kv in _pausedCameras)
+        {
+            if (kv.Key == null) continue;
+            kv.Key.cullingMask = kv.Value.mask;
+            kv.Key.clearFlags = kv.Value.clear;
+        }
+        _pausedCameras.Clear();
     }
 
     void OnDisable()
     {
+        RestoreCameras();
         foreach (var m in _menus)
         {
             m.style.left = StyleKeyword.Null;
@@ -93,12 +167,25 @@ public class HouseHudLayout : MonoBehaviour
         _skatePanels.Clear();
     }
 
-    void Collect()
+    // ---------- finding the elements ----------
+    // A UI document that is switched off and on rebuilds its elements; the old ones lose their panel.
+    bool AnyDetached()
+    {
+        foreach (var e in _menus) if (e.panel == null) return true;
+        foreach (var e in _houseButtons) if (e.panel == null) return true;
+        foreach (var e in _walkOnlyButtons) if (e.panel == null) return true;
+        foreach (var e in _skatePanels) if (e.panel == null) return true;
+        return false;
+    }
+
+    /// Returns true when new elements were found (they need the layout applied).
+    bool Collect()
     {
         _menus.RemoveAll(e => e.panel == null);
         _skatePanels.RemoveAll(e => e.panel == null);
         _houseButtons.RemoveAll(e => e.panel == null);
         _walkOnlyButtons.RemoveAll(e => e.panel == null);
+        bool found = false;
 
         foreach (var doc in FindObjectsByType<UIDocument>(FindObjectsSortMode.None))
         {
@@ -107,28 +194,29 @@ public class HouseHudLayout : MonoBehaviour
 
             if (houseButtonNames != null)
                 foreach (var n in houseButtonNames)
-                {
-                    var hb = string.IsNullOrEmpty(n) ? null : root.Q(n);
-                    if (hb != null && !_houseButtons.Contains(hb)) _houseButtons.Add(hb);
-                }
+                    found |= AddOnce(_houseButtons, string.IsNullOrEmpty(n) ? null : root.Q(n));
 
             if (walkOnlyButtonNames != null)
                 foreach (var n in walkOnlyButtonNames)
-                {
-                    var wb = string.IsNullOrEmpty(n) ? null : root.Q(n);
-                    if (wb != null && !_walkOnlyButtons.Contains(wb)) _walkOnlyButtons.Add(wb);
-                }
+                    found |= AddOnce(_walkOnlyButtons, string.IsNullOrEmpty(n) ? null : root.Q(n));
 
-            var menu = root.Q(menuButtonName);
-            if (menu != null && !_menus.Contains(menu)) _menus.Add(menu);
+            found |= AddOnce(_menus, root.Q(menuButtonName));
 
             var skate = root.Q(skateboardButtonName);
             if (skate != null)
             {
                 // the button sits in its own decorative corner panel: hide the whole panel
                 var target = (skate.parent != null && skate.parent != root && skate.parent.childCount == 1) ? skate.parent : skate;
-                if (!_skatePanels.Contains(target)) _skatePanels.Add(target);
+                found |= AddOnce(_skatePanels, target);
             }
         }
+        return found;
+    }
+
+    static bool AddOnce(List<VisualElement> list, VisualElement e)
+    {
+        if (e == null || list.Contains(e)) return false;
+        list.Add(e);
+        return true;
     }
 }
