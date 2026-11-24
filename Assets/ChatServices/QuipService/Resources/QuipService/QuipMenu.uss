@@ -1,0 +1,117 @@
+:root {
+    --quip-cream: rgb(255, 246, 214);
+    --quip-cream-dark: rgb(240, 222, 170);
+    --quip-yellow: rgb(255, 218, 92);
+    --quip-yellow-dark: rgb(251, 187, 75);
+    --quip-brown: rgb(112, 74, 52);
+    --quip-brown-dark: rgb(70, 44, 30);
+}
+
+.quip-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.35);
+    justify-content: center;
+    align-items: center;
+}
+
+.quip-card {
+    width: 85%;
+    max-width: 680px;
+    height: 80%;
+    padding: 28px;
+    border-width: 6px;
+    border-color: var(--quip-brown-dark);
+    border-radius: 36px;
+    background-color: var(--quip-cream);
+    color: var(--quip-brown-dark);
+}
+
+.quip-title {
+    font-size: 42px;
+    -unity-font-style: bold;
+    white-space: normal;
+    flex-shrink: 0;
+    margin-bottom: 12px;
+}
+
+.quip-description, .quip-empty {
+    font-size: 26px;
+    white-space: normal;
+    flex-shrink: 0;
+    margin-bottom: 20px;
+}
+
+.quip-list {
+    flex-grow: 1;
+    min-height: 0;
+    margin-bottom: 20px;
+}
+
+.quip-button, .quip-back {
+    min-height: 104px;
+    flex-shrink: 0;
+    padding: 16px 22px;
+    margin: 0 8px 16px 0;
+    border-width: 5px;
+    border-color: var(--quip-brown);
+    border-radius: 30px;
+    background-color: var(--quip-yellow);
+    color: var(--quip-brown-dark);
+    font-size: 32px;
+    -unity-font-style: bold;
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+
+.quip-button:hover, .quip-button:focus {
+    background-color: var(--quip-yellow-dark);
+    border-color: var(--quip-brown-dark);
+}
+
+.quip-button:active {
+    background-color: var(--quip-cream-dark);
+}
+
+.quip-button:disabled {
+    opacity: 0.5;
+}
+
+.quip-back {
+    margin: 0;
+    background-color: var(--quip-brown);
+    border-color: var(--quip-cream-dark);
+    color: var(--quip-cream);
+}
+
+.quip-back:hover, .quip-back:focus, .quip-back:active {
+    background-color: var(--quip-brown-dark);
+}
+
+.quip-list .unity-scroller--horizontal {
+    display: none;
+}
+
+.quip-list .unity-scroller--vertical {
+    width: 22px;
+    margin-left: 8px;
+}
+
+.quip-list .unity-scroller__low-button,
+.quip-list .unity-scroller__high-button {
+    display: none;
+}
+
+.quip-list .unity-base-slider__tracker {
+    background-color: var(--quip-cream-dark);
+    border-radius: 10px;
+}
+
+.quip-list .unity-base-slider__dragger {
+    background-color: var(--quip-brown);
+    border-radius: 10px;
+    border-width: 0;
+}

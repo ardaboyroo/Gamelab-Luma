@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
     <!-- Main menu in the house style (cream card, dark brown outline, yellow pill buttons).
-         Button names are used by MenuUI: back-btn, profile-btn, chr-btn, audio-btn (Huis), reach-btn. -->
+         Button names are used by MenuUI: back-btn, profile-btn, chr-btn, quip-btn, audio-btn (Huis), reach-btn. -->
     <Style src="Menu.uss" />
     <ui:VisualElement name="menu-dim" class="menu-dim">
         <ui:VisualElement name="menu-card" class="menu-card">
@@ -9,6 +9,7 @@
             </ui:VisualElement>
             <ui:Button text="Profiel" name="profile-btn" class="menu-btn" />
             <ui:Button text="Karakter aanpassen" name="chr-btn" class="menu-btn" />
+            <ui:Button text="Korte berichten" name="quip-btn" class="menu-btn" />
             <ui:Button text="Huis" name="audio-btn" class="menu-btn" />
             <ui:VisualElement class="menu-spacer" picking-mode="Ignore" />
             <ui:Button text="Reach Out!" name="reach-btn" class="menu-btn menu-btn--green" />

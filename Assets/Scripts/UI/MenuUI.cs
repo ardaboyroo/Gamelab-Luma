@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 using FMODUnity;
+using Luma.QuipService;
 
 public class MenuUI : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class MenuUI : MonoBehaviour
     [SerializeField] private UIDocument _standardUI;
     [SerializeField] private UIDocument _menuUI;
     [SerializeField] private UIDocument _chrEditUI;
+    private QuipMenuUI _quipUI;
 
     [SerializeField] private GuideDogBehaviour _dog;
 
@@ -42,6 +44,7 @@ public class MenuUI : MonoBehaviour
 
     private void OnDestroy()
     {
+        if (_quipUI != null) _quipUI.BackRequested -= ReturnFromQuips;
         PlayerService.OnPlayerRegistered -= HandlePlayerRegistered;
 
         if (!ReferenceEquals(_stateManager, null))
@@ -76,6 +79,7 @@ public class MenuUI : MonoBehaviour
 
     private void HandleStateChanged(PlayerStates states)
     {
+        if (_quipUI != null && _quipUI.IsVisible) _quipUI.Hide();
         var standardRoot = _standardUI.rootVisualElement;
         var menuRoot = _menuUI.rootVisualElement;
         var chrEditRoot = _chrEditUI.rootVisualElement;
@@ -168,8 +172,10 @@ public class MenuUI : MonoBehaviour
         var prof = root.Q<Button>("profile-btn");
         var audio = root.Q<Button>("audio-btn");
         var charedit = root.Q<Button>("chr-btn");
+        var quips = root.Q<Button>("quip-btn");
 
         charedit.clicked += ChangeToCharacterEditState;
+        if (quips != null) quips.clicked += ShowQuips;
         back.clicked += ChangeToStandardState;
 
         // currently hijacking audio button for testing, change this!
@@ -188,14 +194,35 @@ public class MenuUI : MonoBehaviour
 
         root.Q<Button>("back-btn").clicked -= ChangeToStandardState;
         //root.Q<Button>("profile-btn").clicked -= ;
-        //root.Q<Button>("audio-btn").clicked -= ;
+        root.Q<Button>("audio-btn").clicked -= SwitchToHouseScene;
         root.Q<Button>("chr-btn").clicked -= ChangeToCharacterEditState;
+        var quips = root.Q<Button>("quip-btn");
+        if (quips != null) quips.clicked -= ShowQuips;
 
         root.style.display = DisplayStyle.None;
 
         //PlayerStateMachine.Instance.ChangeState(PlayerStateMachine.Instance.GetState<StandardPlayerState>());
 
         //PlayClick();
+    }
+
+    private void ShowQuips()
+    {
+        if (_quipUI == null)
+        {
+            _quipUI = QuipMenuUI.Create(transform, _menuUI);
+            if (_quipUI == null) return;
+            _quipUI.BackRequested += ReturnFromQuips;
+        }
+
+        MenuHideUI();
+        _quipUI.Show();
+    }
+
+    private void ReturnFromQuips()
+    {
+        _quipUI.Hide();
+        MenuShowUI();
     }
 
     private void CharacterEditShowUI()
