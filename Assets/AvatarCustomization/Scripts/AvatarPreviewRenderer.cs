@@ -13,6 +13,8 @@ namespace Luma.AvatarCustomization
         [SerializeField, Range(0, 31)] private int previewLayer = 30;
         private readonly Dictionary<GameObject, int> originalLayers = new();
         private Camera previewCamera;
+        private Camera suspendedMainCamera;
+        private bool mainCameraWasEnabled;
         [SerializeField] private GameObject lightingPrefab;
         private GameObject previewLighting;
         private Light[] previewLights;
@@ -61,11 +63,20 @@ namespace Luma.AvatarCustomization
 
         private void LateUpdate()
         {
-            if (previewCamera == null || appearance == null || appearance.Rig == null) return;
+            if (previewCamera == null || appearance == null || appearance.Rig == null)
+            {
+                SetMainCameraSuspended(false);
+                return;
+            }
             if (root == null) root = GetComponent<UIDocument>().rootVisualElement;
             if (controller == null) controller = GetComponent<AvatarCustomizationController>();
-            if (root == null) return;
+            if (root == null)
+            {
+                SetMainCameraSuspended(false);
+                return;
+            }
             previewCamera.enabled = root.resolvedStyle.display != DisplayStyle.None;
+            SetMainCameraSuspended(previewCamera.enabled);
             if (!previewCamera.enabled) return;
             foreach (var renderer in appearance.GetComponentsInChildren<Renderer>(true))
             {
@@ -114,6 +125,7 @@ namespace Luma.AvatarCustomization
 
         private void OnDestroy()
         {
+            SetMainCameraSuspended(false);
             UnityEngine.Rendering.RenderPipelineManager.beginCameraRendering -= BeginPreviewRender;
             UnityEngine.Rendering.RenderPipelineManager.endCameraRendering -= EndPreviewRender;
             foreach (var entry in originalLayers) if (entry.Key != null) entry.Key.layer = entry.Value;
@@ -139,8 +151,29 @@ namespace Luma.AvatarCustomization
 
         private void OnDisable()
         {
+            SetMainCameraSuspended(false);
             SetPreviewLights(false);
             if (previewCamera != null) previewCamera.enabled = false;
+        }
+
+        private void SetMainCameraSuspended(bool suspended)
+        {
+            if (suspended)
+            {
+                if (suspendedMainCamera == null)
+                {
+                    var mainCamera = Camera.main;
+                    if (mainCamera == null || mainCamera == previewCamera) return;
+                    suspendedMainCamera = mainCamera;
+                    mainCameraWasEnabled = mainCamera.enabled;
+                }
+                suspendedMainCamera.enabled = false;
+            }
+            else if (suspendedMainCamera != null)
+            {
+                suspendedMainCamera.enabled = mainCameraWasEnabled;
+                suspendedMainCamera = null;
+            }
         }
     }
 }
