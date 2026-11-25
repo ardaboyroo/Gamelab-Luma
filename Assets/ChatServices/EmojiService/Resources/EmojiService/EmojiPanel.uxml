@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
+    <Style src="EmojiPanel.uss" />
+    <ui:VisualElement class="emoji-content">
+        <ui:Label text="Kies een emoji om te versturen." class="quip-description" />
+        <ui:ScrollView name="emoji-list" mode="Vertical" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto" class="quip-list emoji-list" />
+        <ui:Label name="emoji-empty" text="Er zijn nog geen emoji's beschikbaar." class="quip-empty" />
+    </ui:VisualElement>
+</ui:UXML>

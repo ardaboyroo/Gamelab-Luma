@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Luma.EmojiService;
 
 namespace Luma.QuipService
 {
@@ -11,6 +12,9 @@ namespace Luma.QuipService
         [SerializeField] private QuipCatalog catalog;
         private UIDocument document;
         private Button backButton;
+        private Button quipTab;
+        private Button emojiTab;
+        private EmojiMenuUI emojiMenu;
         private readonly Dictionary<Button, Action> callbacks = new();
 
         public event Action BackRequested;
@@ -36,6 +40,7 @@ namespace Luma.QuipService
             document.visualTreeAsset = layout;
             var controller = go.AddComponent<QuipMenuUI>();
             controller.catalog = catalog;
+            go.AddComponent<EmojiMenuUI>();
             go.SetActive(true);
             return controller;
         }
@@ -45,12 +50,21 @@ namespace Luma.QuipService
             document = GetComponent<UIDocument>();
             backButton = document.rootVisualElement.Q<Button>("quip-back-btn");
             if (backButton != null) backButton.clicked += RequestBack;
+            quipTab = document.rootVisualElement.Q<Button>("quips-tab");
+            emojiTab = document.rootVisualElement.Q<Button>("emojis-tab");
+            if (quipTab != null) quipTab.clicked += ShowQuips;
+            if (emojiTab != null) emojiTab.clicked += ShowEmojis;
+            emojiMenu = GetComponent<EmojiMenuUI>();
+            if (emojiMenu != null) emojiMenu.Selected += CloseAfterEmoji;
             Hide();
         }
 
         private void OnDisable()
         {
             if (backButton != null) backButton.clicked -= RequestBack;
+            if (quipTab != null) quipTab.clicked -= ShowQuips;
+            if (emojiTab != null) emojiTab.clicked -= ShowEmojis;
+            if (emojiMenu != null) emojiMenu.Selected -= CloseAfterEmoji;
             ClearButtons();
             IsVisible = false;
         }
@@ -58,6 +72,7 @@ namespace Luma.QuipService
         public void Show()
         {
             Refresh();
+            ShowQuips();
             document.rootVisualElement.style.display = DisplayStyle.Flex;
             IsVisible = true;
         }
@@ -101,6 +116,25 @@ namespace Luma.QuipService
                 Hide();
                 RequestBack();
             }
+        }
+
+        public void ShowQuips() => SelectTab(false);
+        public void ShowEmojis() => SelectTab(true);
+
+        private void SelectTab(bool emojis)
+        {
+            var root = document.rootVisualElement;
+            root.Q<VisualElement>("quips-panel").style.display = emojis ? DisplayStyle.None : DisplayStyle.Flex;
+            root.Q<VisualElement>("emoji-panel").style.display = emojis ? DisplayStyle.Flex : DisplayStyle.None;
+            quipTab?.EnableInClassList("message-tab--selected", !emojis);
+            emojiTab?.EnableInClassList("message-tab--selected", emojis);
+            if (emojis && emojiMenu != null) emojiMenu.Refresh();
+        }
+
+        private void CloseAfterEmoji()
+        {
+            Hide();
+            RequestBack();
         }
 
         private void ClearButtons()
