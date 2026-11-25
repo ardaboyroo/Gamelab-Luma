@@ -34,6 +34,7 @@ public class MenuUI : MonoBehaviour
 
     // The state manager we subscribed to, so we can unsubscribe when this scene unloads.
     private PlayerStateManager _stateManager;
+    [SerializeField] private FloatingJoystick _joystick;
 
     private void Awake()
     {
@@ -137,6 +138,7 @@ public class MenuUI : MonoBehaviour
     private void ShowUI()
     {
         _standardActive = true;
+        if (_joystick != null) _joystick.EnableJoystick();
         if (_standardUI == null) return;
         var root = _standardUI.rootVisualElement;
         root.style.display = DisplayStyle.Flex;
@@ -145,17 +147,22 @@ public class MenuUI : MonoBehaviour
         var skateboardBTN = root.Q<Button>("SkateboardButton");
 
         menuBTN.clicked += ChangeToMenuState;
+        var quips = root.Q<Button>("quip-btn");
+        if (quips != null) quips.clicked += ShowQuips;
         skateboardBTN.clicked += _localPlr.GetComponent<WorldMovement>().ToggleSkateBoard;
     }
 
     private void HideUI()
     {
         _standardActive = false;
+        if (_joystick != null) _joystick.DisableJoystick();
         if (_standardUI == null) return;
         var root = _standardUI.rootVisualElement;
         var skateboardBTN = root.Q<Button>("SkateboardButton");
 
         root.Q<Button>("menu-btn").clicked -= ChangeToMenuState;
+        var quips = root.Q<Button>("quip-btn");
+        if (quips != null) quips.clicked -= ShowQuips;
         skateboardBTN.clicked -= _localPlr.GetComponent<WorldMovement>().ToggleSkateBoard;
 
         root.style.display = DisplayStyle.None;
@@ -172,10 +179,8 @@ public class MenuUI : MonoBehaviour
         var prof = root.Q<Button>("profile-btn");
         var audio = root.Q<Button>("audio-btn");
         var charedit = root.Q<Button>("chr-btn");
-        var quips = root.Q<Button>("quip-btn");
 
         charedit.clicked += ChangeToCharacterEditState;
-        if (quips != null) quips.clicked += ShowQuips;
         back.clicked += ChangeToStandardState;
 
         // currently hijacking audio button for testing, change this!
@@ -196,8 +201,6 @@ public class MenuUI : MonoBehaviour
         //root.Q<Button>("profile-btn").clicked -= ;
         root.Q<Button>("audio-btn").clicked -= SwitchToHouseScene;
         root.Q<Button>("chr-btn").clicked -= ChangeToCharacterEditState;
-        var quips = root.Q<Button>("quip-btn");
-        if (quips != null) quips.clicked -= ShowQuips;
 
         root.style.display = DisplayStyle.None;
 
@@ -210,19 +213,19 @@ public class MenuUI : MonoBehaviour
     {
         if (_quipUI == null)
         {
-            _quipUI = QuipMenuUI.Create(transform, _menuUI);
+            _quipUI = QuipMenuUI.Create(transform, _standardUI);
             if (_quipUI == null) return;
             _quipUI.BackRequested += ReturnFromQuips;
         }
 
-        MenuHideUI();
+        HideUI();
         _quipUI.Show();
     }
 
     private void ReturnFromQuips()
     {
         _quipUI.Hide();
-        MenuShowUI();
+        ShowUI();
     }
 
     private void CharacterEditShowUI()

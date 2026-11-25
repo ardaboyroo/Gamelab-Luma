@@ -98,7 +98,7 @@ public class FloatingJoystick : MonoBehaviour
         }
     }
 
-    private void EnableJoystick()
+    public void EnableJoystick()
     {
         // Don't listen to touches while this component is off, and never subscribe twice.
         if (_touchSubscribed || !isActiveAndEnabled)
@@ -110,7 +110,7 @@ public class FloatingJoystick : MonoBehaviour
         _touchSubscribed = true;
     }
 
-    private void DisableJoystick()
+    public void DisableJoystick()
     {
         ETouch.Touch.onFingerDown -= HandleFingerDown;
         ETouch.Touch.onFingerMove -= HandleFingerMove;

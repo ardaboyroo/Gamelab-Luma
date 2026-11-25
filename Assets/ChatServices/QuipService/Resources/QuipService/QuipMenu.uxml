@@ -6,7 +6,7 @@
             <ui:Label text="Kies een bericht om te versturen." class="quip-description" />
             <ui:ScrollView name="quip-list" mode="Vertical" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto" class="quip-list" />
             <ui:Label name="quip-empty" text="Er zijn nog geen berichten beschikbaar." class="quip-empty" />
-            <ui:Button name="quip-back-btn" text="Terug naar menu" class="quip-back" />
+            <ui:Button name="quip-back-btn" text="Terug naar spel" class="quip-back" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

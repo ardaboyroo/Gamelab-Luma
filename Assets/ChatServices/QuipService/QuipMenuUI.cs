@@ -96,7 +96,11 @@ namespace Luma.QuipService
         public void SelectQuip(int id)
         {
             if (catalog != null && catalog.TryGetQuip(id, out var quip))
+            {
                 Debug.Log(quip.Text);
+                Hide();
+                RequestBack();
+            }
         }
 
         private void ClearButtons()
