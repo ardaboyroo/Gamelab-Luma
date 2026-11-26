@@ -92,7 +92,8 @@ public class BuddyTutorialMarker : MonoBehaviour
         return states == null || states.CurrentState == showInState;
     }
 
-    bool CanOpen() => Dialogue != null && !Dialogue.IsOpen && PlayerInShowState();
+    bool CanOpen() => !Luma.QuipService.QuipMenuUI.IsAnyVisible
+        && Dialogue != null && !Dialogue.IsOpen && PlayerInShowState();
 
     // ---------- marker ----------
     void LateUpdate()
@@ -147,7 +148,7 @@ public class BuddyTutorialMarker : MonoBehaviour
     void Update()
     {
         bool dialogueOpen = Dialogue != null && Dialogue.IsOpen;
-        if (!tapBuddyToOpen || dialogueOpen || !PlayerInShowState()) { _tracking = false; return; }
+        if (!tapBuddyToOpen || dialogueOpen || Luma.QuipService.QuipMenuUI.IsAnyVisible || !PlayerInShowState()) { _tracking = false; return; }
 
         if (Application.isMobilePlatform)
         {

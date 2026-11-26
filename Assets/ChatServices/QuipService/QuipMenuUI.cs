@@ -19,6 +19,8 @@ namespace Luma.QuipService
 
         public event Action BackRequested;
         public bool IsVisible { get; private set; }
+        private static int visibleMenuCount;
+        public static bool IsAnyVisible => visibleMenuCount > 0;
 
         // A separate document is created for each MenuUI, including menus in other scenes.
         public static QuipMenuUI Create(Transform parent, UIDocument menuDocument)
@@ -66,7 +68,7 @@ namespace Luma.QuipService
             if (emojiTab != null) emojiTab.clicked -= ShowEmojis;
             if (emojiMenu != null) emojiMenu.Selected -= CloseAfterEmoji;
             ClearButtons();
-            IsVisible = false;
+            Hide();
         }
 
         public void Show()
@@ -74,12 +76,14 @@ namespace Luma.QuipService
             Refresh();
             ShowQuips();
             document.rootVisualElement.style.display = DisplayStyle.Flex;
+            if (!IsVisible) visibleMenuCount++;
             IsVisible = true;
         }
 
         public void Hide()
         {
             if (document != null) document.rootVisualElement.style.display = DisplayStyle.None;
+            if (IsVisible) visibleMenuCount--;
             IsVisible = false;
         }
 

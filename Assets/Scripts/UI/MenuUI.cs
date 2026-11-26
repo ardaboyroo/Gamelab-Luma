@@ -84,6 +84,10 @@ public class MenuUI : MonoBehaviour
         var standardRoot = _standardUI.rootVisualElement;
         var menuRoot = _menuUI.rootVisualElement;
         var chrEditRoot = _chrEditUI.rootVisualElement;
+        var quipButton = standardRoot.Q<Button>("quip-btn");
+        if (quipButton != null)
+            quipButton.style.display = states == PlayerStates.HouseEditState
+                ? DisplayStyle.None : DisplayStyle.Flex;
         switch (states)
         {
             case PlayerStates.StandardState:
@@ -148,7 +152,13 @@ public class MenuUI : MonoBehaviour
 
         menuBTN.clicked += ChangeToMenuState;
         var quips = root.Q<Button>("quip-btn");
-        if (quips != null) quips.clicked += ShowQuips;
+        if (quips != null)
+        {
+            // Leave room above the house's furniture-edit button without moving the world HUD.
+            if (FindAnyObjectByType<HouseUIController>() != null)
+                quips.style.bottom = 300;
+            quips.clicked += ShowQuips;
+        }
         skateboardBTN.clicked += _localPlr.GetComponent<WorldMovement>().ToggleSkateBoard;
     }
 

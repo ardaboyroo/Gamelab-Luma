@@ -1277,7 +1277,7 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  _joystick: {fileID: 886452700}
+  _joystick: {fileID: 0}
 --- !u!4 &400080056
 Transform:
   m_ObjectHideFlags: 0
