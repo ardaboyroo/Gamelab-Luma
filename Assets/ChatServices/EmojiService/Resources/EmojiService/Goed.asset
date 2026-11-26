@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04d140d5f4fb6894ebde2fd94f5a68db, type: 3}
-  m_Name: Emoji01
+  m_Name: Goed
   m_EditorClassIdentifier: 
-  id: 1
-  displayName: Blij
-  image: {fileID: 0}
+  id: 5
+  displayName: Goed
+  image: {fileID: 21300000, guid: 35c57d8a92e5121439751a5357ee81ef, type: 3}

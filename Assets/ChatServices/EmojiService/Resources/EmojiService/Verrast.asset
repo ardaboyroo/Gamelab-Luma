@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04d140d5f4fb6894ebde2fd94f5a68db, type: 3}
-  m_Name: Emoji04
+  m_Name: Verrast
   m_EditorClassIdentifier: 
-  id: 4
-  displayName: Verbaasd
-  image: {fileID: 0}
+  id: 12
+  displayName: Verrast
+  image: {fileID: 21300000, guid: f74c70fefb93e7048a420a9270aaadea, type: 3}

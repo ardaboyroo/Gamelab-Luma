@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 04d140d5f4fb6894ebde2fd94f5a68db, type: 3}
-  m_Name: Emoji06
+  m_Name: Cool
   m_EditorClassIdentifier: 
-  id: 6
-  displayName: Duim omhoog
-  image: {fileID: 0}
+  id: 4
+  displayName: Cool
+  image: {fileID: 21300000, guid: 597d314ae5bb80148bbdfb6ccc7b2f5e, type: 3}
