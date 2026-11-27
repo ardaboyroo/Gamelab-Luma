@@ -68,6 +68,7 @@ namespace Luma.EmojiService
         {
             if (catalog == null || !catalog.TryGetEmoji(id, out var emoji)) return;
             Debug.Log(emoji.DisplayName);
+            Luma.BubbleChatService.BubbleChatService.SendLocal(new Luma.BubbleChatService.ChatMessage(emoji.MessageType, emoji.Id));
             Selected?.Invoke();
         }
 

@@ -117,6 +117,7 @@ namespace Luma.QuipService
             if (catalog != null && catalog.TryGetQuip(id, out var quip))
             {
                 Debug.Log(quip.Text);
+                Luma.BubbleChatService.BubbleChatService.SendLocal(new Luma.BubbleChatService.ChatMessage(quip.MessageType, quip.Id));
                 Hide();
                 RequestBack();
             }
